@@ -1,0 +1,33 @@
+@startuml VCCS Class diagrams
+    interface ICameraController {
+        + {abstract} List getConnectedCameras()
+        + {abstract} void updateCamera(camera)
+    }
+
+    interface ITriggerController {
+        + {abstract} void triggerAutoFocus()
+        + {abstract} void triggerShutter(bool autoFocus = false)
+    }
+
+    interface ILightingController
+    interface IFocusController
+    interface ICamera {
+        + List getProperties
+    }
+
+
+    class DigiCameraController
+    class PiCameraController
+
+    ICameraController <|-- DigiCameraController
+    ICameraController <|-- PiCameraController
+
+    note as n1
+    The ICameraController is responsible for interfacing 
+    directly with the cameras. Gets list of cameras, gets
+    camera properties and can change the properties of
+    the cameras.
+    end note
+    n1 .. ICameraController
+
+@enduml
