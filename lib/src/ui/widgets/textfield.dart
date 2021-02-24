@@ -13,6 +13,7 @@ class VCCSTextFormField extends StatelessWidget {
   final AutovalidateMode autovalidateMode;
   final FormFieldValidator<String> validator;
   final ValueChanged<String> onSubmitted;
+  final FocusNode focusNode;
 
   const VCCSTextFormField(
       {Key key,
@@ -25,7 +26,8 @@ class VCCSTextFormField extends StatelessWidget {
       this.suffixIcon,
       this.autovalidateMode,
       this.validator,
-      this.onSubmitted})
+      this.onSubmitted,
+      this.focusNode})
       : super(key: key);
 
   @override
@@ -33,6 +35,7 @@ class VCCSTextFormField extends StatelessWidget {
     return TextFormField(
       // maxLines: multiline ? 5 : 1,
       controller: controller,
+      focusNode: focusNode,
       onChanged: onChanged,
       inputFormatters: inputFormatters,
       maxLines: maxlines,
@@ -40,12 +43,8 @@ class VCCSTextFormField extends StatelessWidget {
         alignLabelWithHint: true,
         suffixIcon: suffixIcon,
         contentPadding: EdgeInsets.all(8.0),
-        focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Theme.of(context).accentColor)),
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide.none),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Theme.of(context).accentColor)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
         filled: true,
         labelText: label,
         fillColor: TinyColor(Colors.grey).darken(45).color,

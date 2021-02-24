@@ -9,6 +9,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+import '../model/domain/domian.dart';
 import 'pages/pages.dart';
 
 class Routes {
@@ -100,7 +101,7 @@ class ProjectPageRouter extends RouterBase {
       return PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) => CameraSetup(),
         settings: data,
-        transitionsBuilder: TransitionsBuilders.zoomIn,
+        transitionsBuilder: TransitionsBuilders.fadeIn,
         transitionDuration: const Duration(milliseconds: 10),
       );
     },
@@ -108,15 +109,21 @@ class ProjectPageRouter extends RouterBase {
       return PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) => CameraSets(),
         settings: data,
-        transitionsBuilder: TransitionsBuilders.zoomIn,
+        transitionsBuilder: TransitionsBuilders.fadeIn,
         transitionDuration: const Duration(milliseconds: 10),
       );
     },
     SetPage: (data) {
+      final args = data.getArgs<SetPageArguments>(
+        orElse: () => SetPageArguments(),
+      );
       return PageRouteBuilder<dynamic>(
-        pageBuilder: (context, animation, secondaryAnimation) => SetPage(),
+        pageBuilder: (context, animation, secondaryAnimation) => SetPage(
+          key: args.key,
+          set: args.set,
+        ),
         settings: data,
-        transitionsBuilder: TransitionsBuilders.zoomIn,
+        transitionsBuilder: TransitionsBuilders.slideLeft,
         transitionDuration: const Duration(milliseconds: 10),
       );
     },
@@ -125,7 +132,7 @@ class ProjectPageRouter extends RouterBase {
         pageBuilder: (context, animation, secondaryAnimation) =>
             ModelCreation(),
         settings: data,
-        transitionsBuilder: TransitionsBuilders.zoomIn,
+        transitionsBuilder: TransitionsBuilders.fadeIn,
         transitionDuration: const Duration(milliseconds: 10),
       );
     },
@@ -133,7 +140,7 @@ class ProjectPageRouter extends RouterBase {
       return PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) => Settings(),
         settings: data,
-        transitionsBuilder: TransitionsBuilders.zoomIn,
+        transitionsBuilder: TransitionsBuilders.fadeIn,
         transitionDuration: const Duration(milliseconds: 10),
       );
     },
@@ -148,4 +155,11 @@ class ProjectPageRouter extends RouterBase {
 class HomePageArguments {
   final Key key;
   HomePageArguments({this.key});
+}
+
+/// SetPage arguments holder class
+class SetPageArguments {
+  final Key key;
+  final VCCSSet set;
+  SetPageArguments({this.key, this.set});
 }

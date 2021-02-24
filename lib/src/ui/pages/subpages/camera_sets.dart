@@ -26,8 +26,7 @@ class _CameraSetsState extends State<CameraSets> {
           message: 'Create a new set',
           child: FloatingActionButton(
             onPressed: () async {
-              String name = await showDialog<String>(
-                  context: context, builder: (context) => CreateSet());
+              String name = await showDialog<String>(context: context, builder: (context) => CreateSet());
               if (name != null)
                 setState(() {
                   sets.add(VCCSSet(name: name));
@@ -55,10 +54,7 @@ class _CameraSetsState extends State<CameraSets> {
               child: Center(
                 child: Text(
                   "There are no sets. To add a set click on the blue button.",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline5
-                      .copyWith(color: Colors.grey[400]),
+                  style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.grey[400]),
                 ),
               ),
             ),
@@ -68,11 +64,25 @@ class _CameraSetsState extends State<CameraSets> {
     );
   }
 
+  void _setMask(VCCSSet set) {
+    setState(() {
+      for (int i = 0; i < sets.length; i++)
+        if (sets[i].uid == set.uid)
+          sets[i] = sets[i].copyWith(isMask: true);
+        else
+          sets[i] = sets[i].copyWith(isMask: false);
+    });
+  }
+
   List<Widget> _sets() {
     return sets
         .map((e) => Padding(
               padding: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
-              child: SetCard(),
+              child: SetCard(
+                set: e,
+                onSetAsMask: () => _setMask(e),
+                onDelete: () => setState(() => sets.remove(e)),
+              ),
             ))
         .toList();
   }
