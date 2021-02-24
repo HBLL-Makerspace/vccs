@@ -3,6 +3,7 @@ import 'package:vccs/src/ui/widgets/buttons.dart';
 import 'package:vccs/src/ui/widgets/textfield.dart';
 
 class CreateSet extends StatelessWidget {
+  final TextEditingController _name = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
@@ -17,6 +18,8 @@ class CreateSet extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: VCCSTextFormField(
+            onSubmitted: (_) => Navigator.of(context).pop(_name.text),
+            controller: _name,
             label: "Name",
           ),
         ),
@@ -27,7 +30,7 @@ class CreateSet extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8.0),
               child: VCCSRaisedButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(_name.text);
                 },
                 child: Text("Create"),
               ),

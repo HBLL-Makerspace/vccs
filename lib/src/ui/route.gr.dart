@@ -59,12 +59,15 @@ class ProjectPageRoutes {
   static const String projectWelcome = '/';
   static const String cameraSetup = '/setup';
   static const String cameraSets = '/sets';
+  static const String _setPage = '/sets/:id?';
+  static String setPage({dynamic id = ''}) => '/sets/$id';
   static const String modelCreation = '/model';
   static const String settings = '/settings';
   static const all = <String>{
     projectWelcome,
     cameraSetup,
     cameraSets,
+    _setPage,
     modelCreation,
     settings,
   };
@@ -77,6 +80,7 @@ class ProjectPageRouter extends RouterBase {
     RouteDef(ProjectPageRoutes.projectWelcome, page: ProjectWelcome),
     RouteDef(ProjectPageRoutes.cameraSetup, page: CameraSetup),
     RouteDef(ProjectPageRoutes.cameraSets, page: CameraSets),
+    RouteDef(ProjectPageRoutes._setPage, page: SetPage),
     RouteDef(ProjectPageRoutes.modelCreation, page: ModelCreation),
     RouteDef(ProjectPageRoutes.settings, page: Settings),
   ];
@@ -103,6 +107,14 @@ class ProjectPageRouter extends RouterBase {
     CameraSets: (data) {
       return PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) => CameraSets(),
+        settings: data,
+        transitionsBuilder: TransitionsBuilders.zoomIn,
+        transitionDuration: const Duration(milliseconds: 10),
+      );
+    },
+    SetPage: (data) {
+      return PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) => SetPage(),
         settings: data,
         transitionsBuilder: TransitionsBuilders.zoomIn,
         transitionDuration: const Duration(milliseconds: 10),

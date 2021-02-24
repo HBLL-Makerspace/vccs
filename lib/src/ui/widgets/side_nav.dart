@@ -27,21 +27,8 @@ class _SideNavState extends State<SideNav> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4.0),
             color: page.isSelected
-                ? null
+                ? TinyColor(Theme.of(context).accentColor).color
                 : TinyColor(Theme.of(context).canvasColor).lighten(10).color,
-            gradient: page.isSelected
-                ? LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                        TinyColor(Theme.of(context).accentColor)
-                            .lighten(10)
-                            .color,
-                        TinyColor(Theme.of(context).accentColor)
-                            .darken(10)
-                            .color
-                      ])
-                : null,
           ),
           child: Material(
             elevation: page.isSelected ? 12.0 : 0,

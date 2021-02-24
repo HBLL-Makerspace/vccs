@@ -33,6 +33,12 @@ import 'package:vccs/src/ui/pages/pages.dart';
           durationInMilliseconds: 10,
         ),
         CustomRoute(
+          page: SetPage,
+          path: "/sets/:id?",
+          transitionsBuilder: TransitionsBuilders.zoomIn,
+          durationInMilliseconds: 10,
+        ),
+        CustomRoute(
           page: ModelCreation,
           path: "/model",
           transitionsBuilder: TransitionsBuilders.zoomIn,

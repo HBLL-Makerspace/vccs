@@ -1,5 +1,6 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:vccs/src/model/domain/domian.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
 
 class CameraSets extends StatefulWidget {
@@ -8,7 +9,7 @@ class CameraSets extends StatefulWidget {
 }
 
 class _CameraSetsState extends State<CameraSets> {
-  List<Set> sets;
+  List<VCCSSet> sets;
 
   @override
   void initState() {
@@ -24,8 +25,13 @@ class _CameraSetsState extends State<CameraSets> {
         child: Tooltip(
           message: 'Create a new set',
           child: FloatingActionButton(
-            onPressed: () {
-              showDialog(context: context, builder: (context) => CreateSet());
+            onPressed: () async {
+              String name = await showDialog<String>(
+                  context: context, builder: (context) => CreateSet());
+              if (name != null)
+                setState(() {
+                  sets.add(VCCSSet(name: name));
+                });
             },
             child: Icon(Icons.add_a_photo),
           ),
@@ -49,7 +55,10 @@ class _CameraSetsState extends State<CameraSets> {
               child: Center(
                 child: Text(
                   "There are no sets. To add a set click on the blue button.",
-                  style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.grey[400]),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: Colors.grey[400]),
                 ),
               ),
             ),
@@ -57,6 +66,15 @@ class _CameraSetsState extends State<CameraSets> {
         ),
       ],
     );
+  }
+
+  List<Widget> _sets() {
+    return sets
+        .map((e) => Padding(
+              padding: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
+              child: SetCard(),
+            ))
+        .toList();
   }
 
   @override
@@ -79,6 +97,7 @@ class _CameraSetsState extends State<CameraSets> {
                 child: Column(
                   children: [
                     if (sets.isEmpty) _addSetBox(),
+                    if (sets.isNotEmpty) ..._sets(),
                   ],
                 ),
               ),

@@ -12,6 +12,7 @@ class VCCSTextFormField extends StatelessWidget {
   final Widget suffixIcon;
   final AutovalidateMode autovalidateMode;
   final FormFieldValidator<String> validator;
+  final ValueChanged<String> onSubmitted;
 
   const VCCSTextFormField(
       {Key key,
@@ -23,7 +24,8 @@ class VCCSTextFormField extends StatelessWidget {
       this.obscureText = false,
       this.suffixIcon,
       this.autovalidateMode,
-      this.validator})
+      this.validator,
+      this.onSubmitted})
       : super(key: key);
 
   @override
@@ -51,6 +53,7 @@ class VCCSTextFormField extends StatelessWidget {
       obscureText: obscureText,
       autovalidateMode: autovalidateMode,
       validator: validator,
+      onFieldSubmitted: onSubmitted,
     );
   }
 }

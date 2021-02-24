@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:vccs/src/ui/widgets/buttons.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:vccs/src/ui/widgets/forms/create_project.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -38,7 +40,11 @@ class _HomePageState extends State<HomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text("Create Project"),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => CreateProjectForm());
+                            },
                           ),
                         ),
                       ],
@@ -55,7 +61,12 @@ class _HomePageState extends State<HomePage> {
                               child: Text("Open Project"),
                             ),
                             onPressed: () {
-                              ExtendedNavigator.of(context).push("/project");
+                              // ExtendedNavigator.of(context).push("/project");
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => FilePicker()));
+                              // ExtendedNavigator.of(context).push("/project");
                             },
                           ),
                         ),

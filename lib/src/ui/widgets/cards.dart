@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:vccs/src/model/domain/domian.dart';
@@ -9,7 +10,14 @@ class SlotCard extends StatefulWidget {
   final ValueChanged<bool> onCheckboxClicked;
   final VoidCallback onPressed;
 
-  const SlotCard({Key key, this.slot, this.showCheckbox = false, this.onCheckboxClicked, this.isChecked, this.onPressed}) : super(key: key);
+  const SlotCard(
+      {Key key,
+      this.slot,
+      this.showCheckbox = false,
+      this.onCheckboxClicked,
+      this.isChecked,
+      this.onPressed})
+      : super(key: key);
 
   @override
   _SlotCardState createState() => _SlotCardState();
@@ -63,7 +71,10 @@ class _SlotCardState extends State<SlotCard> {
                 alignment: Alignment.topLeft,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: Checkbox(activeColor: Theme.of(context).accentColor, value: widget.isChecked, onChanged: widget.onCheckboxClicked ?? (_) {}),
+                  child: Checkbox(
+                      activeColor: Theme.of(context).accentColor,
+                      value: widget.isChecked,
+                      onChanged: widget.onCheckboxClicked ?? (_) {}),
                 ),
               ),
             Align(
@@ -134,6 +145,25 @@ class _AdvancedCardState extends State<AdvancedCard> {
               )),
         ),
       ),
+    );
+  }
+}
+
+class SetCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: AdvancedCard(
+            onPressed: () => ExtendedNavigator.named("project").push("/sets/0"),
+            child: Container(
+              height: 200,
+              child: Text("hello"),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
