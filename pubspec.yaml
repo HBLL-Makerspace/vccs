@@ -50,8 +50,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  integration_test:
-    sdk: flutter
+  test: any
   build_runner: ^1.11.0
   json_serializable: ^3.5.1
 

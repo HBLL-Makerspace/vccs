@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:vccs/src/model/domain/camera_config.dart';
 import 'package:vccs/src/ui/route.gr.dart';
 
-void main() {
+void main() async {
+  CameraConfiguration.load("cameras/cameras.json");
   runApp(MyApp());
 }
 
@@ -13,7 +15,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'VCCS',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(brightness: Brightness.dark, primarySwatch: Colors.blue, primaryColor: Colors.blue, accentColor: Colors.blue),
+      theme: ThemeData(
+          brightness: Brightness.dark,
+          primarySwatch: Colors.blue,
+          primaryColor: Colors.blue,
+          accentColor: Colors.blue),
       home: ExtendedNavigator(
         router: VCCSRoute(),
       ),

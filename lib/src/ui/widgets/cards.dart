@@ -12,7 +12,14 @@ class SlotCard extends StatefulWidget {
   final ValueChanged<bool> onCheckboxClicked;
   final VoidCallback onPressed;
 
-  const SlotCard({Key key, this.slot, this.showCheckbox = false, this.onCheckboxClicked, this.isChecked, this.onPressed}) : super(key: key);
+  const SlotCard(
+      {Key key,
+      this.slot,
+      this.showCheckbox = false,
+      this.onCheckboxClicked,
+      this.isChecked,
+      this.onPressed})
+      : super(key: key);
 
   @override
   _SlotCardState createState() => _SlotCardState();
@@ -66,7 +73,10 @@ class _SlotCardState extends State<SlotCard> {
                 alignment: Alignment.topLeft,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: Checkbox(activeColor: Theme.of(context).accentColor, value: widget.isChecked, onChanged: widget.onCheckboxClicked ?? (_) {}),
+                  child: Checkbox(
+                      activeColor: Theme.of(context).accentColor,
+                      value: widget.isChecked,
+                      onChanged: widget.onCheckboxClicked ?? (_) {}),
                 ),
               ),
             Align(
@@ -105,7 +115,9 @@ class AdvancedCard extends StatefulWidget {
   final VoidCallback onPressed;
   final bool showHighlight;
 
-  const AdvancedCard({Key key, this.onPressed, this.child, this.showHighlight = false}) : super(key: key);
+  const AdvancedCard(
+      {Key key, this.onPressed, this.child, this.showHighlight = false})
+      : super(key: key);
 
   @override
   _AdvancedCardState createState() => _AdvancedCardState();
@@ -149,7 +161,8 @@ class SetCard extends StatelessWidget {
   final VoidCallback onSetAsMask;
   final VoidCallback onDelete;
 
-  const SetCard({Key key, @required this.set, this.onSetAsMask, this.onDelete}) : super(key: key);
+  const SetCard({Key key, @required this.set, this.onSetAsMask, this.onDelete})
+      : super(key: key);
 
   Widget _maskButtons() {
     return Align(
@@ -191,7 +204,10 @@ class SetCard extends StatelessWidget {
   }
 
   Widget _deleteButton() {
-    return VCCSFlatButton(onPressed: onDelete ?? () {}, child: Text("Delete"), hoverColor: Colors.red[400]);
+    return VCCSFlatButton(
+        onPressed: onDelete ?? () {},
+        child: Text("Delete"),
+        hoverColor: Colors.red[400]);
   }
 
   Widget _pictures() {
@@ -231,6 +247,21 @@ class SetCard extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class CameraCard extends StatelessWidget {
+  final Camera camera;
+
+  const CameraCard({Key key, this.camera}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 150,
+      height: 150,
+      child: AdvancedCard(),
     );
   }
 }

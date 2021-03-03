@@ -28,17 +28,11 @@ class Slot {
 
 class Camera {
   final String model;
-  final String make;
-  final String serialNumber;
+  final String id;
   final String name;
   final CameraProperties cameraProperties;
 
-  Camera(
-      {this.make,
-      this.serialNumber,
-      this.model,
-      this.name,
-      this.cameraProperties});
+  Camera({this.id, this.model, this.name, this.cameraProperties});
 }
 
 class CameraProperties {
