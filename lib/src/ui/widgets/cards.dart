@@ -1,9 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:vccs/src/model/domain/camera_config.dart';
 import 'package:vccs/src/model/domain/domian.dart';
 import 'package:vccs/src/ui/widgets/buttons.dart';
+import 'package:vccs/src/ui/widgets/floating_modal.dart';
 import 'package:vccs/src/ui/widgets/misc/set_preview_pics.dart';
+import 'package:vccs/src/ui/widgets/widgets.dart';
 
 class SlotCard extends StatefulWidget {
   final Slot slot;
@@ -261,7 +264,125 @@ class CameraCard extends StatelessWidget {
     return SizedBox(
       width: 150,
       height: 150,
-      child: AdvancedCard(),
+      child: AdvancedCard(
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topCenter,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        camera.model,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Image(
+                image: AssetImage(
+                    CameraConfiguration.getMediumThumbnailFor(camera.model)),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  camera.id,
+                  overflow: TextOverflow.fade,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SlotConfigCard extends StatelessWidget {
+  final Slot slot;
+  final VoidCallback onPressed;
+
+  SlotConfigCard({Key key, this.slot, this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 150,
+      height: 150,
+      child: AdvancedCard(
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topCenter,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        slot.id + ": " + (slot.name ?? ""),
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: slot.camera != null
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image(
+                        image: AssetImage(
+                            CameraConfiguration.getMediumThumbnailFor(
+                                slot.camera.model)),
+                      ),
+                    )
+                  : Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Icon(
+                          Ionicons.md_camera,
+                          size: 32,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: slot.camera == null
+                    ? VCCSFlatButton(
+                        child: Text("Assign"),
+                        onPressed: () {
+                          showFloatingModalBottomSheet(
+                              context: context, builder: (_) => SelectCamera());
+                        },
+                      )
+                    : Text(
+                        slot.camera.id,
+                        softWrap: false,
+                        overflow: TextOverflow.fade,
+                      ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

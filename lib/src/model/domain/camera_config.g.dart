@@ -28,11 +28,13 @@ Map<String, dynamic> _$CameraConfigurationToJson(
 Config _$ConfigFromJson(Map<String, dynamic> json) {
   return Config(
     small: json['small'] as String,
+    medium: json['medium'] as String,
     large: json['large'] as String,
   );
 }
 
 Map<String, dynamic> _$ConfigToJson(Config instance) => <String, dynamic>{
       'small': instance.small,
+      'medium': instance.medium,
       'large': instance.large,
     };

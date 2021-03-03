@@ -4,7 +4,8 @@ import 'package:vccs/src/model/domain/camera_config.dart';
 import 'package:vccs/src/ui/route.gr.dart';
 
 void main() async {
-  CameraConfiguration.load("cameras/cameras.json");
+  WidgetsFlutterBinding.ensureInitialized();
+  await CameraConfiguration.load("assets/cameras/cameras.json");
   runApp(MyApp());
 }
 

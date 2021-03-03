@@ -14,9 +14,11 @@ import 'pages/pages.dart';
 
 class Routes {
   static const String homePage = '/';
+  static const String configurationPage = '/configure';
   static const String projectPage = '/project';
   static const all = <String>{
     homePage,
+    configurationPage,
     projectPage,
   };
 }
@@ -26,6 +28,7 @@ class VCCSRoute extends RouterBase {
   List<RouteDef> get routes => _routes;
   final _routes = <RouteDef>[
     RouteDef(Routes.homePage, page: HomePage),
+    RouteDef(Routes.configurationPage, page: ConfigurationPage),
     RouteDef(
       Routes.projectPage,
       page: ProjectPage,
@@ -42,6 +45,14 @@ class VCCSRoute extends RouterBase {
       return PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) =>
             HomePage(key: args.key),
+        settings: data,
+        transitionsBuilder: TransitionsBuilders.slideLeft,
+      );
+    },
+    ConfigurationPage: (data) {
+      return PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            ConfigurationPage(),
         settings: data,
         transitionsBuilder: TransitionsBuilders.slideLeft,
       );

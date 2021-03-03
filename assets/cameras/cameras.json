@@ -1,16 +1,19 @@
 {
     "cameras": {
         "Nikon DSC D300 (PTP mode)": {
-            "small": "cameras/nikon/d300/thumbnail_200.png",
-            "large": "cameras/nikon/d300/thumbnail_full.png"
+            "small": "assets/cameras/nikon/d300/thumbnail_100.png",
+            "medium": "assets/cameras/nikon/d300/thumbnail_200.png",
+            "large": "assets/cameras/nikon/d300/thumbnail_full.png"
         },
         "Nikon DSC D300s (PTP mode)": {
-            "small": "cameras/nikon/d300s/thumbnail_200.png",
-            "large": "cameras/nikon/d300s/thumbnail_full.png"
+            "small": "assets/cameras/nikon/d300s/thumbnail_100.png",
+            "medium": "assets/cameras/nikon/d300s/thumbnail_200.png",
+            "large": "assets/cameras/nikon/d300s/thumbnail_full.png"
         }
     },
     "default": {
-        "small": "/default/thumbnail_full.png",
-        "large": "/default/thumbnail_full.png"
+        "small": "assets/cameras/default/thumbnail_full.png",
+        "medium": "assets/cameras/default/thumbnail_full.png",
+        "large": "assets/cameras/default/thumbnail_full.png"
     }
 }

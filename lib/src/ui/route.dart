@@ -10,6 +10,11 @@ import 'package:vccs/src/ui/pages/pages.dart';
       transitionsBuilder: TransitionsBuilders.slideLeft,
     ),
     CustomRoute(
+      page: ConfigurationPage,
+      path: "/configure",
+      transitionsBuilder: TransitionsBuilders.slideLeft,
+    ),
+    CustomRoute(
       page: ProjectPage,
       path: "/project",
       transitionsBuilder: TransitionsBuilders.slideLeft,

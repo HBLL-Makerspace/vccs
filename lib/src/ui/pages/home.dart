@@ -40,7 +40,9 @@ class _HomePageState extends State<HomePage> {
                               child: Text("Create Project"),
                             ),
                             onPressed: () {
-                              showDialog(context: context, builder: (context) => CreateProjectForm());
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => CreateProjectForm());
                             },
                           ),
                         ),
@@ -80,7 +82,9 @@ class _HomePageState extends State<HomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text("Configure"),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              ExtendedNavigator.of(context).push("/configure");
+                            },
                           ),
                         ),
                       ],

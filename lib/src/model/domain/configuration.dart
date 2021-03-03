@@ -9,8 +9,9 @@ class Configuration {
 @JsonSerializable()
 class Slot {
   final String id;
+  final String name;
   final int color;
-  final String camera_sn;
+  final String cameraId;
 
   @JsonKey(ignore: true)
   Status status;
@@ -18,8 +19,9 @@ class Slot {
   Camera camera;
 
   Slot({
+    this.name,
     this.camera,
-    this.camera_sn,
+    this.cameraId,
     this.id,
     this.status = Status.NOT_CONNECTED,
     this.color,

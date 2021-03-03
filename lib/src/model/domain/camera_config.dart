@@ -15,7 +15,7 @@ class CameraConfiguration {
 
   CameraConfiguration(this.cameras, this.default_);
 
-  static void load(String filename) async {
+  static Future<void> load(String filename) async {
     _cameraConfiguration = CameraConfiguration.fromJson(
         jsonDecode(await rootBundle.loadString(filename)));
   }
@@ -26,11 +26,15 @@ class CameraConfiguration {
   }
 
   static String getSmallThumbnailFor(String name) {
-    return getConfigFor(name).small;
+    return getConfigFor(name).small ?? _cameraConfiguration.default_.small;
+  }
+
+  static String getMediumThumbnailFor(String name) {
+    return getConfigFor(name).medium ?? _cameraConfiguration.default_.medium;
   }
 
   static String getLargeThumbnailFor(String name) {
-    return getConfigFor(name).large;
+    return getConfigFor(name).large ?? _cameraConfiguration.default_.large;
   }
 
   factory CameraConfiguration.fromJson(Map<String, dynamic> json) =>
@@ -41,9 +45,10 @@ class CameraConfiguration {
 @JsonSerializable()
 class Config {
   final String small;
+  final String medium;
   final String large;
 
-  Config({this.small, this.large});
+  Config({this.small, this.medium, this.large});
 
   factory Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
   Map<String, dynamic> toJson() => _$ConfigToJson(this);
