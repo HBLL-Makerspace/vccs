@@ -6,14 +6,9 @@ import 'package:vccs/src/ui/widgets/textfield.dart';
 class CameraPropertiesForm extends StatelessWidget {
   final bool horizontal;
   final String actionLabel;
-  final ValueChanged<CameraProperties> onSubmit;
+  final ValueChanged onSubmit;
 
-  const CameraPropertiesForm(
-      {Key key,
-      this.horizontal = false,
-      this.actionLabel = "Apply",
-      this.onSubmit})
-      : super(key: key);
+  const CameraPropertiesForm({Key key, this.horizontal = false, this.actionLabel = "Apply", this.onSubmit}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
