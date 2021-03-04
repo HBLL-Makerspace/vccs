@@ -32,19 +32,8 @@ class Camera {
   final String model;
   final String id;
   final String name;
-  final CameraProperties cameraProperties;
 
-  Camera({this.id, this.model, this.name, this.cameraProperties});
-}
-
-class CameraProperties {
-  final int iso;
-  final int aperture;
-  final String shutter;
-  final int exposureCompensation;
-
-  CameraProperties(
-      {this.iso, this.aperture, this.shutter, this.exposureCompensation});
+  Camera({this.id, this.model, this.name});
 }
 
 enum Status { CONNECTED, CONNECTING, NOT_CONNECTED }

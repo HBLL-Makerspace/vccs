@@ -597,6 +597,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.4"
+  quiver:
+    dependency: transitive
+    description:
+      name: quiver
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.5"
   share:
     dependency: transitive
     description:
@@ -732,6 +739,13 @@ packages:
     dependency: "direct main"
     description:
       name: tinycolor
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
+  tuple:
+    dependency: "direct main"
+    description:
+      name: tuple
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"

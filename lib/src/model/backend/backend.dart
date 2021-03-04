@@ -1,2 +1,3 @@
-export './camera_property_interface.dart';
+export './interfaces/interfaces.dart';
+export './implementations/implementations.dart';
 export './dummy_data.dart';

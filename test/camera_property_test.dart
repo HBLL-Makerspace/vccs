@@ -1,9 +1,10 @@
 import 'package:test/test.dart';
-import 'package:vccs/src/model/backend/implementations/camera_property_controller.dart';
+
+import '../lib/src/model/backend/backend.dart';
 
 void main() {
   test("testing", () async {
-    CameraPropertyController _controller = CameraPropertyController();
+    ICameraController _controller = libgphoto2CameraController();
     await _controller.getConnectedCameras();
   });
 }
