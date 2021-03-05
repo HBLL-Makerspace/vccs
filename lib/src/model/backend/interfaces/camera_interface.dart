@@ -6,24 +6,25 @@ import 'package:vccs/src/model/backend/interfaces/interfaces.dart';
 import '../backend.dart';
 
 abstract class ICamera {
-  ICameraController _controller;
-  ICameraProperties _properties;
+  ICameraController controller;
+  ICameraProperties properties;
 
-  int get iso;
-  double get aperture;
-  Tuple2<int, int> get shutterSpeed;
-  bool get autoFocus;
-  String get model;
+  int getISO();
+  double getAperture();
+  Tuple2<int, int> getShutterSpeed();
+  bool getAutoFocus();
+  String getModel();
+  String getId();
 
   bool get isISOReadOnly;
   bool get isApertureReadOnly;
   bool get isAutoFocusReadOnly;
   bool get isExposureCompensationReadOnly;
 
-  set iso(int iso);
-  set autoFocus(bool enabled);
-  set aperture(double aperture);
-  set shutterSpeed(Tuple2<int, int> shutterSpeed);
+  Future<bool> setISO(int iso);
+  Future<bool> setAutoFocus(bool enabled);
+  Future<bool> setAperture(double aperture);
+  Future<bool> setShutterSpeed(Tuple2<int, int> shutterSpeed);
 
   Future<void> captureImage();
   Future<bool> focus({Duration duration = const Duration(milliseconds: 2000)});
