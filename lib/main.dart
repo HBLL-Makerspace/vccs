@@ -1,10 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:vccs/src/model/backend/backend.dart';
 import 'package:vccs/src/model/domain/camera_config.dart';
 import 'package:vccs/src/ui/route.gr.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await PathProvider.init();
   await CameraConfiguration.load("assets/cameras/cameras.json");
   runApp(MyApp());
 }

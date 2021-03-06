@@ -1,13 +1,36 @@
-abstract class CameraProperty {}
+class CameraProperty {
+  final String name;
+  final String label;
+  final bool readOnly;
+  final dynamic value;
 
-class CameraTextProperty {}
+  CameraProperty(this.name, this.label, this.value, this.readOnly);
+}
 
-class CameraRangeProperty {}
+class CameraTextProperty extends CameraProperty {
+  CameraTextProperty(String name, String label, value, bool readOnly)
+      : super(name, label, value, readOnly);
+  String getText() => value?.toString() ?? "";
+}
 
-class CameraToggleProperty {}
+class CameraRangeProperty extends CameraProperty {
+  final double low;
+  final double high;
+  final double increment;
 
-class CameraRadioProperty {}
+  CameraRangeProperty(String name, String label, bool readOnly,
+      {this.low = 0, this.high = 0, this.increment = 1})
+      : super(name, label, [low, high, increment], readOnly);
+}
 
-class CameraDropDownProperty {}
+// class CameraToggleProperty extends CameraProperty {
+// }
 
-class CameraDateProperty {}
+// class CameraRadioProperty extends CameraProperty {
+// }
+
+// class CameraDropDownProperty extends CameraProperty {
+// }
+
+// class CameraDateProperty extends CameraProperty {
+// }

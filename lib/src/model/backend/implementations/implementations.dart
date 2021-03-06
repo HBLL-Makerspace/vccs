@@ -1,2 +1,2 @@
 export './camera_properties.dart';
-export './camera_controller.dart';
+export 'libgphoto2/camera_controller.dart';

@@ -23,23 +23,25 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  path: ^1.8.0
   uuid: ^2.2.2
   intl: ^0.16.1
   tuple: ^1.0.3
   http: ^0.12.2
-  win32: ^1.7.4+1
+  # win32: 2.0.0
   link_text: ^0.1.4
   tinycolor: ^1.0.3
   auto_route: ^0.6.9
   flutter_bloc: ^6.1.1
   google_fonts: ^1.1.2
+  path_provider: ^2.0.1
   flutter_icons: ^1.1.0
   dotted_border: ^1.0.7
   json_annotation: ^3.1.1
   pull_to_refresh: ^1.6.4
-  file_picker_cross: ^4.2.8
+  # file_picker_cross: ^4.2.8
   circular_check_box: ^1.0.4
-  filepicker_windows: ^1.0.0
+  # filepicker_windows: ^1.0.0
   modal_bottom_sheet: ^1.0.0+1
   auto_route_generator: ^0.6.10
 

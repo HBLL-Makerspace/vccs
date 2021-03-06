@@ -3,11 +3,11 @@ import 'package:vccs/src/model/backend/implementations/camera_properties.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_properties.dart';
 import 'package:vccs/src/model/backend/interfaces/interfaces.dart';
 
-import '../backend.dart';
-
 abstract class ICamera {
-  ICameraController controller;
-  ICameraProperties properties;
+  final ICameraController controller;
+  final ICameraProperties properties;
+
+  ICamera(this.controller, this.properties);
 
   int getISO();
   double getAperture();
@@ -32,7 +32,4 @@ abstract class ICamera {
   CameraProperty getProperty(String name);
   List<CameraProperty> getPropertiesInSection(String section);
   Map<String, List<CameraProperty>> getPropertiesMap();
-
-  ICamera fromJson(Map<String, dynamic> json);
-  Map<String, dynamic> toJson();
 }

@@ -1,4 +1,4 @@
-import 'package:file_picker_cross/file_picker_cross.dart';
+// import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/material.dart';
 import 'package:vccs/src/ui/widgets/buttons.dart';
 import 'package:vccs/src/ui/widgets/textfield.dart';
@@ -25,7 +25,8 @@ class _CreateProjectFormState extends State<CreateProjectForm> {
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 500),
         child: Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           clipBehavior: Clip.antiAlias,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -45,7 +46,8 @@ class _CreateProjectFormState extends State<CreateProjectForm> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                padding:
+                    const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                 child: Row(
                   children: [
                     Expanded(
@@ -62,10 +64,10 @@ class _CreateProjectFormState extends State<CreateProjectForm> {
                         ),
                         onPressed: () async {
                           // show a dialog to open a file
-                          FilePickerCross myFile = await FilePickerCross.importFromStorage(
-                              type: FileTypeCross.any, // Available: `any`, `audio`, `image`, `video`, `custom`. Note: not available using FDE
-                              fileExtension: 'txt, md' // Only if FileTypeCross.custom . May be any file extension like `dot`, `ppt,pptx,odp`
-                              );
+                          // FilePickerCross myFile = await FilePickerCross.importFromStorage(
+                          //     type: FileTypeCross.any, // Available: `any`, `audio`, `image`, `video`, `custom`. Note: not available using FDE
+                          //     fileExtension: 'txt, md' // Only if FileTypeCross.custom . May be any file extension like `dot`, `ppt,pptx,odp`
+                          //     );
                         },
                       ),
                     )
@@ -73,7 +75,8 @@ class _CreateProjectFormState extends State<CreateProjectForm> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                padding:
+                    const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                 child: Row(
                   children: [
                     Expanded(
