@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:vccs/src/model/backend/backend.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/model/domain/camera_config.dart';
 import 'package:vccs/src/ui/widgets/textfield.dart';
 
@@ -26,24 +28,39 @@ class SelectCamera extends StatelessWidget {
             ),
             Expanded(
               child: Scrollbar(
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    ...DummyData.cameras
-                        .map((e) => ListTile(
-                              title: Text(e.model ?? "Unknown"),
-                              subtitle: Text(e.id ?? "Unknown"),
-                              leading: Image(
-                                image: AssetImage(
-                                    CameraConfiguration.getSmallThumbnailFor(
-                                        e.model)),
-                              ),
-                              onTap: () {
-                                Navigator.pop(context, e);
-                              },
-                            ))
-                        .toList()
-                  ],
+                child: BlocBuilder<CameraBloc, CameraState>(
+                  builder: (context, state) {
+                    return ListView(
+                      shrinkWrap: true,
+                      children: [
+                        if (state is LoadingCamerasState)
+                          Padding(
+                            padding: const EdgeInsets.all(32.0),
+                            child: Row(children: [
+                              Expanded(
+                                child: SpinKitWave(
+                                  color: Colors.grey[300],
+                                ),
+                              )
+                            ]),
+                          ),
+                        if (state is CamerasState)
+                          ...state.cameras
+                              .map((e) => ListTile(
+                                    title: Text(e.getModel() ?? "Unknown"),
+                                    subtitle: Text(e.getId() ?? "Unknown"),
+                                    leading: Image(
+                                      image: AssetImage(CameraConfiguration
+                                          .getSmallThumbnailFor(e.getModel())),
+                                    ),
+                                    onTap: () {
+                                      Navigator.pop(context, e);
+                                    },
+                                  ))
+                              .toList()
+                      ],
+                    );
+                  },
                 ),
               ),
             ),

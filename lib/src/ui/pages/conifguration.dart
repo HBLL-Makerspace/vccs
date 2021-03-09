@@ -1,8 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/model/backend/backend.dart';
-import 'package:vccs/src/ui/widgets/buttons.dart';
+import 'package:vccs/src/ui/route.gr.dart';
 import 'package:vccs/src/ui/widgets/cards.dart';
-import 'package:vccs/src/ui/widgets/textfield.dart';
 
 class ConfigurationPage extends StatelessWidget {
   Widget _slotHeader(BuildContext context) {
@@ -16,35 +19,18 @@ class ConfigurationPage extends StatelessWidget {
             style: Theme.of(context).textTheme.headline4,
           ),
         ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-            child: VCCSTextFormField(
-              label: "Number of slots",
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 16.0),
-          child: VCCSRaisedButton(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5.0),
-              child: Text("Set"),
-            ),
-          ),
-        )
       ],
     );
   }
 
-  Widget _cameraHeader(BuildContext context) {
+  Widget _cameraHeader(BuildContext context, String cameras) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
-            "Cameras",
+            "Cameras: $cameras",
             style: Theme.of(context).textTheme.headline4,
           ),
         ),
@@ -55,7 +41,9 @@ class ConfigurationPage extends StatelessWidget {
           padding: const EdgeInsets.only(right: 16.0),
           child: IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: () {},
+            onPressed: () {
+              BlocProvider.of<CameraBloc>(context).add(LoadCamerasEvent());
+            },
           ),
         )
       ],
@@ -93,50 +81,76 @@ class ConfigurationPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Configuration"),
       ),
-      body: Scrollbar(
-        child: ListView(
-          children: [
-            _slotHeader(context),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Wrap(
-                children: [
-                  ...DummyData.slots
-                      .map((e) => SlotConfigCard(
-                            slot: e,
-                          ))
-                      .toList()
-                ],
-              ),
+      body: BlocBuilder<CameraBloc, CameraState>(
+        builder: (context, state) {
+          return Scrollbar(
+            child: ListView(
+              children: [
+                _slotHeader(context),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Wrap(
+                    children: [
+                      ...DummyData.slots
+                          .map((e) => SlotConfigCard(
+                                slot: e,
+                              ))
+                          .toList()
+                    ],
+                  ),
+                ),
+                _cameraHeader(
+                    context,
+                    (state is CamerasState)
+                        ? state.cameras.length.toString()
+                        : "Loading"),
+                if (state is LoadingCamerasState)
+                  Padding(
+                    padding: const EdgeInsets.all(32.0),
+                    child: Row(children: [
+                      Expanded(
+                        child: SpinKitWave(
+                          color: Colors.grey[300],
+                        ),
+                      )
+                    ]),
+                  ),
+                if (state is CamerasState)
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Wrap(
+                      children: [
+                        ...state.cameras
+                            .map((e) => CameraCard(
+                                  camera: e,
+                                  onPressed: () {
+                                    ExtendedNavigator.of(context).push(
+                                        "/configure/cameras",
+                                        arguments:
+                                            CameraPageArguments(camera: e));
+                                  },
+                                ))
+                            .toList()
+                      ],
+                    ),
+                  ),
+                // _unassignedCameraHeader(context),
+                // Padding(
+                //   padding: const EdgeInsets.all(16.0),
+                //   child: Wrap(
+                //     children: [
+                //       ...DummyData.cameras
+                //           .map((e) => CameraCard(
+                //                 camera: e,
+                //               ))
+                //           .toList()
+                //     ],
+                //   ),
+                // ),
+              ],
             ),
-            _cameraHeader(context),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Wrap(
-                children: [
-                  ...DummyData.cameras
-                      .map((e) => CameraCard(
-                            camera: e,
-                          ))
-                      .toList()
-                ],
-              ),
-            ),
-            _unassignedCameraHeader(context),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Wrap(
-                children: [
-                  ...DummyData.cameras
-                      .map((e) => CameraCard(
-                            camera: e,
-                          ))
-                      .toList()
-                ],
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

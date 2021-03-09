@@ -14,21 +14,23 @@ class VCCSTextFormField extends StatelessWidget {
   final FormFieldValidator<String> validator;
   final ValueChanged<String> onSubmitted;
   final FocusNode focusNode;
+  final bool enabled;
 
-  const VCCSTextFormField(
-      {Key key,
-      this.onChanged,
-      this.inputFormatters,
-      this.label,
-      this.maxlines = 1,
-      this.controller,
-      this.obscureText = false,
-      this.suffixIcon,
-      this.autovalidateMode,
-      this.validator,
-      this.onSubmitted,
-      this.focusNode})
-      : super(key: key);
+  const VCCSTextFormField({
+    Key key,
+    this.onChanged,
+    this.inputFormatters,
+    this.label,
+    this.maxlines = 1,
+    this.controller,
+    this.obscureText = false,
+    this.suffixIcon,
+    this.autovalidateMode,
+    this.validator,
+    this.onSubmitted,
+    this.focusNode,
+    this.enabled = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +42,17 @@ class VCCSTextFormField extends StatelessWidget {
       inputFormatters: inputFormatters,
       maxLines: maxlines,
       decoration: InputDecoration(
+        // isDense: true,
+        enabled: enabled,
         alignLabelWithHint: true,
         suffixIcon: suffixIcon,
         contentPadding: EdgeInsets.all(8.0),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Theme.of(context).accentColor)),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Theme.of(context).accentColor)),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none),
         filled: true,
         labelText: label,
         fillColor: TinyColor(Colors.grey).darken(45).color,

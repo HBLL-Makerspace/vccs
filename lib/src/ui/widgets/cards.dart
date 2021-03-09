@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 import 'package:vccs/src/model/domain/camera_config.dart';
 import 'package:vccs/src/model/domain/domian.dart';
 import 'package:vccs/src/ui/widgets/buttons.dart';
@@ -255,9 +256,10 @@ class SetCard extends StatelessWidget {
 }
 
 class CameraCard extends StatelessWidget {
-  final Camera camera;
+  final ICamera camera;
+  final VoidCallback onPressed;
 
-  const CameraCard({Key key, this.camera}) : super(key: key);
+  const CameraCard({Key key, this.camera, this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -265,6 +267,7 @@ class CameraCard extends StatelessWidget {
       width: 150,
       height: 150,
       child: AdvancedCard(
+        onPressed: onPressed ?? () {},
         child: Stack(
           children: [
             Align(
@@ -275,7 +278,7 @@ class CameraCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        camera.model,
+                        camera.getModel(),
                         overflow: TextOverflow.fade,
                         softWrap: false,
                       ),
@@ -287,8 +290,8 @@ class CameraCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Image(
-                image: AssetImage(
-                    CameraConfiguration.getMediumThumbnailFor(camera.model)),
+                image: AssetImage(CameraConfiguration.getMediumThumbnailFor(
+                    camera.getModel())),
               ),
             ),
             Align(
@@ -296,7 +299,7 @@ class CameraCard extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: Text(
-                  camera.id,
+                  camera.getId(),
                   overflow: TextOverflow.fade,
                 ),
               ),

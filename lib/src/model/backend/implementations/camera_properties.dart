@@ -18,16 +18,22 @@ class CameraRangeProperty extends CameraProperty {
   final double high;
   final double increment;
 
-  CameraRangeProperty(String name, String label, bool readOnly,
+  CameraRangeProperty(String name, String label, value, bool readOnly,
       {this.low = 0, this.high = 0, this.increment = 1})
-      : super(name, label, [low, high, increment], readOnly);
+      : super(name, label, value, readOnly);
 }
 
-// class CameraToggleProperty extends CameraProperty {
-// }
+class CameraToggleProperty extends CameraProperty {
+  CameraToggleProperty(String name, String label, value, bool readOnly)
+      : super(name, label, value, readOnly);
+}
 
-// class CameraRadioProperty extends CameraProperty {
-// }
+class CameraRadioProperty extends CameraProperty {
+  final List<String> choices;
+  CameraRadioProperty(String name, String label, value, bool readOnly,
+      {this.choices})
+      : super(name, label, value, readOnly);
+}
 
 // class CameraDropDownProperty extends CameraProperty {
 // }

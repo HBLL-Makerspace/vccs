@@ -29,6 +29,7 @@ abstract class ICamera {
   Future<void> captureImage();
   Future<bool> focus({Duration duration = const Duration(milliseconds: 2000)});
 
+  List<String> getSections();
   CameraProperty getProperty(String name);
   List<CameraProperty> getPropertiesInSection(String section);
   Map<String, List<CameraProperty>> getPropertiesMap();

@@ -9,16 +9,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+import '../model/backend/interfaces/camera_interface.dart';
 import '../model/domain/domian.dart';
 import 'pages/pages.dart';
 
 class Routes {
   static const String homePage = '/';
   static const String configurationPage = '/configure';
+  static const String cameraPage = '/configure/cameras';
   static const String projectPage = '/project';
   static const all = <String>{
     homePage,
     configurationPage,
+    cameraPage,
     projectPage,
   };
 }
@@ -29,6 +32,7 @@ class VCCSRoute extends RouterBase {
   final _routes = <RouteDef>[
     RouteDef(Routes.homePage, page: HomePage),
     RouteDef(Routes.configurationPage, page: ConfigurationPage),
+    RouteDef(Routes.cameraPage, page: CameraPage),
     RouteDef(
       Routes.projectPage,
       page: ProjectPage,
@@ -55,6 +59,18 @@ class VCCSRoute extends RouterBase {
             ConfigurationPage(),
         settings: data,
         transitionsBuilder: TransitionsBuilders.slideLeft,
+      );
+    },
+    CameraPage: (data) {
+      final args = data.getArgs<CameraPageArguments>(nullOk: false);
+      return PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) => CameraPage(
+          key: args.key,
+          camera: args.camera,
+        ),
+        settings: data,
+        transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
+        transitionDuration: const Duration(milliseconds: 10),
       );
     },
     ProjectPage: (data) {
@@ -166,6 +182,13 @@ class ProjectPageRouter extends RouterBase {
 class HomePageArguments {
   final Key key;
   HomePageArguments({this.key});
+}
+
+/// CameraPage arguments holder class
+class CameraPageArguments {
+  final Key key;
+  final ICamera camera;
+  CameraPageArguments({this.key, @required this.camera});
 }
 
 /// SetPage arguments holder class
