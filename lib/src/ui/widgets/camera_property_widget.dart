@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:vccs/src/model/backend/implementations/camera_properties.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
 
@@ -30,6 +31,15 @@ class CameraPropertyWidget extends StatelessWidget {
           property: cameraProperty,
         );
         break;
+      case CameraDateProperty:
+        input = CameraDateTimePropertyWidget(
+          property: cameraProperty,
+        );
+        break;
+      case CameraRadioProperty:
+        input = CameraRadioPropertyWidget(
+          property: cameraProperty,
+        );
     }
     return input;
   }
@@ -185,6 +195,99 @@ class _CameraTogglePropertyWidgetState extends State<CameraTogglePropertyWidget>
         });
       },
       isSelected: [isSelected, !isSelected],
+    );
+  }
+}
+
+class CameraDateTimePropertyWidget extends StatefulWidget {
+  final CameraDateProperty property;
+
+  const CameraDateTimePropertyWidget({Key key, this.property})
+      : super(key: key);
+
+  @override
+  _CameraDateTimePropertyWidgetState createState() =>
+      _CameraDateTimePropertyWidgetState();
+}
+
+class _CameraDateTimePropertyWidgetState
+    extends State<CameraDateTimePropertyWidget> {
+  TextEditingController _controller;
+  DateFormat _format = DateFormat.yMMMd().add_jms();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(
+        text: _format.format(DateTime(widget.property.value)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return VCCSTextFormField(
+        onTap: () async {
+          var _date = await showDatePicker(
+              context: context,
+              initialDate: DateTime.now(),
+              firstDate: DateTime(0),
+              lastDate: DateTime(DateTime.now().year + 100));
+          var time = await showTimePicker(
+              context: context, initialTime: TimeOfDay.now());
+          _date = DateTime(
+              _date.year, _date.month, _date.day, time.hour, time.minute);
+          setState(() {
+            _controller.text = _format.format(_date);
+          });
+        },
+        enabled: !widget.property.readOnly,
+        controller: _controller);
+  }
+}
+
+class CameraRadioPropertyWidget extends StatefulWidget {
+  final CameraRadioProperty property;
+
+  const CameraRadioPropertyWidget({Key key, this.property}) : super(key: key);
+
+  @override
+  _CameraRadioPropertyWidgetState createState() =>
+      _CameraRadioPropertyWidgetState();
+}
+
+class _CameraRadioPropertyWidgetState extends State<CameraRadioPropertyWidget> {
+  dynamic groupValue;
+
+  @override
+  void initState() {
+    super.initState();
+    groupValue = widget.property.value;
+  }
+
+  Widget _radio(choice) {
+    return Expanded(
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => setState(() => groupValue = choice),
+            child: Radio(
+              activeColor: Theme.of(context).primaryColor,
+              groupValue: groupValue,
+              onChanged: (value) {
+                setState(() => groupValue = value);
+              },
+              value: choice.toString(),
+            ),
+          ),
+          Text(choice.toString())
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [...widget.property.choices.map((e) => _radio(e)).toList()],
     );
   }
 }

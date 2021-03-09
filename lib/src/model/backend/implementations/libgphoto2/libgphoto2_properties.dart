@@ -23,7 +23,6 @@ class libgphoto2CameraProperties implements ICameraProperties {
         // print(json["value"].runtimeType);
         switch (json["type"]) {
           case 1:
-            print("section");
             _section = json["label"];
             break;
           case 2:
@@ -42,6 +41,21 @@ class libgphoto2CameraProperties implements ICameraProperties {
           case 4:
             // print("toggle property");
             props[json["name"]] = CameraToggleProperty(json["name"],
+                json["label"], json["value"], (json["readOnly"] ?? 0) == 1);
+            break;
+          case 5:
+          case 6:
+            if ((json["choices"] ?? []).length <= 3)
+              props[json["name"]] = CameraRadioProperty(json["name"],
+                  json["label"], json["value"], (json["readOnly"] ?? 0) == 1,
+                  choices: json["choices"]);
+            else
+              props[json["name"]] = CameraDropDownProperty(json["name"],
+                  json["label"], json["value"], (json["readOnly"] ?? 0) == 1,
+                  choices: json["choices"]);
+            break;
+          case 8:
+            props[json["name"]] = CameraDateProperty(json["name"],
                 json["label"], json["value"], (json["readOnly"] ?? 0) == 1);
             break;
           default:

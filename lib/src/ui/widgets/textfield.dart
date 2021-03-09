@@ -15,6 +15,7 @@ class VCCSTextFormField extends StatelessWidget {
   final ValueChanged<String> onSubmitted;
   final FocusNode focusNode;
   final bool enabled;
+  final VoidCallback onTap;
 
   const VCCSTextFormField({
     Key key,
@@ -30,6 +31,7 @@ class VCCSTextFormField extends StatelessWidget {
     this.onSubmitted,
     this.focusNode,
     this.enabled = true,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -37,6 +39,7 @@ class VCCSTextFormField extends StatelessWidget {
     return TextFormField(
       // maxLines: multiline ? 5 : 1,
       controller: controller,
+      onTap: onTap,
       focusNode: focusNode,
       onChanged: onChanged,
       inputFormatters: inputFormatters,

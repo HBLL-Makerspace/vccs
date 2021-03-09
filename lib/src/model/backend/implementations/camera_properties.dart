@@ -29,14 +29,20 @@ class CameraToggleProperty extends CameraProperty {
 }
 
 class CameraRadioProperty extends CameraProperty {
-  final List<String> choices;
+  final List<dynamic> choices;
   CameraRadioProperty(String name, String label, value, bool readOnly,
       {this.choices})
       : super(name, label, value, readOnly);
 }
 
-// class CameraDropDownProperty extends CameraProperty {
-// }
+class CameraDropDownProperty extends CameraProperty {
+  final List<dynamic> choices;
+  CameraDropDownProperty(String name, String label, value, bool readOnly,
+      {this.choices})
+      : super(name, label, value, readOnly);
+}
 
-// class CameraDateProperty extends CameraProperty {
-// }
+class CameraDateProperty extends CameraProperty {
+  CameraDateProperty(String name, String label, value, bool readOnly)
+      : super(name, label, value, readOnly);
+}
