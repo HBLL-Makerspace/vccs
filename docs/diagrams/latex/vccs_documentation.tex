@@ -1,4 +1,4 @@
-\documentclass[titlepage]{article}
+\documentclass[titlepage]{hitec}
 \usepackage{graphicx}
 \usepackage{subfiles}
 
@@ -9,13 +9,16 @@
 
 \maketitle
 
-\section{Introduction}
-This is where you tell people why they should bother reading your article.
+\tableofcontents
 
-\section{Literature Review}
-This is the section that is invariably much longer than it should be, and
-where everyone tries to impress peers about how easy it is to locate various
-references in online databases.
+\section*{Overview}
+This is the section that overviews the entire document
+\subsection*{Introduction}
+This document covers every aspect of the 3D scanning rig. It will cover the entire hardware, electrical and software charateristics.
+
+\subfile{./sections/hardware.tex}
+\subfile{./sections/electrical.tex}
+\subfile{./sections/software.tex}
 
 \section{Conclusion}
 Not much of a paper, but it's a start.
