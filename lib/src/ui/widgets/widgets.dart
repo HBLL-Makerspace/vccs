@@ -6,3 +6,4 @@ export './textfield.dart';
 export './cards.dart';
 export './camera_property_widget.dart';
 export './forms/forms.dart';
+export './inherited.dart';

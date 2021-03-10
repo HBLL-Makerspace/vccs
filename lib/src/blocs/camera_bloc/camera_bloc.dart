@@ -10,8 +10,8 @@ part 'camera_event.dart';
 part 'camera_state.dart';
 
 class CameraBloc extends Bloc<CameraEvent, CameraState> {
-  CameraBloc() : super(CameraInitial());
-  ICameraController _controller = libgphoto2CameraController();
+  CameraBloc(this._controller) : super(CameraInitial());
+  final ICameraController _controller;
 
   @override
   Stream<CameraState> mapEventToState(

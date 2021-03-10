@@ -1,17 +1,20 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:vccs/src/blocs/camera_change_property/camera_change_property_bloc.dart';
 import 'package:vccs/src/model/backend/implementations/camera_properties.dart';
+import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
 
 class CameraPropertyWidget extends StatelessWidget {
   final CameraProperty cameraProperty;
+  final ICamera camera;
 
-  const CameraPropertyWidget({Key key, this.cameraProperty}) : super(key: key);
+  const CameraPropertyWidget({Key key, this.cameraProperty, this.camera})
+      : super(key: key);
 
-  Widget _inputFromType(BuildContext context) {
+  Widget _inputFromType(BuildContext context, ValueChanged<dynamic> onUpdate) {
     Widget input = Container(
       child: Text("Unimplmeneted type: ${cameraProperty.runtimeType}"),
     );
@@ -19,26 +22,37 @@ class CameraPropertyWidget extends StatelessWidget {
       case CameraTextProperty:
         input = CameraTextPropertyWidget(
           property: cameraProperty,
+          onUpdate: onUpdate,
         );
         break;
       case CameraRangeProperty:
         input = CameraRangePropertyWidget(
           property: cameraProperty,
+          onUpdate: onUpdate,
         );
         break;
       case CameraToggleProperty:
         input = CameraTogglePropertyWidget(
           property: cameraProperty,
+          onUpdate: onUpdate,
         );
         break;
       case CameraDateProperty:
         input = CameraDateTimePropertyWidget(
           property: cameraProperty,
+          onUpdate: onUpdate,
         );
         break;
       case CameraRadioProperty:
         input = CameraRadioPropertyWidget(
           property: cameraProperty,
+          onUpdate: onUpdate,
+        );
+        break;
+      case CameraDropDownProperty:
+        input = CameraDropDownPropertyWidget(
+          property: cameraProperty,
+          onUpdate: onUpdate,
         );
     }
     return input;
@@ -46,6 +60,7 @@ class CameraPropertyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var bloc = CameraChangePropertyBloc(AppData.of(context).controller);
     return Row(
       children: [
         Expanded(
@@ -57,7 +72,12 @@ class CameraPropertyWidget extends StatelessWidget {
         ),
         Expanded(
           flex: 2,
-          child: _inputFromType(context),
+          child: BlocProvider(
+              create: (BuildContext context) => bloc,
+              child: _inputFromType(
+                  context,
+                  (v) => bloc.add(ChangeCameraPropertyEvent(
+                      camera, cameraProperty.copyWith(value: v))))),
         )
       ],
     );
@@ -66,8 +86,10 @@ class CameraPropertyWidget extends StatelessWidget {
 
 class CameraTextPropertyWidget extends StatefulWidget {
   final CameraTextProperty property;
+  final ValueChanged<dynamic> onUpdate;
 
-  const CameraTextPropertyWidget({Key key, this.property}) : super(key: key);
+  const CameraTextPropertyWidget({Key key, this.property, this.onUpdate})
+      : super(key: key);
 
   @override
   _CameraTextPropertyWidgetState createState() =>
@@ -86,14 +108,23 @@ class _CameraTextPropertyWidgetState extends State<CameraTextPropertyWidget> {
   @override
   Widget build(BuildContext context) {
     return VCCSTextFormField(
-        enabled: !widget.property.readOnly, controller: _controller);
+      enabled: !widget.property.readOnly,
+      controller: _controller,
+      onSubmitted: (val) {
+        if (widget.onUpdate != null) {
+          widget.onUpdate(val);
+        }
+      },
+    );
   }
 }
 
 class CameraRangePropertyWidget extends StatefulWidget {
   final CameraRangeProperty property;
+  final ValueChanged<dynamic> onUpdate;
 
-  const CameraRangePropertyWidget({Key key, this.property}) : super(key: key);
+  const CameraRangePropertyWidget({Key key, this.property, this.onUpdate})
+      : super(key: key);
 
   @override
   _CameraRangePropertyWidgetState createState() =>
@@ -128,6 +159,10 @@ class _CameraRangePropertyWidgetState extends State<CameraRangePropertyWidget> {
         min: widget.property.low,
         max: widget.property.high,
         onChanged: (double val) => setState(() => value = val),
+        onChangeEnd: (double endVal) {
+          setState(() => value = endVal);
+          if (widget.onUpdate != null) widget.onUpdate(endVal);
+        },
       ),
     );
   }
@@ -135,8 +170,10 @@ class _CameraRangePropertyWidgetState extends State<CameraRangePropertyWidget> {
 
 class CameraTogglePropertyWidget extends StatefulWidget {
   final CameraToggleProperty property;
+  final ValueChanged<dynamic> onUpdate;
 
-  const CameraTogglePropertyWidget({Key key, this.property}) : super(key: key);
+  const CameraTogglePropertyWidget({Key key, this.property, this.onUpdate})
+      : super(key: key);
 
   @override
   _CameraTogglePropertyWidgetState createState() =>
@@ -167,6 +204,12 @@ class _CameraTogglePropertyWidgetState extends State<CameraTogglePropertyWidget>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ToggleButtons(
       renderBorder: true,
@@ -185,15 +228,18 @@ class _CameraTogglePropertyWidgetState extends State<CameraTogglePropertyWidget>
           ),
         ),
       ],
-      onPressed: (int index) {
-        setState(() {
-          isSelected = !isSelected;
-          if (isSelected)
-            _controller.forward();
-          else
-            _controller.reverse();
-        });
-      },
+      onPressed: widget.property.readOnly
+          ? null
+          : (int index) {
+              setState(() {
+                isSelected = !isSelected;
+                if (isSelected)
+                  _controller.forward();
+                else
+                  _controller.reverse();
+              });
+              if (widget.onUpdate != null) widget.onUpdate(isSelected);
+            },
       isSelected: [isSelected, !isSelected],
     );
   }
@@ -201,8 +247,9 @@ class _CameraTogglePropertyWidgetState extends State<CameraTogglePropertyWidget>
 
 class CameraDateTimePropertyWidget extends StatefulWidget {
   final CameraDateProperty property;
+  final ValueChanged<dynamic> onUpdate;
 
-  const CameraDateTimePropertyWidget({Key key, this.property})
+  const CameraDateTimePropertyWidget({Key key, this.property, this.onUpdate})
       : super(key: key);
 
   @override
@@ -219,7 +266,7 @@ class _CameraDateTimePropertyWidgetState
   void initState() {
     super.initState();
     _controller = TextEditingController(
-        text: _format.format(DateTime(widget.property.value)));
+        text: _format.format(DateTime(widget?.property?.value ?? 0)));
   }
 
   @override
@@ -231,13 +278,20 @@ class _CameraDateTimePropertyWidgetState
               initialDate: DateTime.now(),
               firstDate: DateTime(0),
               lastDate: DateTime(DateTime.now().year + 100));
-          var time = await showTimePicker(
-              context: context, initialTime: TimeOfDay.now());
-          _date = DateTime(
-              _date.year, _date.month, _date.day, time.hour, time.minute);
-          setState(() {
-            _controller.text = _format.format(_date);
-          });
+          if (_date != null) {
+            var time = await showTimePicker(
+                context: context, initialTime: TimeOfDay.now());
+            if (time != null) {
+              _date = DateTime(
+                  _date.year, _date.month, _date.day, time.hour, time.minute);
+              setState(() {
+                _controller.text = _format.format(_date);
+              });
+              if (widget.onUpdate != null) {
+                widget.onUpdate(_date.millisecondsSinceEpoch);
+              }
+            }
+          }
         },
         enabled: !widget.property.readOnly,
         controller: _controller);
@@ -246,8 +300,10 @@ class _CameraDateTimePropertyWidgetState
 
 class CameraRadioPropertyWidget extends StatefulWidget {
   final CameraRadioProperty property;
+  final ValueChanged<dynamic> onUpdate;
 
-  const CameraRadioPropertyWidget({Key key, this.property}) : super(key: key);
+  const CameraRadioPropertyWidget({Key key, this.property, this.onUpdate})
+      : super(key: key);
 
   @override
   _CameraRadioPropertyWidgetState createState() =>
@@ -272,9 +328,12 @@ class _CameraRadioPropertyWidgetState extends State<CameraRadioPropertyWidget> {
             child: Radio(
               activeColor: Theme.of(context).primaryColor,
               groupValue: groupValue,
-              onChanged: (value) {
-                setState(() => groupValue = value);
-              },
+              onChanged: widget.property.readOnly
+                  ? null
+                  : (value) {
+                      setState(() => groupValue = value);
+                      if (widget.onUpdate != null) widget.onUpdate(groupValue);
+                    },
               value: choice.toString(),
             ),
           ),
@@ -288,6 +347,45 @@ class _CameraRadioPropertyWidgetState extends State<CameraRadioPropertyWidget> {
   Widget build(BuildContext context) {
     return Row(
       children: [...widget.property.choices.map((e) => _radio(e)).toList()],
+    );
+  }
+}
+
+class CameraDropDownPropertyWidget extends StatefulWidget {
+  final CameraDropDownProperty property;
+  final ValueChanged<dynamic> onUpdate;
+
+  const CameraDropDownPropertyWidget({Key key, this.property, this.onUpdate})
+      : super(key: key);
+
+  @override
+  _CameraDropDownPropertyWidgetState createState() =>
+      _CameraDropDownPropertyWidgetState();
+}
+
+class _CameraDropDownPropertyWidgetState
+    extends State<CameraDropDownPropertyWidget> {
+  dynamic val;
+
+  @override
+  void initState() {
+    super.initState();
+    val = widget.property.value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return VCCSDropDownTextField<dynamic>(
+      options: widget.property.choices,
+      value: val,
+      getLabel: (l) => l.toString(),
+      builder: (context, v, _) => Text(v.toString()),
+      onChanged: widget.property.readOnly
+          ? null
+          : (v) {
+              setState(() => val = v);
+              if (widget.onUpdate != null) widget.onUpdate(val);
+            },
     );
   }
 }

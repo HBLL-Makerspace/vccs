@@ -5,6 +5,9 @@ import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/model/backend/backend.dart';
 import 'package:vccs/src/model/domain/camera_config.dart';
 import 'package:vccs/src/ui/route.gr.dart';
+import 'package:vccs/src/ui/widgets/widgets.dart';
+
+ICameraController _controller = libgphoto2CameraController();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,18 +20,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CameraBloc(),
-      child: MaterialApp(
-        title: 'VCCS',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            brightness: Brightness.dark,
-            primarySwatch: Colors.blue,
-            primaryColor: Colors.blue,
-            accentColor: Colors.blue),
-        home: ExtendedNavigator(
-          router: VCCSRoute(),
+    return AppData(
+      controller: _controller,
+      child: BlocProvider(
+        create: (context) => CameraBloc(_controller),
+        child: MaterialApp(
+          title: 'VCCS',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+              brightness: Brightness.dark,
+              primarySwatch: Colors.blue,
+              primaryColor: Colors.blue,
+              accentColor: Colors.blue),
+          home: ExtendedNavigator(
+            router: VCCSRoute(),
+          ),
         ),
       ),
     );

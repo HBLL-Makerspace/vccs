@@ -5,6 +5,12 @@ class CameraProperty {
   final dynamic value;
 
   CameraProperty(this.name, this.label, this.value, this.readOnly);
+
+  CameraProperty copyWith(
+      {String name, String label, bool readOnly, dynamic value}) {
+    return CameraProperty(name ?? this.name, label ?? this.label,
+        value ?? this.value, readOnly ?? this.readOnly);
+  }
 }
 
 class CameraTextProperty extends CameraProperty {
