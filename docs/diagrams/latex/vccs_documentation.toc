@@ -1,4 +1,5 @@
-\contentsline {section}{\numberline {1}Hardware}{1}%
-\contentsline {section}{\numberline {2}Electrical}{1}%
-\contentsline {section}{\numberline {3}Software}{1}%
-\contentsline {section}{\numberline {4}Conclusion}{1}%
+\babel@toc {english}{}
+\babel@toc {english}{}
+\contentsline {section}{\numberline {1}Hardware}{4}{section.1}%
+\contentsline {section}{\numberline {2}Electrical}{4}{section.2}%
+\contentsline {section}{\numberline {3}Software}{4}{section.3}%

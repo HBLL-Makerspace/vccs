@@ -1,26 +1,78 @@
 \documentclass[titlepage]{hitec}
 \usepackage{graphicx}
 \usepackage{subfiles}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[english]{isodate}
+\usepackage[parfill]{parskip}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{titling}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks=true, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
 
-\title{Camera Control Software}
-\author{Ben Brenkman}
+\definecolor{vcc_blue}{rgb}{.204,.353,.541}
+
+\makeatletter
+\title{3D Scanning Rig}\let\Title\@title
+\author{Ben Brenkman}          \let\Author\@author
+\makeatother
 
 \begin{document}
+\begin{titlepage}
+    \null\vfil
+    \longthickrule\vskip1.5em
+    \fullcenter{\Huge{\Title}}
+    \vskip1em
+    \fullcenter{\LARGE{Documentation and User Guide}}
+    \vskip1.5em\longthickrule
+    \vskip3em
+    \fullcenter{\large
+        \lineskip .75em
+        % \large{\Author}
+    }%
+    \vskip 1.5em%
+\end{titlepage}
 
-\maketitle
+% \maketitle
 
-\tableofcontents
+
 
 \section*{Overview}
-This is the section that overviews the entire document
+% \section*{{\color{vcc_blue}Overview}}
+The 3D scanning rig is an open sourced design that uses multiple cameras to take pictures simultaneously to produce 3D models.
+The rig is designed with taking 3D scans of live subjects that move while taking pictures. Using a traditional rotating plate does not work well with moving objects.
+\par To achieve simultaneous capture of the object we have created a spherical rig that holds multiple cameras in place. This document provides all the design and software used to make this work. Included will be schematics of all the physical components including the electrical and mechanics. As well as software descriptions with links to access the source code.
 \subsection*{Introduction}
-This document covers every aspect of the 3D scanning rig. It will cover the entire hardware, electrical and software charateristics.
+This document covers every aspect of the 3D scanning rig. It will cover the entire hardware, electrical and software characteristics. We also provide a users manual to help you get started with using the rig.
+\subfile{./sections/contact.tex}
+% \subsection{Revision History}
+% \begin{center}
+%     \begin{tabular}{ |c|c|c| } 
+%      \hline
+%      cell1 & cell2 & cell3 \\ 
+%      \hline
+%      cell4 & cell5 & cell6 \\ 
+%      \hline
+%      cell7 & cell8 & cell9 \\ 
+%      \hline
+%     \end{tabular}
+% \end{center}
+
+\newpage
+\tableofcontents
+\newpage
 
 \subfile{./sections/hardware.tex}
 \subfile{./sections/electrical.tex}
 \subfile{./sections/software.tex}
-
-\section{Conclusion}
-Not much of a paper, but it's a start.
 
 \end{document}
