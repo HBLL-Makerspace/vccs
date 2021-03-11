@@ -21,6 +21,12 @@ import 'package:vccs/src/ui/pages/pages.dart';
       durationInMilliseconds: 10,
     ),
     CustomRoute(
+      page: SlotPage,
+      path: "/configure/slots",
+      transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
+      durationInMilliseconds: 10,
+    ),
+    CustomRoute(
       page: ProjectPage,
       path: "/project",
       transitionsBuilder: TransitionsBuilders.slideLeft,

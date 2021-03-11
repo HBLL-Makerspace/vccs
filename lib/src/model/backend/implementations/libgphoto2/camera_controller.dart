@@ -11,35 +11,42 @@ import '../../path_provider.dart';
 
 class libgphoto2CameraController implements ICameraController {
   Map<String, String> _idPortMap = {};
+  Map<String, ICamera> _cameras = {};
 
   @override
-  Future<List<ICamera>> getConnectedCameras() async {
+  Future<List<ICamera>> getConnectedCameras({bool forceUpdate = false}) async {
     String path = PathProvider.getPluginPath("libgphoto2");
-    List<ICamera> cameras = [];
-    var process = await Process.run(
-        "${join(path, "get_all_connected_cameras")}", [],
-        runInShell: true,
-        workingDirectory: path,
-        includeParentEnvironment: true);
-    if (process.exitCode == 0) {
-      try {
-        var jsonObj = jsonDecode(process.stdout);
-        print("There are ${(jsonObj as List).length} conneceted cameras");
-        for (var cam in (jsonObj as List)) {
-          libgphoto2Camera cam_ = libgphoto2Camera.fromJson(cam);
-          cameras.add(cam_);
-          _idPortMap[cam_.getId()] = cam_.port;
+    if (forceUpdate || _cameras.isEmpty) {
+      _cameras.clear();
+      _idPortMap.clear();
+      List<ICamera> cameras = [];
+      var process = await Process.run(
+          "${join(path, "get_all_connected_cameras")}", [],
+          runInShell: true,
+          workingDirectory: path,
+          includeParentEnvironment: true);
+      if (process.exitCode == 0) {
+        try {
+          var jsonObj = jsonDecode(process.stdout);
+          print("There are ${(jsonObj as List).length} conneceted cameras");
+          for (var cam in (jsonObj as List)) {
+            libgphoto2Camera cam_ = libgphoto2Camera.fromJson(cam);
+            cameras.add(cam_);
+            _cameras[cam_.getId()] = cam_;
+            _idPortMap[cam_.getId()] = cam_.port;
+          }
+          return cameras;
+        } catch (e) {
+          print(e);
+          print("Failed to get connected cameras");
+          return [];
         }
-        return cameras;
-      } catch (e) {
-        print(e);
+      } else {
         print("Failed to get connected cameras");
         return [];
       }
-    } else {
-      print("Failed to get connected cameras");
-      return [];
-    }
+    } else
+      return _cameras.values.toList();
   }
 
   @override
@@ -65,4 +72,7 @@ class libgphoto2CameraController implements ICameraController {
     print(process.stderr);
     return process.exitCode == 0;
   }
+
+  @override
+  Future<ICamera> getCameraByID(String id, {bool forceUpdate = false}) {}
 }

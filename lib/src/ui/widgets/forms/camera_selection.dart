@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/model/domain/camera_config.dart';
+import 'package:vccs/src/ui/widgets/inherited.dart';
 import 'package:vccs/src/ui/widgets/textfield.dart';
 
 class SelectCamera extends StatelessWidget {
@@ -12,6 +13,11 @@ class SelectCamera extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> assignedCameras = AppData.of(context)
+        .configuration
+        .getAssignedCameraRefs()
+        .map((e) => e?.cameraId)
+        .toList();
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: 500,
@@ -46,6 +52,8 @@ class SelectCamera extends StatelessWidget {
                           ),
                         if (state is CamerasState)
                           ...state.cameras
+                              .where((cam) =>
+                                  !assignedCameras.contains(cam.getId()))
                               .map((e) => ListTile(
                                     title: Text(e.getModel() ?? "Unknown"),
                                     subtitle: Text(e.getId() ?? "Unknown"),

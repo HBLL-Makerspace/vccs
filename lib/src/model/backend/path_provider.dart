@@ -15,4 +15,12 @@ class PathProvider {
   static String getPluginPath(String plugin) {
     return join(Directory.current.path, "assets", "plugins", plugin);
   }
+
+  static String getVCCSDirectory() {
+    return join(applicationDocumentsDirectory.path, "VCCS");
+  }
+
+  static String getProjectsDirectory() {
+    return join(applicationDocumentsDirectory.path, "VCCS", "projects");
+  }
 }

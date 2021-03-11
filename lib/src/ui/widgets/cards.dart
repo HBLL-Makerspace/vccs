@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 import 'package:vccs/src/model/domain/camera_config.dart';
 import 'package:vccs/src/model/domain/domian.dart';
@@ -268,44 +270,49 @@ class CameraCard extends StatelessWidget {
       height: 150,
       child: AdvancedCard(
         onPressed: onPressed ?? () {},
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: Row(
+        child: camera == null
+            ? Center(
+                child: Text("No Camera"),
+              )
+            : Stack(
                 children: [
-                  Expanded(
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              camera.getModel(),
+                              overflow: TextOverflow.fade,
+                              softWrap: false,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Image(
+                      image: AssetImage(
+                          CameraConfiguration.getMediumThumbnailFor(
+                              camera.getModel())),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.only(bottom: 8.0),
                       child: Text(
-                        camera.getModel(),
+                        camera.getId(),
                         overflow: TextOverflow.fade,
-                        softWrap: false,
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Image(
-                image: AssetImage(CameraConfiguration.getMediumThumbnailFor(
-                    camera.getModel())),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  camera.getId(),
-                  overflow: TextOverflow.fade,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -323,6 +330,7 @@ class SlotConfigCard extends StatelessWidget {
       width: 150,
       height: 150,
       child: AdvancedCard(
+        onPressed: onPressed,
         child: Stack(
           children: [
             Align(
@@ -333,7 +341,7 @@ class SlotConfigCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        slot.id + ": " + (slot.name ?? ""),
+                        slot.name ?? slot.id,
                         overflow: TextOverflow.fade,
                         softWrap: false,
                       ),
@@ -344,13 +352,13 @@ class SlotConfigCard extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: slot.camera != null
+              child: slot?.cameraRef?.cameraId != null
                   ? Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Image(
                         image: AssetImage(
                             CameraConfiguration.getMediumThumbnailFor(
-                                slot.camera.model)),
+                                slot?.cameraRef?.cameraModel)),
                       ),
                     )
                   : Center(
@@ -368,19 +376,37 @@ class SlotConfigCard extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
-                child: slot.camera == null
+                child: slot?.cameraRef?.cameraId == null
                     ? VCCSFlatButton(
                         child: Text("Assign"),
-                        onPressed: () {
-                          showFloatingModalBottomSheet(
+                        onPressed: () async {
+                          var cam = await showFloatingModalBottomSheet<ICamera>(
                               context: context, builder: (_) => SelectCamera());
+                          if (cam != null)
+                            context.read<ConfigurationBloc>().add(
+                                ConfigurationAssignCameraToSlotEvent(
+                                    slot, cam));
                         },
                       )
                     : Text(
-                        slot.camera.id,
+                        slot?.cameraRef?.cameraId,
                         softWrap: false,
                         overflow: TextOverflow.fade,
                       ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Tooltip(
+                message: "Remove slot",
+                child: IconButton(
+                  icon: Icon(Icons.clear),
+                  onPressed: () {
+                    context
+                        .read<ConfigurationBloc>()
+                        .add(ConfigurationRemoveSlotEvent(slot));
+                  },
+                ),
               ),
             ),
           ],

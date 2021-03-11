@@ -7,9 +7,11 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../model/backend/interfaces/camera_interface.dart';
+import '../model/domain/configuration.dart';
 import '../model/domain/domian.dart';
 import 'pages/pages.dart';
 
@@ -17,11 +19,13 @@ class Routes {
   static const String homePage = '/';
   static const String configurationPage = '/configure';
   static const String cameraPage = '/configure/cameras';
+  static const String slotPage = '/configure/slots';
   static const String projectPage = '/project';
   static const all = <String>{
     homePage,
     configurationPage,
     cameraPage,
+    slotPage,
     projectPage,
   };
 }
@@ -33,6 +37,7 @@ class VCCSRoute extends RouterBase {
     RouteDef(Routes.homePage, page: HomePage),
     RouteDef(Routes.configurationPage, page: ConfigurationPage),
     RouteDef(Routes.cameraPage, page: CameraPage),
+    RouteDef(Routes.slotPage, page: SlotPage),
     RouteDef(
       Routes.projectPage,
       page: ProjectPage,
@@ -66,6 +71,19 @@ class VCCSRoute extends RouterBase {
       return PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) => CameraPage(
           key: args.key,
+          camera: args.camera,
+        ),
+        settings: data,
+        transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
+        transitionDuration: const Duration(milliseconds: 10),
+      );
+    },
+    SlotPage: (data) {
+      final args = data.getArgs<SlotPageArguments>(nullOk: false);
+      return PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) => SlotPage(
+          key: args.key,
+          slot: args.slot,
           camera: args.camera,
         ),
         settings: data,
@@ -189,6 +207,14 @@ class CameraPageArguments {
   final Key key;
   final ICamera camera;
   CameraPageArguments({this.key, @required this.camera});
+}
+
+/// SlotPage arguments holder class
+class SlotPageArguments {
+  final Key key;
+  final Slot slot;
+  final ICamera camera;
+  SlotPageArguments({this.key, @required this.slot, this.camera});
 }
 
 /// SetPage arguments holder class

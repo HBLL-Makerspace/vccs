@@ -9,46 +9,46 @@ class CameraSetup extends StatefulWidget {
 
 class _CameraSetupState extends State<CameraSetup> {
   final List<Slot> _slots = [
-    Slot(
-        id: "1",
-        camera: Camera(id: "D3435", model: "D300"),
-        status: Status.CONNECTED),
-    Slot(
-        id: "2",
-        camera: Camera(id: "D3436", model: "D300"),
-        status: Status.CONNECTED),
-    Slot(
-        id: "3",
-        camera: Camera(id: "D3437", model: "D300"),
-        status: Status.CONNECTED),
-    Slot(
-        id: "4",
-        camera: Camera(id: "D3438", model: "D300"),
-        status: Status.CONNECTING),
-    Slot(
-        id: "5",
-        camera: Camera(id: "D3439", model: "D300"),
-        status: Status.CONNECTING),
-    Slot(
-        id: "6",
-        camera: Camera(id: "D3440", model: "D300"),
-        status: Status.CONNECTING),
-    Slot(
-        id: "7",
-        camera: Camera(id: "D3441", model: "D300"),
-        status: Status.CONNECTING),
-    Slot(
-        id: "8",
-        camera: Camera(id: "D3442", model: "D300"),
-        status: Status.NOT_CONNECTED),
-    Slot(
-        id: "9",
-        camera: Camera(id: "D3443", model: "D300"),
-        status: Status.NOT_CONNECTED),
-    Slot(
-        id: "10",
-        camera: Camera(id: "D3444", model: "D300"),
-        status: Status.NOT_CONNECTED),
+    // Slot(
+    //     id: "1",
+    //     camera: Camera(id: "D3435", model: "D300"),
+    //     status: Status.CONNECTED),
+    // Slot(
+    //     id: "2",
+    //     camera: Camera(id: "D3436", model: "D300"),
+    //     status: Status.CONNECTED),
+    // Slot(
+    //     id: "3",
+    //     camera: Camera(id: "D3437", model: "D300"),
+    //     status: Status.CONNECTED),
+    // Slot(
+    //     id: "4",
+    //     camera: Camera(id: "D3438", model: "D300"),
+    //     status: Status.CONNECTING),
+    // Slot(
+    //     id: "5",
+    //     camera: Camera(id: "D3439", model: "D300"),
+    //     status: Status.CONNECTING),
+    // Slot(
+    //     id: "6",
+    //     camera: Camera(id: "D3440", model: "D300"),
+    //     status: Status.CONNECTING),
+    // Slot(
+    //     id: "7",
+    //     camera: Camera(id: "D3441", model: "D300"),
+    //     status: Status.CONNECTING),
+    // Slot(
+    //     id: "8",
+    //     camera: Camera(id: "D3442", model: "D300"),
+    //     status: Status.NOT_CONNECTED),
+    // Slot(
+    //     id: "9",
+    //     camera: Camera(id: "D3443", model: "D300"),
+    //     status: Status.NOT_CONNECTED),
+    // Slot(
+    //     id: "10",
+    //     camera: Camera(id: "D3444", model: "D300"),
+    //     status: Status.NOT_CONNECTED),
   ];
 
   Map<String, bool> _selected;

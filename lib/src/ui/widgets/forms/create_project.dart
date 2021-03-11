@@ -1,5 +1,6 @@
 // import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/material.dart';
+import 'package:vccs/src/model/backend/path_provider.dart';
 import 'package:vccs/src/ui/widgets/buttons.dart';
 import 'package:vccs/src/ui/widgets/textfield.dart';
 
@@ -10,12 +11,15 @@ class CreateProjectForm extends StatefulWidget {
 
 class _CreateProjectFormState extends State<CreateProjectForm> {
   FocusNode _node;
+  TextEditingController _location;
 
   @override
   void initState() {
     super.initState();
     _node = FocusNode();
     _node.requestFocus();
+    _location =
+        TextEditingController(text: PathProvider.getProjectsDirectory());
   }
 
   @override
@@ -53,6 +57,7 @@ class _CreateProjectFormState extends State<CreateProjectForm> {
                     Expanded(
                       child: VCCSTextFormField(
                         label: "Location",
+                        enabled: false,
                       ),
                     ),
                     Padding(
@@ -62,13 +67,13 @@ class _CreateProjectFormState extends State<CreateProjectForm> {
                           padding: const EdgeInsets.symmetric(vertical: 5.0),
                           child: Text("Browse"),
                         ),
-                        onPressed: () async {
-                          // show a dialog to open a file
-                          // FilePickerCross myFile = await FilePickerCross.importFromStorage(
-                          //     type: FileTypeCross.any, // Available: `any`, `audio`, `image`, `video`, `custom`. Note: not available using FDE
-                          //     fileExtension: 'txt, md' // Only if FileTypeCross.custom . May be any file extension like `dot`, `ppt,pptx,odp`
-                          //     );
-                        },
+                        // onPressed: () async {
+                        // show a dialog to open a file
+                        // FilePickerCross myFile = await FilePickerCross.importFromStorage(
+                        //     type: FileTypeCross.any, // Available: `any`, `audio`, `image`, `video`, `custom`. Note: not available using FDE
+                        //     fileExtension: 'txt, md' // Only if FileTypeCross.custom . May be any file extension like `dot`, `ppt,pptx,odp`
+                        //     );
+                        // },
                       ),
                     )
                   ],

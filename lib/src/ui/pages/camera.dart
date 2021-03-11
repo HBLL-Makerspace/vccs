@@ -11,40 +11,85 @@ class CameraPage extends StatelessWidget {
   const CameraPage({Key key, @required this.camera}) : super(key: key);
 
   Widget _header(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: CameraCard(
-            camera: camera,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 62.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  camera.getModel(),
-                  style: Theme.of(context).textTheme.headline3,
-                ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: CameraCard(
+                camera: camera,
               ),
-              Text(
-                "Identification: ${camera.getId()}",
-                style: Theme.of(context).textTheme.subtitle2,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 62.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      camera.getModel(),
+                      style: Theme.of(context).textTheme.headline3,
+                    ),
+                  ),
+                  Text(
+                    "Identification: ${camera.getId()}",
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            Expanded(child: Container()),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () => ExtendedNavigator.of(context).pop(),
+              ),
+            )
+          ],
         ),
-        Expanded(child: Container()),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: IconButton(
-            icon: Icon(Icons.close),
-            onPressed: () => ExtendedNavigator.of(context).pop(),
+        Positioned.fill(
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: VCCSFlatButton(
+                      child: Text("LiveView"),
+                      onPressed: () {},
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: VCCSFlatButton(
+                      child: Text("Preview"),
+                      onPressed: () {},
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: VCCSRaisedButton(
+                      child: Text("AutoFocus"),
+                      onPressed: () {},
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: VCCSRaisedButton(
+                      child: Text("Capture"),
+                      onPressed: () {},
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         )
       ],

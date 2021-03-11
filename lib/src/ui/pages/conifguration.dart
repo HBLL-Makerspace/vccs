@@ -1,11 +1,14 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
-import 'package:vccs/src/model/backend/backend.dart';
+import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
+import 'package:vccs/src/model/domain/configuration.dart';
 import 'package:vccs/src/ui/route.gr.dart';
 import 'package:vccs/src/ui/widgets/cards.dart';
+import 'package:vccs/src/ui/widgets/forms/create_slot.dart';
 
 class ConfigurationPage extends StatelessWidget {
   Widget _slotHeader(BuildContext context) {
@@ -75,6 +78,78 @@ class ConfigurationPage extends StatelessWidget {
     );
   }
 
+  Widget _addSlotButton(BuildContext context) {
+    return SizedBox(
+      width: 150,
+      height: 150,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: DottedBorder(
+          dashPattern: [5, 10],
+          strokeWidth: 3,
+          strokeCap: StrokeCap.round,
+          borderType: BorderType.RRect,
+          radius: Radius.circular(16),
+          color: Theme.of(context).primaryColor,
+          child: Material(
+            borderRadius: BorderRadius.circular(16),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: () async {
+                String name = await showDialog(
+                    context: context, builder: (context) => CreateSlotForm());
+                if (name != null)
+                  context
+                      .read<ConfigurationBloc>()
+                      .add(ConfigurationAddSlotEvent(Slot(name: name)));
+              },
+              child: Container(
+                height: 200,
+                child: Center(
+                  child: Icon(
+                    Icons.add,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _slots(BuildContext context) {
+    return BlocBuilder<ConfigurationBloc, ConfigurationState>(
+      builder: (context, state) {
+        switch (state.runtimeType) {
+          case ConfigurationInitial:
+            return Row(
+              children: [Text("Configuration not loaded. Please restart app.")],
+            );
+          case ConfigurationDataState:
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Wrap(
+                children: [
+                  ...(state as ConfigurationDataState)
+                      .configuration
+                      .getSlots()
+                      .map((e) => SlotConfigCard(
+                            slot: e,
+                            onPressed: () => ExtendedNavigator.of(context)
+                                .push("/configure/slots", arguments: SlotPageArguments(slot: e)),
+                          ))
+                      .toList(),
+                  _addSlotButton(context)
+                ],
+              ),
+            );
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,18 +162,8 @@ class ConfigurationPage extends StatelessWidget {
             child: ListView(
               children: [
                 _slotHeader(context),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Wrap(
-                    children: [
-                      ...DummyData.slots
-                          .map((e) => SlotConfigCard(
-                                slot: e,
-                              ))
-                          .toList()
-                    ],
-                  ),
-                ),
+                _slots(context),
+
                 _cameraHeader(
                     context,
                     (state is CamerasState)

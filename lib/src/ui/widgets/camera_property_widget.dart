@@ -158,11 +158,15 @@ class _CameraRangePropertyWidgetState extends State<CameraRangePropertyWidget> {
             .round(),
         min: widget.property.low,
         max: widget.property.high,
-        onChanged: (double val) => setState(() => value = val),
-        onChangeEnd: (double endVal) {
-          setState(() => value = endVal);
-          if (widget.onUpdate != null) widget.onUpdate(endVal);
-        },
+        onChanged: widget.property.readOnly
+            ? null
+            : (double val) => setState(() => value = val),
+        onChangeEnd: widget.property.readOnly
+            ? null
+            : (double endVal) {
+                setState(() => value = endVal);
+                if (widget.onUpdate != null) widget.onUpdate(endVal);
+              },
       ),
     );
   }
