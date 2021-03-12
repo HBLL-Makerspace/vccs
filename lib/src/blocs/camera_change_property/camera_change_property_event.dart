@@ -5,7 +5,7 @@ abstract class CameraChangePropertyEvent {}
 
 class ChangeCameraPropertyEvent extends CameraChangePropertyEvent {
   final ICamera camera;
-  final CameraProperty property;
+  final List<CameraProperty> properties;
 
-  ChangeCameraPropertyEvent(this.camera, this.property);
+  ChangeCameraPropertyEvent(this.camera, this.properties);
 }

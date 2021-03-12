@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:vccs/src/blocs/camera_change_property/camera_change_property_bloc.dart';
 import 'package:vccs/src/model/backend/implementations/camera_properties.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
@@ -10,8 +8,15 @@ import 'package:vccs/src/ui/widgets/widgets.dart';
 class CameraPropertyWidget extends StatelessWidget {
   final CameraProperty cameraProperty;
   final ICamera camera;
+  final ValueChanged<CameraProperty> onUpdate;
+  final bool enabled;
 
-  const CameraPropertyWidget({Key key, this.cameraProperty, this.camera})
+  const CameraPropertyWidget(
+      {Key key,
+      this.cameraProperty,
+      this.camera,
+      this.onUpdate,
+      this.enabled = true})
       : super(key: key);
 
   Widget _inputFromType(BuildContext context, ValueChanged<dynamic> onUpdate) {
@@ -23,36 +28,42 @@ class CameraPropertyWidget extends StatelessWidget {
         input = CameraTextPropertyWidget(
           property: cameraProperty,
           onUpdate: onUpdate,
+          enabled: enabled,
         );
         break;
       case CameraRangeProperty:
         input = CameraRangePropertyWidget(
           property: cameraProperty,
           onUpdate: onUpdate,
+          enabled: enabled,
         );
         break;
       case CameraToggleProperty:
         input = CameraTogglePropertyWidget(
           property: cameraProperty,
           onUpdate: onUpdate,
+          enabled: enabled,
         );
         break;
       case CameraDateProperty:
         input = CameraDateTimePropertyWidget(
           property: cameraProperty,
           onUpdate: onUpdate,
+          enabled: enabled,
         );
         break;
       case CameraRadioProperty:
         input = CameraRadioPropertyWidget(
           property: cameraProperty,
           onUpdate: onUpdate,
+          enabled: enabled,
         );
         break;
       case CameraDropDownProperty:
         input = CameraDropDownPropertyWidget(
           property: cameraProperty,
           onUpdate: onUpdate,
+          enabled: enabled,
         );
     }
     return input;
@@ -60,7 +71,6 @@ class CameraPropertyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var bloc = CameraChangePropertyBloc(AppData.of(context).controller);
     return Row(
       children: [
         Expanded(
@@ -72,12 +82,13 @@ class CameraPropertyWidget extends StatelessWidget {
         ),
         Expanded(
           flex: 2,
-          child: BlocProvider(
-              create: (BuildContext context) => bloc,
-              child: _inputFromType(
-                  context,
-                  (v) => bloc.add(ChangeCameraPropertyEvent(
-                      camera, cameraProperty.copyWith(value: v))))),
+          child: _inputFromType(
+            context,
+            (v) {
+              if (onUpdate != null) {}
+              onUpdate(cameraProperty.copyWith(value: v));
+            },
+          ),
         )
       ],
     );
@@ -87,8 +98,10 @@ class CameraPropertyWidget extends StatelessWidget {
 class CameraTextPropertyWidget extends StatefulWidget {
   final CameraTextProperty property;
   final ValueChanged<dynamic> onUpdate;
+  final bool enabled;
 
-  const CameraTextPropertyWidget({Key key, this.property, this.onUpdate})
+  const CameraTextPropertyWidget(
+      {Key key, this.property, this.onUpdate, this.enabled = false})
       : super(key: key);
 
   @override
@@ -108,7 +121,7 @@ class _CameraTextPropertyWidgetState extends State<CameraTextPropertyWidget> {
   @override
   Widget build(BuildContext context) {
     return VCCSTextFormField(
-      enabled: !widget.property.readOnly,
+      enabled: !widget.property.readOnly && widget.enabled,
       controller: _controller,
       onSubmitted: (val) {
         if (widget.onUpdate != null) {
@@ -122,8 +135,10 @@ class _CameraTextPropertyWidgetState extends State<CameraTextPropertyWidget> {
 class CameraRangePropertyWidget extends StatefulWidget {
   final CameraRangeProperty property;
   final ValueChanged<dynamic> onUpdate;
+  final bool enabled;
 
-  const CameraRangePropertyWidget({Key key, this.property, this.onUpdate})
+  const CameraRangePropertyWidget(
+      {Key key, this.property, this.onUpdate, this.enabled = false})
       : super(key: key);
 
   @override
@@ -158,15 +173,15 @@ class _CameraRangePropertyWidgetState extends State<CameraRangePropertyWidget> {
             .round(),
         min: widget.property.low,
         max: widget.property.high,
-        onChanged: widget.property.readOnly
-            ? null
-            : (double val) => setState(() => value = val),
-        onChangeEnd: widget.property.readOnly
-            ? null
-            : (double endVal) {
+        onChanged: !widget.property.readOnly && widget.enabled
+            ? (double val) => setState(() => value = val)
+            : null,
+        onChangeEnd: !widget.property.readOnly && widget.enabled
+            ? (double endVal) {
                 setState(() => value = endVal);
                 if (widget.onUpdate != null) widget.onUpdate(endVal);
-              },
+              }
+            : null,
       ),
     );
   }
@@ -175,8 +190,10 @@ class _CameraRangePropertyWidgetState extends State<CameraRangePropertyWidget> {
 class CameraTogglePropertyWidget extends StatefulWidget {
   final CameraToggleProperty property;
   final ValueChanged<dynamic> onUpdate;
+  final bool enabled;
 
-  const CameraTogglePropertyWidget({Key key, this.property, this.onUpdate})
+  const CameraTogglePropertyWidget(
+      {Key key, this.property, this.onUpdate, this.enabled = false})
       : super(key: key);
 
   @override
@@ -232,9 +249,8 @@ class _CameraTogglePropertyWidgetState extends State<CameraTogglePropertyWidget>
           ),
         ),
       ],
-      onPressed: widget.property.readOnly
-          ? null
-          : (int index) {
+      onPressed: !widget.property.readOnly && widget.enabled
+          ? (int index) {
               setState(() {
                 isSelected = !isSelected;
                 if (isSelected)
@@ -243,7 +259,8 @@ class _CameraTogglePropertyWidgetState extends State<CameraTogglePropertyWidget>
                   _controller.reverse();
               });
               if (widget.onUpdate != null) widget.onUpdate(isSelected);
-            },
+            }
+          : null,
       isSelected: [isSelected, !isSelected],
     );
   }
@@ -252,8 +269,10 @@ class _CameraTogglePropertyWidgetState extends State<CameraTogglePropertyWidget>
 class CameraDateTimePropertyWidget extends StatefulWidget {
   final CameraDateProperty property;
   final ValueChanged<dynamic> onUpdate;
+  final bool enabled;
 
-  const CameraDateTimePropertyWidget({Key key, this.property, this.onUpdate})
+  const CameraDateTimePropertyWidget(
+      {Key key, this.property, this.onUpdate, this.enabled = false})
       : super(key: key);
 
   @override
@@ -297,7 +316,7 @@ class _CameraDateTimePropertyWidgetState
             }
           }
         },
-        enabled: !widget.property.readOnly,
+        enabled: !widget.property.readOnly && widget.enabled,
         controller: _controller);
   }
 }
@@ -305,8 +324,10 @@ class _CameraDateTimePropertyWidgetState
 class CameraRadioPropertyWidget extends StatefulWidget {
   final CameraRadioProperty property;
   final ValueChanged<dynamic> onUpdate;
+  final bool enabled;
 
-  const CameraRadioPropertyWidget({Key key, this.property, this.onUpdate})
+  const CameraRadioPropertyWidget(
+      {Key key, this.property, this.onUpdate, this.enabled = false})
       : super(key: key);
 
   @override
@@ -332,12 +353,12 @@ class _CameraRadioPropertyWidgetState extends State<CameraRadioPropertyWidget> {
             child: Radio(
               activeColor: Theme.of(context).primaryColor,
               groupValue: groupValue,
-              onChanged: widget.property.readOnly
-                  ? null
-                  : (value) {
+              onChanged: !widget.property.readOnly && widget.enabled
+                  ? (value) {
                       setState(() => groupValue = value);
                       if (widget.onUpdate != null) widget.onUpdate(groupValue);
-                    },
+                    }
+                  : null,
               value: choice.toString(),
             ),
           ),
@@ -358,8 +379,10 @@ class _CameraRadioPropertyWidgetState extends State<CameraRadioPropertyWidget> {
 class CameraDropDownPropertyWidget extends StatefulWidget {
   final CameraDropDownProperty property;
   final ValueChanged<dynamic> onUpdate;
+  final bool enabled;
 
-  const CameraDropDownPropertyWidget({Key key, this.property, this.onUpdate})
+  const CameraDropDownPropertyWidget(
+      {Key key, this.property, this.onUpdate, this.enabled = false})
       : super(key: key);
 
   @override
@@ -384,12 +407,12 @@ class _CameraDropDownPropertyWidgetState
       value: val,
       getLabel: (l) => l.toString(),
       builder: (context, v, _) => Text(v.toString()),
-      onChanged: widget.property.readOnly
-          ? null
-          : (v) {
+      onChanged: !widget.property.readOnly && widget.enabled
+          ? (v) {
               setState(() => val = v);
               if (widget.onUpdate != null) widget.onUpdate(val);
-            },
+            }
+          : null,
     );
   }
 }

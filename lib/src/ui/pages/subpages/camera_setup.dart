@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/model/domain/domian.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
 
@@ -8,49 +11,6 @@ class CameraSetup extends StatefulWidget {
 }
 
 class _CameraSetupState extends State<CameraSetup> {
-  final List<Slot> _slots = [
-    // Slot(
-    //     id: "1",
-    //     camera: Camera(id: "D3435", model: "D300"),
-    //     status: Status.CONNECTED),
-    // Slot(
-    //     id: "2",
-    //     camera: Camera(id: "D3436", model: "D300"),
-    //     status: Status.CONNECTED),
-    // Slot(
-    //     id: "3",
-    //     camera: Camera(id: "D3437", model: "D300"),
-    //     status: Status.CONNECTED),
-    // Slot(
-    //     id: "4",
-    //     camera: Camera(id: "D3438", model: "D300"),
-    //     status: Status.CONNECTING),
-    // Slot(
-    //     id: "5",
-    //     camera: Camera(id: "D3439", model: "D300"),
-    //     status: Status.CONNECTING),
-    // Slot(
-    //     id: "6",
-    //     camera: Camera(id: "D3440", model: "D300"),
-    //     status: Status.CONNECTING),
-    // Slot(
-    //     id: "7",
-    //     camera: Camera(id: "D3441", model: "D300"),
-    //     status: Status.CONNECTING),
-    // Slot(
-    //     id: "8",
-    //     camera: Camera(id: "D3442", model: "D300"),
-    //     status: Status.NOT_CONNECTED),
-    // Slot(
-    //     id: "9",
-    //     camera: Camera(id: "D3443", model: "D300"),
-    //     status: Status.NOT_CONNECTED),
-    // Slot(
-    //     id: "10",
-    //     camera: Camera(id: "D3444", model: "D300"),
-    //     status: Status.NOT_CONNECTED),
-  ];
-
   Map<String, bool> _selected;
 
   @override
@@ -87,7 +47,7 @@ class _CameraSetupState extends State<CameraSetup> {
     );
   }
 
-  Widget _slotGridList() {
+  Widget _slotGridList(List<Slot> _slots) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Wrap(
@@ -116,7 +76,7 @@ class _CameraSetupState extends State<CameraSetup> {
     );
   }
 
-  Widget _select(BuildContext context) {
+  Widget _select(BuildContext context, List<Slot> _slots) {
     bool _selectedAll = !_selected.containsValue(true)
         ? false
         : (_selected.length == _slots.length && !_selected.containsValue(false))
@@ -144,12 +104,22 @@ class _CameraSetupState extends State<CameraSetup> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        _cameraProperties(context),
-        _select(context),
-        _slotGridList(),
-      ],
+    return BlocBuilder<ConfigurationBloc, ConfigurationState>(
+      builder: (context, state) {
+        if (state is ConfigurationDataState) {
+          List<Slot> _slots = state.configuration.getSlots();
+          return ListView(
+            children: [
+              _cameraProperties(context),
+              _select(context, _slots),
+              _slotGridList(_slots),
+            ],
+          );
+        } else
+          return Center(
+            child: SpinKitWave(color: Colors.white),
+          );
+      },
     );
   }
 }

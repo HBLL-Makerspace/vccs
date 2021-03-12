@@ -22,7 +22,7 @@ class CameraChangePropertyBloc
       case ChangeCameraPropertyEvent:
         yield ChangingCameraPropertyState();
         ChangeCameraPropertyEvent typed = event as ChangeCameraPropertyEvent;
-        await _controller.changeCameraProperty(typed.camera, typed.property);
+        await _controller.changeCameraProperty(typed.camera, typed.properties);
         yield ChangedCameraPropertyState();
         break;
     }

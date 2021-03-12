@@ -51,8 +51,8 @@ class libgphoto2CameraController implements ICameraController {
 
   @override
   Future<bool> changeCameraProperty(
-      ICamera camera, CameraProperty property) async {
-    print("updating property ${property.name} to ${property.value.toString()}");
+      ICamera camera, List<CameraProperty> properties) async {
+    // print("updating property ${property.name} to ${property.value.toString()}");
     String path = PathProvider.getPluginPath("libgphoto2");
     var process = await Process.run(
         "${join(path, "set_camera_property")}",
@@ -60,8 +60,9 @@ class libgphoto2CameraController implements ICameraController {
           jsonEncode({
             "name": camera.getModel(),
             "port": _idPortMap[camera.getId()],
-            "property": property.name,
-            "value": property.value
+            "properties": properties
+                .map((e) => {"name": e.name, "value": e.value})
+                .toList()
           })
         ],
         runInShell: true,
