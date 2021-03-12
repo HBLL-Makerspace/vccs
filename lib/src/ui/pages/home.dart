@@ -67,10 +67,10 @@ class _HomePageState extends State<HomePage> {
                               context
                                   .read<ProjectListBloc>()
                                   .add(LoadProjectsEvent());
-                              showFloatingModalBottomSheet(
-                                  context: context,
-                                  builder: (_) => SelectProject());
-                              // ExtendedNavigator.of(context).push("/project");
+                              // showFloatingModalBottomSheet(
+                              //     context: context,
+                              //     builder: (_) => SelectProject());
+                              ExtendedNavigator.of(context).push("/project");
                               // Navigator.push(
                               //     context,
                               //     MaterialPageRoute(
