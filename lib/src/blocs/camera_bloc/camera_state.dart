@@ -1,14 +1,22 @@
 part of 'camera_bloc.dart';
 
 @immutable
-abstract class CameraState {}
+abstract class CameraChangePropertyState {}
 
-class CameraInitial extends CameraState {}
+class CameraChangePropertyInitial extends CameraChangePropertyState {}
 
-class LoadingCamerasState extends CameraState {}
+class CameraDataState extends CameraChangePropertyState {
+  final bool isChaningProperties;
+  final bool isLiveViewActive;
+  final bool isCameraCaptureInProgress;
+  final bool isGettingPreview;
+  final ICamera camera;
 
-class CamerasState extends CameraState {
-  final List<ICamera> cameras;
-
-  CamerasState(this.cameras);
+  CameraDataState(
+    this.camera, {
+    this.isChaningProperties = false,
+    this.isLiveViewActive = false,
+    this.isCameraCaptureInProgress = false,
+    this.isGettingPreview = false,
+  });
 }

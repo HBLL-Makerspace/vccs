@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
+import 'package:vccs/src/blocs/multi_camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/model/domain/camera_config.dart';
 import 'package:vccs/src/ui/widgets/inherited.dart';
 import 'package:vccs/src/ui/widgets/textfield.dart';
@@ -34,7 +34,7 @@ class SelectCamera extends StatelessWidget {
             ),
             Expanded(
               child: Scrollbar(
-                child: BlocBuilder<CameraBloc, CameraState>(
+                child: BlocBuilder<MultiCameraBloc, CameraState>(
                   builder: (context, state) {
                     return ListView(
                       shrinkWrap: true,

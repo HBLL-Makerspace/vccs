@@ -16,7 +16,7 @@ import 'package:vccs/src/ui/pages/pages.dart';
     ),
     CustomRoute(
       page: CameraPage,
-      path: "/configure/cameras",
+      path: "/configure/cameras/:id",
       transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
       durationInMilliseconds: 10,
     ),

@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
+import 'package:vccs/src/blocs/multi_camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/blocs/project_list/project_list_bloc.dart';
 import 'package:vccs/src/model/backend/backend.dart';
@@ -29,8 +29,8 @@ class MyApp extends StatelessWidget {
       controller: _controller,
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<CameraBloc>(
-            create: (context) => CameraBloc(_controller),
+          BlocProvider<MultiCameraBloc>(
+            create: (context) => MultiCameraBloc(_controller),
           ),
           BlocProvider<ConfigurationBloc>(
             create: (context) => ConfigurationBloc(_config),

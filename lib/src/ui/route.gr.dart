@@ -18,13 +18,14 @@ import 'pages/pages.dart';
 class Routes {
   static const String homePage = '/';
   static const String configurationPage = '/configure';
-  static const String cameraPage = '/configure/cameras';
+  static const String _cameraPage = '/configure/cameras/:id';
+  static String cameraPage({@required dynamic id}) => '/configure/cameras/$id';
   static const String slotPage = '/configure/slots';
   static const String projectPage = '/project';
   static const all = <String>{
     homePage,
     configurationPage,
-    cameraPage,
+    _cameraPage,
     slotPage,
     projectPage,
   };
@@ -36,7 +37,7 @@ class VCCSRoute extends RouterBase {
   final _routes = <RouteDef>[
     RouteDef(Routes.homePage, page: HomePage),
     RouteDef(Routes.configurationPage, page: ConfigurationPage),
-    RouteDef(Routes.cameraPage, page: CameraPage),
+    RouteDef(Routes._cameraPage, page: CameraPage),
     RouteDef(Routes.slotPage, page: SlotPage),
     RouteDef(
       Routes.projectPage,
@@ -67,12 +68,8 @@ class VCCSRoute extends RouterBase {
       );
     },
     CameraPage: (data) {
-      final args = data.getArgs<CameraPageArguments>(nullOk: false);
       return PageRouteBuilder<dynamic>(
-        pageBuilder: (context, animation, secondaryAnimation) => CameraPage(
-          key: args.key,
-          camera: args.camera,
-        ),
+        pageBuilder: (context, animation, secondaryAnimation) => CameraPage(),
         settings: data,
         transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
         transitionDuration: const Duration(milliseconds: 10),
@@ -200,13 +197,6 @@ class ProjectPageRouter extends RouterBase {
 class HomePageArguments {
   final Key key;
   HomePageArguments({this.key});
-}
-
-/// CameraPage arguments holder class
-class CameraPageArguments {
-  final Key key;
-  final ICamera camera;
-  CameraPageArguments({this.key, @required this.camera});
 }
 
 /// SlotPage arguments holder class

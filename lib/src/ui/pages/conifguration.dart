@@ -3,7 +3,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
+import 'package:vccs/src/blocs/multi_camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/model/domain/configuration.dart';
 import 'package:vccs/src/ui/route.gr.dart';
@@ -45,7 +45,7 @@ class ConfigurationPage extends StatelessWidget {
           child: IconButton(
             icon: Icon(Icons.refresh),
             onPressed: () {
-              BlocProvider.of<CameraBloc>(context).add(LoadCamerasEvent());
+              BlocProvider.of<MultiCameraBloc>(context).add(LoadCamerasEvent());
             },
           ),
         )
@@ -137,8 +137,9 @@ class ConfigurationPage extends StatelessWidget {
                       .getSlots()
                       .map((e) => SlotConfigCard(
                             slot: e,
-                            onPressed: () => ExtendedNavigator.of(context)
-                                .push("/configure/slots", arguments: SlotPageArguments(slot: e)),
+                            onPressed: () => ExtendedNavigator.of(context).push(
+                                "/configure/slots",
+                                arguments: SlotPageArguments(slot: e)),
                           ))
                       .toList(),
                   _addSlotButton(context)
@@ -156,7 +157,7 @@ class ConfigurationPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Configuration"),
       ),
-      body: BlocBuilder<CameraBloc, CameraState>(
+      body: BlocBuilder<MultiCameraBloc, CameraState>(
         builder: (context, state) {
           return Scrollbar(
             child: ListView(
@@ -190,9 +191,7 @@ class ConfigurationPage extends StatelessWidget {
                                   camera: e,
                                   onPressed: () {
                                     ExtendedNavigator.of(context).push(
-                                        "/configure/cameras",
-                                        arguments:
-                                            CameraPageArguments(camera: e));
+                                        "/configure/cameras/${e.getId()}");
                                   },
                                 ))
                             .toList()

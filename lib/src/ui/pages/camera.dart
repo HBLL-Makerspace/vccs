@@ -4,23 +4,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:vccs/src/blocs/camera_change_property/camera_change_property_bloc.dart';
+import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/model/backend/implementations/camera_properties.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
 
-class CameraPage extends StatefulWidget {
-  final ICamera camera;
-
-  const CameraPage({Key key, @required this.camera}) : super(key: key);
-
+class CameraPage extends StatelessWidget {
   @override
-  _CameraPageState createState() => _CameraPageState();
+  Widget build(BuildContext context) {
+    var routeData = RouteData.of(context);
+    var id = routeData.pathParams['id'].value;
+    var _controller = AppData.of(context).controller;
+    return Scaffold(
+      body: BlocProvider(
+        create: (BuildContext context) =>
+            CameraBloc(_controller)..add(LoadCameraDataEvent(id)),
+        child: _CameraPageInternal(),
+      ),
+    );
+  }
 }
 
-class _CameraPageState extends State<CameraPage> {
+class _CameraPageInternal extends StatefulWidget {
+  const _CameraPageInternal({Key key}) : super(key: key);
+  @override
+  __CameraPageInternalState createState() => __CameraPageInternalState();
+}
+
+class __CameraPageInternalState extends State<_CameraPageInternal> {
   Map<String, CameraProperty> properties;
-  CameraChangePropertyBloc bloc;
 
   @override
   void initState() {
@@ -28,7 +40,7 @@ class _CameraPageState extends State<CameraPage> {
     properties = {};
   }
 
-  Widget _header(BuildContext context, bool isChanging) {
+  Widget _header(BuildContext context, ICamera camera, bool isChanging) {
     return Stack(
       children: [
         Row(
@@ -37,7 +49,7 @@ class _CameraPageState extends State<CameraPage> {
             Padding(
               padding: const EdgeInsets.all(32.0),
               child: CameraCard(
-                camera: widget.camera,
+                camera: camera,
               ),
             ),
             Padding(
@@ -48,12 +60,12 @@ class _CameraPageState extends State<CameraPage> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: Text(
-                      widget.camera.getModel(),
+                      camera.getModel(),
                       style: Theme.of(context).textTheme.headline3,
                     ),
                   ),
                   Text(
-                    "Identification: ${widget.camera.getId()}",
+                    "Identification: ${camera.getId()}",
                     style: Theme.of(context).textTheme.subtitle2,
                   ),
                 ],
@@ -115,15 +127,15 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   Widget _camSectionProperties(
-      BuildContext context, String section, bool isChanging) {
+      BuildContext context, String section, ICamera camera, bool isChanging) {
     return Column(
       children: [
-        ...widget.camera.getPropertiesInSection(section).map((e) => Padding(
+        ...camera.getPropertiesInSection(section).map((e) => Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: CameraPropertyWidget(
                 enabled: !isChanging,
                 cameraProperty: e,
-                camera: widget.camera,
+                camera: camera,
                 onUpdate: (value) {
                   setState(() {
                     properties[value.name] = value;
@@ -135,7 +147,7 @@ class _CameraPageState extends State<CameraPage> {
     );
   }
 
-  Widget _camProperties(BuildContext context, bool isChanging) {
+  Widget _camProperties(BuildContext context, ICamera camera, bool isChanging) {
     return ExpandableTheme(
       data: ExpandableThemeData(
         iconColor: Colors.grey[300],
@@ -144,7 +156,7 @@ class _CameraPageState extends State<CameraPage> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            ...widget.camera.getSections().map((e) => Column(
+            ...camera.getSections().map((e) => Column(
                   children: [
                     Material(
                       clipBehavior: Clip.antiAlias,
@@ -161,7 +173,8 @@ class _CameraPageState extends State<CameraPage> {
                         ),
                         expanded: Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: _camSectionProperties(context, e, isChanging),
+                          child: _camSectionProperties(
+                              context, e, camera, isChanging),
                         ),
                       ),
                     ),
@@ -173,24 +186,37 @@ class _CameraPageState extends State<CameraPage> {
     );
   }
 
+  Widget _search() {
+    return Column(
+      children: [
+        Padding(
+          padding:
+              const EdgeInsets.only(top: 16.0, bottom: 0, left: 32, right: 32),
+          child: VCCSTextFormField(
+            label: "Search",
+          ),
+        )
+      ],
+    );
+  }
+
   Widget _page(BuildContext context) {
-    return BlocBuilder<CameraChangePropertyBloc, CameraChangePropertyState>(
-      cubit: bloc,
-      builder: (context, state) {
-        bool isChanging;
-        if (state is ChangingCameraPropertyState) {
-          isChanging = true;
-        } else {
-          isChanging = false;
-        }
+    return BlocBuilder<CameraBloc, CameraChangePropertyState>(
+        builder: (context, state) {
+      if (state is CameraDataState) {
+        bool isChanging = state.isCameraCaptureInProgress ||
+            state.isChaningProperties ||
+            state.isLiveViewActive ||
+            state.isGettingPreview;
         return Scaffold(
           body: Scrollbar(
             child: ListView(
               children: [
-                _header(context, isChanging),
+                _header(context, state.camera, state.isChaningProperties),
+                _search(),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: _camProperties(context, isChanging),
+                  child: _camProperties(context, state.camera, isChanging),
                 ),
                 Container(
                   height: 80,
@@ -241,21 +267,24 @@ class _CameraPageState extends State<CameraPage> {
                   onPressed: isChanging
                       ? null
                       : () {
-                          bloc.add(ChangeCameraPropertyEvent(
-                              widget.camera, properties.values.toList()));
+                          BlocProvider.of<CameraBloc>(context, listen: false)
+                              .add(ChangeCameraPropertyEvent(
+                                  state.camera, properties.values.toList()));
                         },
                 ),
               ],
             ),
           ),
         );
-      },
-    );
+      } else
+        return Scaffold(
+          body: Center(child: Text("loading camera")),
+        );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    bloc = CameraChangePropertyBloc(AppData.of(context).controller);
     return _page(context);
   }
 }
