@@ -3,6 +3,7 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/model/backend/implementations/camera_properties.dart';
@@ -92,29 +93,42 @@ class __CameraPageInternalState extends State<_CameraPageInternal> {
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: VCCSFlatButton(
-                      child: Text("LiveView"),
-                      onPressed: () {},
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 8.0, bottom: 1.0),
+                            child: Icon(
+                              Ionicons.md_videocam,
+                              size: 16,
+                            ),
+                          ),
+                          Text("LiveView"),
+                        ],
+                      ),
+                      onPressed: isChanging ? null : () {},
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: VCCSFlatButton(
                       child: Text("Preview"),
-                      onPressed: () {},
+                      onPressed: isChanging ? null : () {},
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: VCCSRaisedButton(
                       child: Text("AutoFocus"),
-                      onPressed: () {},
+                      onPressed: isChanging ? null : () {},
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: VCCSRaisedButton(
                       child: Text("Capture"),
-                      onPressed: () {},
+                      onPressed: isChanging ? null : () {},
                     ),
                   ),
                 ],
@@ -204,15 +218,12 @@ class __CameraPageInternalState extends State<_CameraPageInternal> {
     return BlocBuilder<CameraBloc, CameraChangePropertyState>(
         builder: (context, state) {
       if (state is CameraDataState) {
-        bool isChanging = state.isCameraCaptureInProgress ||
-            state.isChaningProperties ||
-            state.isLiveViewActive ||
-            state.isGettingPreview;
+        bool isChanging = !state.status.canInteract;
         return Scaffold(
           body: Scrollbar(
             child: ListView(
               children: [
-                _header(context, state.camera, state.isChaningProperties),
+                _header(context, state.camera, isChanging),
                 _search(),
                 Padding(
                   padding: const EdgeInsets.all(16.0),

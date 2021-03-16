@@ -2,34 +2,42 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 
-class Configuration {
-  Map<String, Slot> _slots;
+part 'configuration.g.dart';
 
-  Configuration({Map<String, Slot> slots}) : _slots = slots ?? {};
+@JsonSerializable()
+class Configuration {
+  @JsonKey(name: "slots")
+  Map<String, Slot> slots = {};
+
+  Configuration({this.slots});
 
   void setSlot(Slot slot) {
-    _slots[slot.id] = slot;
+    slots[slot.id] = slot;
   }
 
   void removeSlot(Slot slot) {
-    _slots.remove(slot.id);
+    slots.remove(slot.id);
   }
 
   Slot getAssignedSlot(ICamera camera) {
-    for (var slot in _slots.values) {
+    for (var slot in slots.values) {
       if (slot.cameraRef.cameraId == camera.getId()) return slot;
     }
   }
 
   List<CameraRef> getAssignedCameraRefs() {
-    return _slots.values.map((e) => e.cameraRef).toList();
+    return slots.values.map((e) => e.cameraRef).toList();
   }
 
   List<Slot> getSlots() {
-    List<Slot> slots_unsorted = _slots.values.toList();
+    List<Slot> slots_unsorted = slots.values.toList();
     slots_unsorted.sort();
     return slots_unsorted;
   }
+
+  Map<String, dynamic> toJson() => _$ConfigurationToJson(this);
+  factory Configuration.fromJson(Map<String, dynamic> json) =>
+      _$ConfigurationFromJson(json);
 }
 
 @JsonSerializable()
@@ -62,6 +70,9 @@ class Slot with Comparable<Slot> {
   int compareTo(Slot other) {
     return name.compareTo(other.name);
   }
+
+  Map<String, dynamic> toJson() => _$SlotToJson(this);
+  factory Slot.fromJson(Map<String, dynamic> json) => _$SlotFromJson(json);
 }
 
 @JsonSerializable()
@@ -70,6 +81,10 @@ class CameraRef {
   final String cameraModel;
 
   CameraRef(this.cameraId, this.cameraModel);
+
+  Map<String, dynamic> toJson() => _$CameraRefToJson(this);
+  factory CameraRef.fromJson(Map<String, dynamic> json) =>
+      _$CameraRefFromJson(json);
 }
 
 enum Status { CONNECTED, CONNECTING, NOT_CONNECTED }

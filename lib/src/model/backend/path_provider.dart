@@ -20,6 +20,10 @@ class PathProvider {
     return join(applicationDocumentsDirectory.path, "VCCS");
   }
 
+  static String getConfigurationPath() {
+    return join(getVCCSDirectory(), "conf.json");
+  }
+
   static String getProjectsDirectory() {
     return join(applicationDocumentsDirectory.path, "VCCS", "projects");
   }

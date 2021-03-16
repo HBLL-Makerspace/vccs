@@ -5,6 +5,7 @@ import 'package:path/path.dart';
 import 'package:vccs/src/model/backend/implementations/camera_properties.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_controller_interface.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
+import 'package:vccs/src/model/backend/interfaces/camera_properties.dart';
 import './libgphoto2_camera.dart';
 
 import '../../path_provider.dart';
@@ -12,6 +13,8 @@ import '../../path_provider.dart';
 class libgphoto2CameraController implements ICameraController {
   Map<String, String> _idPortMap = {};
   Map<String, ICamera> _cameras = {};
+  Map<String, Process> _liveViewProcess = {};
+  Map<String, bool> _changingProperties = {};
 
   @override
   Future<List<ICamera>> getConnectedCameras({bool forceUpdate = false}) async {
@@ -52,6 +55,7 @@ class libgphoto2CameraController implements ICameraController {
   @override
   Future<bool> changeCameraProperty(
       ICamera camera, List<CameraProperty> properties) async {
+    _changingProperties[camera.getId()] = true;
     // print("updating property ${property.name} to ${property.value.toString()}");
     String path = PathProvider.getPluginPath("libgphoto2");
     var process = await Process.run(
@@ -71,11 +75,40 @@ class libgphoto2CameraController implements ICameraController {
     print(process.exitCode);
     print(process.stdout);
     print(process.stderr);
+    _changingProperties.remove(camera.getId());
     return process.exitCode == 0;
   }
 
   @override
   Future<ICamera> getCameraByID(String id, {bool forceUpdate = false}) async {
     return _cameras[id];
+  }
+
+  @override
+  Future<CameraStatus> getCameraStatus(ICamera camera) async {
+    bool isLiveViewActive = _liveViewProcess.containsKey(camera.getId());
+    bool isChangingProperties = _changingProperties.containsKey(camera.getId());
+    return CameraStatus(isChangingProperties, isLiveViewActive);
+  }
+
+  @override
+  Future<bool> startLiveView(ICamera camera) async {
+    if (_liveViewProcess.containsKey(camera.getId())) return false;
+    String path = PathProvider.getPluginPath("libgphoto2");
+    var process =
+        await Process.start(join(path, "liveview.sh"), [], runInShell: true);
+    _liveViewProcess[camera.getId()] = process;
+    process.stdout.transform(utf8.decoder).forEach(print);
+    process.stderr.transform(utf8.decoder).forEach(print);
+    return true;
+  }
+
+  @override
+  Future<bool> stopLiveView(ICamera camera) async {
+    if (_liveViewProcess.containsKey(camera.getId())) {
+      var process = _liveViewProcess[camera.getId()];
+      return process.kill(ProcessSignal.sigint);
+    } else
+      return true;
   }
 }

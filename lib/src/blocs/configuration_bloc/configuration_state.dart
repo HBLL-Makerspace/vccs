@@ -5,6 +5,8 @@ abstract class ConfigurationState {}
 
 class ConfigurationInitial extends ConfigurationState {}
 
+class ConfigurationLoadingState extends ConfigurationState {}
+
 class ConfigurationDataState extends ConfigurationState {
   final Configuration configuration;
 

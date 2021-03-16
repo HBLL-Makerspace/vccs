@@ -20,7 +20,8 @@ class MultiCameraBloc extends Bloc<CameraEvent, CameraState> {
     switch (event.runtimeType) {
       case LoadCamerasEvent:
         yield LoadingCamerasState();
-        yield CamerasState(await _controller.getConnectedCameras());
+        yield CamerasState(
+            await _controller.getConnectedCameras(forceUpdate: true));
         break;
       default:
         break;

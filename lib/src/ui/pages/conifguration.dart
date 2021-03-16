@@ -7,6 +7,7 @@ import 'package:vccs/src/blocs/multi_camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/model/domain/configuration.dart';
 import 'package:vccs/src/ui/route.gr.dart';
+import 'package:vccs/src/ui/widgets/buttons.dart';
 import 'package:vccs/src/ui/widgets/cards.dart';
 import 'package:vccs/src/ui/widgets/forms/create_slot.dart';
 
@@ -156,6 +157,15 @@ class ConfigurationPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Configuration"),
+        actions: [
+          VCCSRaisedButton(
+            child: Text("Save"),
+            onPressed: () {
+              BlocProvider.of<ConfigurationBloc>(context)
+                  .add(SaveConfigurationEvent());
+            },
+          ),
+        ],
       ),
       body: BlocBuilder<MultiCameraBloc, CameraState>(
         builder: (context, state) {

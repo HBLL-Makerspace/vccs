@@ -208,6 +208,12 @@ class _CameraTogglePropertyWidgetState extends State<CameraTogglePropertyWidget>
   AnimationController _controller;
   Animation<double> _size;
 
+  // @override
+  // void didUpdateWidget(covariant CameraTogglePropertyWidget oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   isSelected = oldWidget.property.value;
+  // }
+
   @override
   void initState() {
     super.initState();
