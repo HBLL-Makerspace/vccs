@@ -136,11 +136,15 @@ class ConfigurationPage extends StatelessWidget {
                   ...(state as ConfigurationDataState)
                       .configuration
                       .getSlots()
-                      .map((e) => SlotConfigCard(
+                      .map((e) => SlotCard(
                             slot: e,
                             onPressed: () => ExtendedNavigator.of(context).push(
                                 "/configure/slots",
                                 arguments: SlotPageArguments(slot: e)),
+                            showRemove: true,
+                            onRemove: () => context
+                                .read<ConfigurationBloc>()
+                                .add(ConfigurationRemoveSlotEvent(e)),
                           ))
                       .toList(),
                   _addSlotButton(context)
@@ -151,6 +155,15 @@ class ConfigurationPage extends StatelessWidget {
             return Container();
         }
       },
+    );
+  }
+
+  Widget _noCameras() {
+    return Container(
+      height: 150,
+      child: Center(
+        child: Text("Looks like there aren't any connected cameras 🤔"),
+      ),
     );
   }
 
@@ -168,13 +181,7 @@ class ConfigurationPage extends StatelessWidget {
           ]),
         );
       case CamerasState:
-        if ((state as CamerasState).cameras.isEmpty)
-          return Container(
-            height: 150,
-            child: Center(
-              child: Text("Looks like there aren't any connected cameras 🤔"),
-            ),
-          );
+        if ((state as CamerasState).cameras.isEmpty) return _noCameras();
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: Wrap(
@@ -193,12 +200,7 @@ class ConfigurationPage extends StatelessWidget {
           ),
         );
       default:
-        return Container(
-          height: 150,
-          child: Center(
-            child: Text("Looks like there aren't any connected cameras 🙃"),
-          ),
-        );
+        return _noCameras();
     }
   }
 

@@ -1,11 +1,11 @@
 part of 'camera_bloc.dart';
 
 @immutable
-abstract class CameraChangePropertyState {}
+abstract class CameraState {}
 
-class CameraChangePropertyInitial extends CameraChangePropertyState {}
+class CameraChangePropertyInitial extends CameraState {}
 
-class CameraDataState extends CameraChangePropertyState {
+class CameraDataState extends CameraState {
   final ICamera camera;
   final CameraStatus status;
 

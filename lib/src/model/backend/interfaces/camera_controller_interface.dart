@@ -4,6 +4,7 @@ import 'package:vccs/src/model/backend/interfaces/interfaces.dart';
 import 'camera_properties.dart';
 
 abstract class ICameraController {
+  Stream onCameraUpdate(String cameraId);
   Future<List<ICamera>> getConnectedCameras({bool forceUpdate = false});
   Future<bool> changeCameraProperty(
       ICamera camera, List<CameraProperty> property);

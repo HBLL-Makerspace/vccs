@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 import 'package:vccs/src/model/domain/camera_config.dart';
@@ -10,111 +12,6 @@ import 'package:vccs/src/ui/widgets/buttons.dart';
 import 'package:vccs/src/ui/widgets/floating_modal.dart';
 import 'package:vccs/src/ui/widgets/misc/set_preview_pics.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
-
-class SlotCard extends StatefulWidget {
-  final Slot slot;
-  final bool showCheckbox;
-  final bool isChecked;
-  final ValueChanged<bool> onCheckboxClicked;
-  final VoidCallback onPressed;
-
-  const SlotCard(
-      {Key key,
-      this.slot,
-      this.showCheckbox = false,
-      this.onCheckboxClicked,
-      this.isChecked,
-      this.onPressed})
-      : super(key: key);
-
-  @override
-  _SlotCardState createState() => _SlotCardState();
-}
-
-class _SlotCardState extends State<SlotCard> {
-  Widget _status(BuildContext context, Status status) {
-    switch (status) {
-      case Status.CONNECTED:
-        return Tooltip(
-          message: 'Camera is connected',
-          child: Icon(
-            MaterialCommunityIcons.camera,
-            size: 18,
-            color: Colors.green[400],
-          ),
-        );
-      case Status.CONNECTING:
-        return Tooltip(
-          message: 'Connecting to camera',
-          child: Icon(
-            Icons.linked_camera,
-            size: 18,
-            color: Colors.amber[300],
-          ),
-        );
-      case Status.NOT_CONNECTED:
-        return Tooltip(
-          message: 'Something went wrong, camera is not connected',
-          child: Icon(
-            Feather.alert_triangle,
-            size: 18,
-            color: Colors.red[400],
-          ),
-        );
-    }
-    return Container();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 150,
-      height: 150,
-      child: AdvancedCard(
-        onPressed: widget.onPressed,
-        child: Stack(
-          children: [
-            if (widget.showCheckbox)
-              Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Checkbox(
-                      activeColor: Theme.of(context).accentColor,
-                      value: widget.isChecked,
-                      onChanged: widget.onCheckboxClicked ?? (_) {}),
-                ),
-              ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: _status(context, widget.slot.status),
-              ),
-            ),
-            Center(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Icon(
-                      Ionicons.md_camera,
-                      size: 32,
-                      color: Colors.grey[400],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Text(widget.slot.id),
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class AdvancedCard extends StatefulWidget {
   final Widget child;
@@ -338,11 +235,63 @@ class CameraCard extends StatelessWidget {
   }
 }
 
-class SlotConfigCard extends StatelessWidget {
+class SlotCard extends StatefulWidget {
   final Slot slot;
   final VoidCallback onPressed;
+  final bool showCheckbox;
+  final bool showRemove;
+  final VoidCallback onRemove;
+  final bool isChecked;
+  final ValueChanged<bool> onCheckboxClicked;
 
-  SlotConfigCard({Key key, this.slot, this.onPressed}) : super(key: key);
+  SlotCard(
+      {Key key,
+      this.slot,
+      this.onPressed,
+      this.showCheckbox = false,
+      this.isChecked,
+      this.onCheckboxClicked,
+      this.showRemove = false,
+      this.onRemove})
+      : super(key: key);
+
+  @override
+  _SlotCardState createState() => _SlotCardState();
+}
+
+class _SlotCardState extends State<SlotCard> {
+  Widget _cameraStatus(BuildContext context) {
+    return BlocBuilder<CameraBloc, CameraState>(
+        cubit: CameraBloc(AppData.of(context).controller)
+          ..add(LoadCameraDataEvent(widget.slot.cameraRef.cameraId)),
+        builder: (context, state) {
+          bool error = true;
+          if (state is CameraDataState) error = state.camera == null;
+          Widget icon;
+          if (!error)
+            icon = Tooltip(
+                message: 'Connected',
+                child: Icon(Icons.done, color: Colors.green, size: 16));
+          else
+            icon = Tooltip(
+              message: "Camera is not connected",
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child:
+                    Icon(Feather.alert_triangle, color: Colors.red, size: 12),
+              ),
+            );
+          return Material(
+            elevation: 4,
+            borderRadius: BorderRadius.circular(100),
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: icon,
+            ),
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -350,8 +299,8 @@ class SlotConfigCard extends StatelessWidget {
       width: 150,
       height: 150,
       child: AdvancedCard(
-        onPressed: onPressed,
-        color: Color(slot.color),
+        onPressed: widget.onPressed,
+        color: Color(widget.slot.color),
         child: Stack(
           children: [
             Align(
@@ -362,11 +311,12 @@ class SlotConfigCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        slot.name ?? slot.id,
+                        widget.slot.name ?? widget.slot.id,
                         overflow: TextOverflow.fade,
                         softWrap: false,
                         style: TextStyle(
-                            color: Color(slot.color).computeLuminance() > 0.5
+                            color: Color(widget.slot.color).computeLuminance() >
+                                    0.5
                                 ? Colors.black
                                 : Colors.white),
                       ),
@@ -377,13 +327,13 @@ class SlotConfigCard extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: slot?.cameraRef?.cameraId != null
+              child: widget.slot?.cameraRef?.cameraId != null
                   ? Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Image(
                         image: AssetImage(
                             CameraConfiguration.getMediumThumbnailFor(
-                                slot?.cameraRef?.cameraModel)),
+                                widget.slot?.cameraRef?.cameraModel)),
                       ),
                     )
                   : Center(
@@ -392,9 +342,10 @@ class SlotConfigCard extends StatelessWidget {
                         child: Icon(
                           Ionicons.md_camera,
                           size: 32,
-                          color: Color(slot.color).computeLuminance() > 0.5
-                              ? Colors.black
-                              : Colors.grey[400],
+                          color:
+                              Color(widget.slot.color).computeLuminance() > 0.5
+                                  ? Colors.black
+                                  : Colors.grey[400],
                         ),
                       ),
                     ),
@@ -403,14 +354,16 @@ class SlotConfigCard extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
-                child: slot?.cameraRef?.cameraId == null
+                child: widget.slot?.cameraRef?.cameraId == null
                     ? VCCSFlatButton(
                         child: Text(
                           "Assign",
                           style: TextStyle(
-                              color: Color(slot.color).computeLuminance() > 0.5
-                                  ? Colors.black
-                                  : Colors.white),
+                              color:
+                                  Color(widget.slot.color).computeLuminance() >
+                                          0.5
+                                      ? Colors.black
+                                      : Colors.white),
                         ),
                         onPressed: () async {
                           var cam = await showFloatingModalBottomSheet<ICamera>(
@@ -418,36 +371,54 @@ class SlotConfigCard extends StatelessWidget {
                           if (cam != null)
                             context.read<ConfigurationBloc>().add(
                                 ConfigurationAssignCameraToSlotEvent(
-                                    slot, cam));
+                                    widget.slot, cam));
                         },
                       )
                     : Text(
-                        slot?.cameraRef?.cameraId,
+                        widget.slot?.cameraRef?.cameraId,
                         softWrap: false,
                         overflow: TextOverflow.fade,
                         style: TextStyle(
-                            color: Color(slot.color).computeLuminance() > 0.5
+                            color: Color(widget.slot.color).computeLuminance() >
+                                    0.5
                                 ? Colors.black
                                 : Colors.white),
                       ),
               ),
             ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Tooltip(
-                message: "Remove slot",
-                child: IconButton(
-                  icon: Icon(
-                    Icons.clear,
-                    color: Color(slot.color).computeLuminance() > 0.5
-                        ? Colors.black
-                        : Colors.white,
+            if (widget.showCheckbox && !widget.showRemove)
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Checkbox(
+                      activeColor: Theme.of(context).accentColor,
+                      value: widget.isChecked,
+                      onChanged: widget.onCheckboxClicked ?? (_) {}),
+                ),
+              ),
+            if (widget.showRemove)
+              Align(
+                alignment: Alignment.topRight,
+                child: Tooltip(
+                  message: "Remove slot",
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.clear,
+                      color: Color(widget.slot.color).computeLuminance() > 0.5
+                          ? Colors.black
+                          : Colors.white,
+                    ),
+                    onPressed: widget.onRemove,
                   ),
-                  onPressed: () {
-                    context
-                        .read<ConfigurationBloc>()
-                        .add(ConfigurationRemoveSlotEvent(slot));
-                  },
+                ),
+              ),
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: _cameraStatus(context),
                 ),
               ),
             ),

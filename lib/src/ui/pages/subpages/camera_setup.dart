@@ -63,11 +63,11 @@ class _CameraSetupState extends State<CameraSetup> {
                       _selected[e.id] = val;
                     }),
                     onPressed: () {
-                      if (_selected.containsValue(true)) {
-                        setState(() {
-                          _selected[e.id] = !(_selected[e.id] ?? false);
-                        });
-                      }
+                      // if (_selected.containsValue(true)) {
+                      setState(() {
+                        _selected[e.id] = !(_selected[e.id] ?? false);
+                      });
+                      // }
                     },
                   ))
               .toList()

@@ -215,8 +215,7 @@ class __CameraPageInternalState extends State<_CameraPageInternal> {
   }
 
   Widget _page(BuildContext context) {
-    return BlocBuilder<CameraBloc, CameraChangePropertyState>(
-        builder: (context, state) {
+    return BlocBuilder<CameraBloc, CameraState>(builder: (context, state) {
       if (state is CameraDataState) {
         bool isChanging = !state.status.canInteract;
         return Scaffold(

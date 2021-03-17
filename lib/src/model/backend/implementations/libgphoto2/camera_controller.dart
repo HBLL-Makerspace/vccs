@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -15,6 +16,7 @@ class libgphoto2CameraController implements ICameraController {
   Map<String, ICamera> _cameras = {};
   Map<String, Process> _liveViewProcess = {};
   Map<String, bool> _changingProperties = {};
+  Map<String, StreamController> _cameraChanges = {};
 
   @override
   Future<List<ICamera>> getConnectedCameras({bool forceUpdate = false}) async {
@@ -35,6 +37,7 @@ class libgphoto2CameraController implements ICameraController {
           for (var cam in (jsonObj as List)) {
             libgphoto2Camera cam_ = libgphoto2Camera.fromJson(cam);
             cameras.add(cam_);
+            _notifyCameraListeners(cam_);
             _cameras[cam_.getId()] = cam_;
             _idPortMap[cam_.getId()] = cam_.port;
           }
@@ -86,8 +89,9 @@ class libgphoto2CameraController implements ICameraController {
 
   @override
   Future<CameraStatus> getCameraStatus(ICamera camera) async {
-    bool isLiveViewActive = _liveViewProcess.containsKey(camera.getId());
-    bool isChangingProperties = _changingProperties.containsKey(camera.getId());
+    bool isLiveViewActive = _liveViewProcess.containsKey(camera?.getId());
+    bool isChangingProperties =
+        _changingProperties.containsKey(camera?.getId());
     return CameraStatus(isChangingProperties, isLiveViewActive);
   }
 
@@ -110,5 +114,17 @@ class libgphoto2CameraController implements ICameraController {
       return process.kill(ProcessSignal.sigint);
     } else
       return true;
+  }
+
+  @override
+  Stream onCameraUpdate(String cameraId) {
+    if (!_cameraChanges.containsKey(cameraId))
+      _cameraChanges[cameraId] = StreamController.broadcast();
+    return _cameraChanges[cameraId].stream.asBroadcastStream();
+  }
+
+  void _notifyCameraListeners(ICamera camera) {
+    if (_cameraChanges.containsKey(camera?.getId()))
+      _cameraChanges[camera?.getId()].add(true);
   }
 }
