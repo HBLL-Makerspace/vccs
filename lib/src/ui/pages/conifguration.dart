@@ -97,12 +97,12 @@ class ConfigurationPage extends StatelessWidget {
             clipBehavior: Clip.antiAlias,
             child: InkWell(
               onTap: () async {
-                String name = await showDialog(
+                Slot slot = await showDialog(
                     context: context, builder: (context) => CreateSlotForm());
-                if (name != null)
+                if (slot.name != null)
                   context
                       .read<ConfigurationBloc>()
-                      .add(ConfigurationAddSlotEvent(Slot(name: name)));
+                      .add(ConfigurationAddSlotEvent(slot));
               },
               child: Container(
                 height: 200,
@@ -147,6 +147,8 @@ class ConfigurationPage extends StatelessWidget {
                 ],
               ),
             );
+          default:
+            return Container();
         }
       },
     );

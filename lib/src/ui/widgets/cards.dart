@@ -120,9 +120,14 @@ class AdvancedCard extends StatefulWidget {
   final Widget child;
   final VoidCallback onPressed;
   final bool showHighlight;
+  final Color color;
 
   const AdvancedCard(
-      {Key key, this.onPressed, this.child, this.showHighlight = false})
+      {Key key,
+      this.onPressed,
+      this.child,
+      this.showHighlight = false,
+      this.color})
       : super(key: key);
 
   @override
@@ -140,6 +145,16 @@ class _AdvancedCardState extends State<AdvancedCard> {
 
   @override
   Widget build(BuildContext context) {
+    Widget card = Container(
+      child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            hoverColor: widget.showHighlight ? null : Colors.transparent,
+            child: widget.child,
+            onTap: widget.onPressed ?? () {},
+            focusColor: Colors.transparent,
+          )),
+    );
     return MouseRegion(
       onEnter: (e) => setState(() => _isHover = true),
       onExit: (e) => setState(() => _isHover = false),
@@ -147,16 +162,8 @@ class _AdvancedCardState extends State<AdvancedCard> {
         elevation: _isHover ? 16.0 : 4.0,
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Container(
-          child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                hoverColor: widget.showHighlight ? null : Colors.transparent,
-                child: widget.child,
-                onTap: widget.onPressed ?? () {},
-                focusColor: Colors.transparent,
-              )),
-        ),
+        color: widget.color,
+        child: card,
       ),
     );
   }
@@ -331,6 +338,7 @@ class SlotConfigCard extends StatelessWidget {
       height: 150,
       child: AdvancedCard(
         onPressed: onPressed,
+        color: Color(slot.color),
         child: Stack(
           children: [
             Align(
@@ -344,6 +352,10 @@ class SlotConfigCard extends StatelessWidget {
                         slot.name ?? slot.id,
                         overflow: TextOverflow.fade,
                         softWrap: false,
+                        style: TextStyle(
+                            color: Color(slot.color).computeLuminance() > 0.5
+                                ? Colors.black
+                                : Colors.white),
                       ),
                     ),
                   ),
@@ -367,7 +379,9 @@ class SlotConfigCard extends StatelessWidget {
                         child: Icon(
                           Ionicons.md_camera,
                           size: 32,
-                          color: Colors.grey[400],
+                          color: Color(slot.color).computeLuminance() > 0.5
+                              ? Colors.black
+                              : Colors.grey[400],
                         ),
                       ),
                     ),
@@ -378,7 +392,13 @@ class SlotConfigCard extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: slot?.cameraRef?.cameraId == null
                     ? VCCSFlatButton(
-                        child: Text("Assign"),
+                        child: Text(
+                          "Assign",
+                          style: TextStyle(
+                              color: Color(slot.color).computeLuminance() > 0.5
+                                  ? Colors.black
+                                  : Colors.white),
+                        ),
                         onPressed: () async {
                           var cam = await showFloatingModalBottomSheet<ICamera>(
                               context: context, builder: (_) => SelectCamera());
@@ -392,6 +412,10 @@ class SlotConfigCard extends StatelessWidget {
                         slot?.cameraRef?.cameraId,
                         softWrap: false,
                         overflow: TextOverflow.fade,
+                        style: TextStyle(
+                            color: Color(slot.color).computeLuminance() > 0.5
+                                ? Colors.black
+                                : Colors.white),
                       ),
               ),
             ),
@@ -400,7 +424,12 @@ class SlotConfigCard extends StatelessWidget {
               child: Tooltip(
                 message: "Remove slot",
                 child: IconButton(
-                  icon: Icon(Icons.clear),
+                  icon: Icon(
+                    Icons.clear,
+                    color: Color(slot.color).computeLuminance() > 0.5
+                        ? Colors.black
+                        : Colors.white,
+                  ),
                   onPressed: () {
                     context
                         .read<ConfigurationBloc>()

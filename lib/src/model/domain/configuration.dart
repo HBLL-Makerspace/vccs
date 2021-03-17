@@ -30,9 +30,9 @@ class Configuration {
   }
 
   List<Slot> getSlots() {
-    List<Slot> slots_unsorted = slots.values.toList();
-    slots_unsorted.sort();
-    return slots_unsorted;
+    List<Slot> slots_unsorted = slots?.values?.toList();
+    slots_unsorted?.sort();
+    return slots_unsorted ?? [];
   }
 
   Map<String, dynamic> toJson() => _$ConfigurationToJson(this);

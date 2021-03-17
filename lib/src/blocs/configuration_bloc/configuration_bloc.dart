@@ -12,10 +12,11 @@ part 'configuration_event.dart';
 part 'configuration_state.dart';
 
 class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
-  ConfigurationBloc(this._configuration) : super(ConfigurationInitial()) {
+  ConfigurationBloc(this.configuration) : super(ConfigurationInitial()) {
+    configuration = Configuration(slots: {});
     add(ConfigurationUpdateEvent());
   }
-  Configuration _configuration = Configuration(slots: {});
+  Configuration configuration;
 
   @override
   Stream<ConfigurationState> mapEventToState(
@@ -30,40 +31,40 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
         }
         String contents = file.readAsStringSync();
         if (contents.isEmpty)
-          yield ConfigurationDataState(_configuration);
+          yield ConfigurationDataState(configuration);
         else {
-          _configuration = Configuration.fromJson(jsonDecode(contents));
-          yield ConfigurationDataState(_configuration);
+          configuration = Configuration.fromJson(jsonDecode(contents));
+          yield ConfigurationDataState(configuration);
         }
         break;
       case SaveConfigurationEvent:
-        print(_configuration);
+        print(configuration);
         String configPath = PathProvider.getConfigurationPath();
         var file = File(configPath);
         if (!file.existsSync()) {
           file.createSync(recursive: true);
         }
-        file.writeAsStringSync(jsonEncode(_configuration.toJson()));
-        yield ConfigurationDataState(_configuration);
+        file.writeAsStringSync(jsonEncode(configuration.toJson()));
+        yield ConfigurationDataState(configuration);
         break;
       case ConfigurationUpdateEvent:
-        yield ConfigurationDataState(_configuration);
+        yield ConfigurationDataState(configuration);
         break;
       case ConfigurationAddSlotEvent:
-        _configuration.setSlot((event as ConfigurationAddSlotEvent).slot);
-        yield ConfigurationDataState(_configuration);
+        configuration.setSlot((event as ConfigurationAddSlotEvent).slot);
+        yield ConfigurationDataState(configuration);
         break;
       case ConfigurationRemoveSlotEvent:
-        _configuration.removeSlot((event as ConfigurationRemoveSlotEvent).slot);
-        yield ConfigurationDataState(_configuration);
+        configuration.removeSlot((event as ConfigurationRemoveSlotEvent).slot);
+        yield ConfigurationDataState(configuration);
         break;
       case ConfigurationAssignCameraToSlotEvent:
         var typed = (event as ConfigurationAssignCameraToSlotEvent);
         Slot updated = typed.slot.copyWith(
             cameraRef:
                 CameraRef(typed.camera.getId(), typed.camera.getModel()));
-        _configuration.setSlot(updated);
-        yield ConfigurationDataState(_configuration);
+        configuration.setSlot(updated);
+        yield ConfigurationDataState(configuration);
         break;
     }
   }

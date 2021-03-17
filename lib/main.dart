@@ -25,7 +25,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppData(
-      configuration: _config,
       controller: _controller,
       child: MultiBlocProvider(
         providers: [
@@ -33,8 +32,8 @@ class MyApp extends StatelessWidget {
             create: (context) => MultiCameraBloc(_controller),
           ),
           BlocProvider<ConfigurationBloc>(
-            create: (context) => ConfigurationBloc(_config),
-          ),
+              create: (context) =>
+                  ConfigurationBloc(_config)..add(ConfigurationLoadEvent())),
           BlocProvider<ProjectListBloc>(
             create: (context) => ProjectListBloc(),
           )

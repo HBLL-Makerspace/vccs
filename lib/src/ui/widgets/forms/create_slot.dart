@@ -1,7 +1,9 @@
 // import 'package:file_picker_cross/file_picker_cross.dart';
-import 'package:auto_route/auto_route.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:vccs/src/model/domain/configuration.dart';
 import 'package:vccs/src/ui/widgets/buttons.dart';
+import 'package:vccs/src/ui/widgets/misc/color_picker.dart';
 import 'package:vccs/src/ui/widgets/textfield.dart';
 
 class CreateSlotForm extends StatefulWidget {
@@ -12,6 +14,7 @@ class CreateSlotForm extends StatefulWidget {
 class _CreateSlotFormState extends State<CreateSlotForm> {
   FocusNode _node;
   TextEditingController _controller;
+  Color slotColor = Colors.blue;
 
   @override
   void initState() {
@@ -24,8 +27,10 @@ class _CreateSlotFormState extends State<CreateSlotForm> {
   void submit() {
     if (_controller.text == null || _controller.text.isEmpty)
       Navigator.pop(context);
-    else
-      Navigator.pop(context, _controller.text);
+    else {
+      Navigator.pop(
+          context, Slot(name: _controller.text, color: slotColor.value));
+    }
   }
 
   @override
@@ -57,6 +62,31 @@ class _CreateSlotFormState extends State<CreateSlotForm> {
                   onSubmitted: (_) {
                     submit();
                   },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 16),
+                child: ListTile(
+                  title: Text("Slot color"),
+                  subtitle: Text(
+                      "Color of the slot, just a way to visually distinguish or group slots."),
+                  trailing: ColorIndicator(
+                    width: 44,
+                    height: 44,
+                    borderRadius: 4,
+                    color: slotColor,
+                    onSelect: () async {
+                      Color colorPicked = slotColor;
+                      bool picked =
+                          await colorPickerDialog(context, slotColor, (col) {
+                        colorPicked = col;
+                      });
+                      if (picked)
+                        setState(() {
+                          slotColor = colorPicked;
+                        });
+                    },
+                  ),
                 ),
               ),
               Padding(
