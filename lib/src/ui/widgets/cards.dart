@@ -267,17 +267,30 @@ class SetCard extends StatelessWidget {
 class CameraCard extends StatelessWidget {
   final ICamera camera;
   final VoidCallback onPressed;
+  final CameraRef cameraRef;
 
-  const CameraCard({Key key, this.camera, this.onPressed}) : super(key: key);
+  const CameraCard({Key key, this.camera, this.onPressed, this.cameraRef})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String cameraModel;
+    String cameraId;
+
+    if (cameraRef != null) {
+      cameraModel = cameraRef.cameraModel;
+      cameraId = cameraRef.cameraId;
+    } else if (camera != null) {
+      cameraModel = camera.getModel();
+      cameraId = camera.getId();
+    }
+
     return SizedBox(
       width: 150,
       height: 150,
       child: AdvancedCard(
         onPressed: onPressed ?? () {},
-        child: camera == null
+        child: camera == null && cameraRef == null
             ? Center(
                 child: Text("No Camera"),
               )
@@ -291,7 +304,7 @@ class CameraCard extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              camera.getModel(),
+                              cameraModel,
                               overflow: TextOverflow.fade,
                               softWrap: false,
                             ),
@@ -305,7 +318,7 @@ class CameraCard extends StatelessWidget {
                     child: Image(
                       image: AssetImage(
                           CameraConfiguration.getMediumThumbnailFor(
-                              camera.getModel())),
+                              cameraModel)),
                     ),
                   ),
                   Align(
@@ -313,7 +326,7 @@ class CameraCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: Text(
-                        camera.getId(),
+                        cameraId,
                         overflow: TextOverflow.fade,
                       ),
                     ),

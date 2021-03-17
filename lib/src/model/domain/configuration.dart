@@ -58,12 +58,20 @@ class Slot with Comparable<Slot> {
     this.color,
   }) : id = id ?? Uuid().v4();
 
-  Slot copyWith({String id, String name, String color, CameraRef cameraRef}) {
+  Slot copyWith({String id, String name, int color, CameraRef cameraRef}) {
     return Slot(
         id: id ?? this.id,
         name: name ?? this.name,
         color: color ?? this.color,
         cameraRef: cameraRef ?? this.cameraRef);
+  }
+
+  Slot unassign() {
+    return Slot(
+      id: this.id,
+      name: this.name,
+      color: this.color,
+    );
   }
 
   @override

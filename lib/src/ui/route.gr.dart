@@ -10,7 +10,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../model/backend/interfaces/camera_interface.dart';
 import '../model/domain/configuration.dart';
 import '../model/domain/domian.dart';
 import 'pages/pages.dart';
@@ -81,7 +80,6 @@ class VCCSRoute extends RouterBase {
         pageBuilder: (context, animation, secondaryAnimation) => SlotPage(
           key: args.key,
           slot: args.slot,
-          camera: args.camera,
         ),
         settings: data,
         transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
@@ -203,8 +201,7 @@ class HomePageArguments {
 class SlotPageArguments {
   final Key key;
   final Slot slot;
-  final ICamera camera;
-  SlotPageArguments({this.key, @required this.slot, this.camera});
+  SlotPageArguments({this.key, @required this.slot});
 }
 
 /// SetPage arguments holder class

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 import 'package:vccs/src/model/backend/path_provider.dart';
@@ -65,6 +66,11 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
                 CameraRef(typed.camera.getId(), typed.camera.getModel()));
         configuration.setSlot(updated);
         yield ConfigurationDataState(configuration);
+        break;
+      case ConfigurationUpdateSlotEvent:
+        configuration.setSlot((event as ConfigurationUpdateSlotEvent).slot);
+        yield ConfigurationDataState(configuration);
+
         break;
     }
   }

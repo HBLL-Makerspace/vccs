@@ -1,15 +1,32 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_icons/flutter_icons.dart';
+import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 import 'package:vccs/src/model/domain/configuration.dart';
+import 'package:vccs/src/ui/widgets/misc/color_picker.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
 
-class SlotPage extends StatelessWidget {
+class SlotPage extends StatefulWidget {
   final Slot slot;
-  final ICamera camera;
 
-  const SlotPage({Key key, @required this.slot, this.camera}) : super(key: key);
+  const SlotPage({Key key, @required this.slot}) : super(key: key);
+
+  @override
+  _SlotPageState createState() => _SlotPageState();
+}
+
+class _SlotPageState extends State<SlotPage> {
+  Slot slot;
+
+  @override
+  void initState() {
+    super.initState();
+    slot = widget.slot;
+  }
 
   Widget _header(BuildContext context) {
     return Stack(
@@ -20,7 +37,11 @@ class SlotPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(32.0),
               child: CameraCard(
-                camera: camera,
+                cameraRef: slot.cameraRef,
+                onPressed: () {
+                  ExtendedNavigator.of(context)
+                      .push("/configure/cameras/${slot.cameraRef.cameraId}");
+                },
               ),
             ),
             Padding(
@@ -28,23 +49,46 @@ class SlotPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Text(
-                      "Slot: ${slot.name}",
-                      style: Theme.of(context).textTheme.headline3,
-                    ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0, bottom: 4.0),
+                        child: ColorIndicator(
+                          width: 52,
+                          height: 52,
+                          borderRadius: 4,
+                          color: Color(slot.color),
+                          onSelect: () async {
+                            Color colorPicked = Color(slot.color);
+                            bool picked = await colorPickerDialog(
+                                context, Color(slot.color), (col) {
+                              colorPicked = col;
+                            });
+                            if (picked) {
+                              setState(() {
+                                slot = slot.copyWith(color: colorPicked.value);
+                              });
+                              context
+                                  .read<ConfigurationBloc>()
+                                  .add(ConfigurationUpdateSlotEvent(slot));
+                            }
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "Slot: ${slot.name}",
+                          style: Theme.of(context).textTheme.headline3,
+                        ),
+                      ),
+                    ],
                   ),
                   if (slot.cameraRef != null)
                     Text(
                       "${slot.cameraRef?.cameraModel}: ${slot.cameraRef?.cameraId}",
                       style: Theme.of(context).textTheme.headline6,
                     ),
-                  if (slot.cameraRef == null)
-                    VCCSRaisedButton(
-                      child: Text("Assign Camera"),
-                      onPressed: () {},
-                    )
                 ],
               ),
             ),
@@ -58,6 +102,78 @@ class SlotPage extends StatelessWidget {
             )
           ],
         ),
+        Positioned.fill(
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: VCCSFlatButton(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 8.0, bottom: 1.0),
+                            child: Icon(
+                              Ionicons.md_videocam,
+                              size: 16,
+                            ),
+                          ),
+                          Text("LiveView"),
+                        ],
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+                  if (slot.cameraRef != null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: VCCSFlatButton(
+                        child: Text("Unassign"),
+                        onPressed: () {
+                          setState(() {
+                            slot = slot.unassign();
+                          });
+                          context
+                              .read<ConfigurationBloc>()
+                              .add(ConfigurationUpdateSlotEvent(slot));
+                        },
+                        hoverColor: Colors.red[400],
+                      ),
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: VCCSRaisedButton(
+                      child: Text(slot.cameraRef != null
+                          ? "Reassign Camera"
+                          : "Assign Camera"),
+                      onPressed: () async {
+                        var cam = await showFloatingModalBottomSheet<ICamera>(
+                            context: context, builder: (_) => SelectCamera());
+
+                        if (cam != null) {
+                          setState(() {
+                            slot = slot.copyWith(
+                                cameraRef:
+                                    CameraRef(cam.getId(), cam.getModel()));
+                          });
+                          context
+                              .read<ConfigurationBloc>()
+                              .add(ConfigurationUpdateSlotEvent(slot));
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        )
       ],
     );
   }

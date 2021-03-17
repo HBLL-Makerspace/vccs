@@ -24,6 +24,12 @@ class ConfigurationAssignCameraToSlotEvent extends ConfigurationEvent {
   ConfigurationAssignCameraToSlotEvent(this.slot, this.camera);
 }
 
+class ConfigurationUpdateSlotEvent extends ConfigurationEvent {
+  final Slot slot;
+
+  ConfigurationUpdateSlotEvent(this.slot);
+}
+
 class SaveConfigurationEvent extends ConfigurationEvent {}
 
 class ConfigurationLoadEvent extends ConfigurationEvent {}
