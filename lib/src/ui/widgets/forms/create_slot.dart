@@ -15,6 +15,7 @@ class _CreateSlotFormState extends State<CreateSlotForm> {
   FocusNode _node;
   TextEditingController _controller;
   Color slotColor = Colors.blue;
+  GlobalKey<FormState> _formKey;
 
   @override
   void initState() {
@@ -22,12 +23,11 @@ class _CreateSlotFormState extends State<CreateSlotForm> {
     _node = FocusNode();
     _node.requestFocus();
     _controller = TextEditingController();
+    _formKey = GlobalKey<FormState>();
   }
 
   void submit() {
-    if (_controller.text == null || _controller.text.isEmpty)
-      Navigator.pop(context);
-    else {
+    if (_formKey.currentState.validate()) {
       Navigator.pop(
           context, Slot(name: _controller.text, color: slotColor.value));
     }
@@ -35,75 +35,80 @@ class _CreateSlotFormState extends State<CreateSlotForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 500),
-        child: Dialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "Create Slot",
-                  style: Theme.of(context).textTheme.headline5,
+    return Form(
+      key: _formKey,
+      child: Container(
+        alignment: Alignment.center,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 500),
+          child: Dialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "Create Slot",
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: VCCSTextFormField(
-                  focusNode: _node,
-                  label: "Slot name",
-                  controller: _controller,
-                  onSubmitted: (_) {
-                    submit();
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0, bottom: 16),
-                child: ListTile(
-                  title: Text("Slot color"),
-                  subtitle: Text(
-                      "Color of the slot, just a way to visually distinguish or group slots."),
-                  trailing: ColorIndicator(
-                    width: 44,
-                    height: 44,
-                    borderRadius: 4,
-                    color: slotColor,
-                    onSelect: () async {
-                      Color colorPicked = slotColor;
-                      bool picked =
-                          await colorPickerDialog(context, slotColor, (col) {
-                        colorPicked = col;
-                      });
-                      if (picked)
-                        setState(() {
-                          slotColor = colorPicked;
-                        });
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: VCCSTextFormField(
+                    focusNode: _node,
+                    label: "Slot name",
+                    controller: _controller,
+                    validator: (val) =>
+                        val.isEmpty ? "Please give the slot a name" : null,
+                    onSubmitted: (_) {
+                      submit();
                     },
                   ),
                 ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: VCCSRaisedButton(
-                        child: Text("Create"),
-                        onPressed: submit,
-                      ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 16),
+                  child: ListTile(
+                    title: Text("Slot color"),
+                    subtitle: Text(
+                        "Color of the slot, just a way to visually distinguish or group slots."),
+                    trailing: ColorIndicator(
+                      width: 44,
+                      height: 44,
+                      borderRadius: 4,
+                      color: slotColor,
+                      onSelect: () async {
+                        Color colorPicked = slotColor;
+                        bool picked =
+                            await colorPickerDialog(context, slotColor, (col) {
+                          colorPicked = col;
+                        });
+                        if (picked)
+                          setState(() {
+                            slotColor = colorPicked;
+                          });
+                      },
                     ),
-                  ],
+                  ),
                 ),
-              )
-            ],
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: VCCSRaisedButton(
+                          child: Text("Create"),
+                          onPressed: submit,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

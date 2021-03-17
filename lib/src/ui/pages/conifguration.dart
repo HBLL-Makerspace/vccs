@@ -99,7 +99,7 @@ class ConfigurationPage extends StatelessWidget {
               onTap: () async {
                 Slot slot = await showDialog(
                     context: context, builder: (context) => CreateSlotForm());
-                if (slot.name != null)
+                if (slot?.name != null)
                   context
                       .read<ConfigurationBloc>()
                       .add(ConfigurationAddSlotEvent(slot));
