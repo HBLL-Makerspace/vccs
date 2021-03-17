@@ -154,20 +154,69 @@ class ConfigurationPage extends StatelessWidget {
     );
   }
 
+  Widget _cameras(BuildContext context, CameraState state) {
+    switch (state.runtimeType) {
+      case LoadingCamerasState:
+        return Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Row(children: [
+            Expanded(
+              child: SpinKitWave(
+                color: Colors.grey[300],
+              ),
+            )
+          ]),
+        );
+      case CamerasState:
+        if ((state as CamerasState).cameras.isEmpty)
+          return Container(
+            height: 150,
+            child: Center(
+              child: Text("Looks like there aren't any connected cameras 🤔"),
+            ),
+          );
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Wrap(
+            children: [
+              ...(state as CamerasState)
+                  .cameras
+                  .map((e) => CameraCard(
+                        camera: e,
+                        onPressed: () {
+                          ExtendedNavigator.of(context)
+                              .push("/configure/cameras/${e.getId()}");
+                        },
+                      ))
+                  .toList()
+            ],
+          ),
+        );
+      default:
+        return Container(
+          height: 150,
+          child: Center(
+            child: Text("Looks like there aren't any connected cameras 🙃"),
+          ),
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Configuration"),
-        actions: [
-          VCCSRaisedButton(
-            child: Text("Save"),
-            onPressed: () {
-              BlocProvider.of<ConfigurationBloc>(context)
-                  .add(SaveConfigurationEvent());
-            },
-          ),
-        ],
+      ),
+      floatingActionButton: VCCSRaisedButton(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Save Configuration"),
+        ),
+        onPressed: () {
+          BlocProvider.of<ConfigurationBloc>(context)
+              .add(SaveConfigurationEvent());
+        },
       ),
       body: BlocBuilder<MultiCameraBloc, CameraState>(
         builder: (context, state) {
@@ -181,35 +230,8 @@ class ConfigurationPage extends StatelessWidget {
                     context,
                     (state is CamerasState)
                         ? state.cameras.length.toString()
-                        : "Loading"),
-                if (state is LoadingCamerasState)
-                  Padding(
-                    padding: const EdgeInsets.all(32.0),
-                    child: Row(children: [
-                      Expanded(
-                        child: SpinKitWave(
-                          color: Colors.grey[300],
-                        ),
-                      )
-                    ]),
-                  ),
-                if (state is CamerasState)
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Wrap(
-                      children: [
-                        ...state.cameras
-                            .map((e) => CameraCard(
-                                  camera: e,
-                                  onPressed: () {
-                                    ExtendedNavigator.of(context).push(
-                                        "/configure/cameras/${e.getId()}");
-                                  },
-                                ))
-                            .toList()
-                      ],
-                    ),
-                  ),
+                        : "0"),
+                _cameras(context, state),
                 // _unassignedCameraHeader(context),
                 // Padding(
                 //   padding: const EdgeInsets.all(16.0),
