@@ -263,7 +263,7 @@ class _SlotCardState extends State<SlotCard> {
   Widget _cameraStatus(BuildContext context) {
     return BlocBuilder<CameraBloc, CameraState>(
         cubit: CameraBloc(AppData.of(context).controller)
-          ..add(LoadCameraDataEvent(widget.slot.cameraRef.cameraId)),
+          ..add(LoadCameraDataEvent(widget.slot?.cameraRef?.cameraId)),
         builder: (context, state) {
           bool error = true;
           if (state is CameraDataState) error = state.camera == null;

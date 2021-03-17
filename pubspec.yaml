@@ -74,6 +74,7 @@ flutter:
   assets:
     - "assets/"
     - "assets/cameras/"
+    - "assets/cameras/default/"
     - "assets/cameras/nikon/"
     - "assets/cameras/nikon/d300/"
     - "assets/cameras/nikon/d300s/"
