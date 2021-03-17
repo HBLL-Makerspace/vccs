@@ -111,7 +111,9 @@ class libgphoto2CameraController implements ICameraController {
   Future<bool> stopLiveView(ICamera camera) async {
     if (_liveViewProcess.containsKey(camera.getId())) {
       var process = _liveViewProcess[camera.getId()];
-      return process.kill(ProcessSignal.sigint);
+      var code = process.kill(ProcessSignal.sigint);
+      _liveViewProcess.remove(camera.getId());
+      return code;
     } else
       return true;
   }

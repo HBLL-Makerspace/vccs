@@ -217,16 +217,16 @@ class __CameraPageInternalState extends State<_CameraPageInternal> {
   Widget _page(BuildContext context) {
     return BlocBuilder<CameraBloc, CameraState>(builder: (context, state) {
       if (state is CameraDataState) {
-        bool isChanging = !state.status.canInteract;
         return Scaffold(
           body: Scrollbar(
             child: ListView(
               children: [
-                _header(context, state.camera, isChanging),
+                _header(context, state.camera, !state.status.canInteract),
                 _search(),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: _camProperties(context, state.camera, isChanging),
+                  child: _camProperties(
+                      context, state.camera, !state.status.canInteract),
                 ),
                 Container(
                   height: 80,
@@ -248,7 +248,7 @@ class __CameraPageInternalState extends State<_CameraPageInternal> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text("Cancel"),
                     ),
-                    onPressed: isChanging
+                    onPressed: !state.status.canInteract
                         ? null
                         : () {
                             setState(() {
@@ -260,7 +260,7 @@ class __CameraPageInternalState extends State<_CameraPageInternal> {
                 VCCSRaisedButton(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: isChanging
+                    child: !state.status.canInteract
                         ? Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 20.0),
@@ -274,7 +274,7 @@ class __CameraPageInternalState extends State<_CameraPageInternal> {
                           )
                         : Text("Apply Changes"),
                   ),
-                  onPressed: isChanging
+                  onPressed: !state.status.canInteract
                       ? null
                       : () {
                           BlocProvider.of<CameraBloc>(context, listen: false)
