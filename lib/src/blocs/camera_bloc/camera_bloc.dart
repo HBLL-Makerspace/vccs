@@ -44,6 +44,25 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
         });
         yield CameraDataState(camera,
             status: await _controller.getCameraStatus(camera));
+        break;
+
+      case StartLiveView:
+        yield CameraDataState(camera,
+            status: await _controller.getCameraStatus(camera));
+        StartLiveView typed = event as StartLiveView;
+        await _controller.startLiveView(typed.camera);
+        yield CameraDataState(camera,
+            status: await _controller.getCameraStatus(camera));
+        break;
+
+      case StopLiveView:
+        yield CameraDataState(camera,
+            status: await _controller.getCameraStatus(camera));
+        StopLiveView typed = event as StopLiveView;
+        await _controller.stopLiveView(typed.camera);
+        yield CameraDataState(camera,
+            status: await _controller.getCameraStatus(camera));
+        break;
     }
   }
 }

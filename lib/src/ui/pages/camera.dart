@@ -41,7 +41,8 @@ class __CameraPageInternalState extends State<_CameraPageInternal> {
     properties = {};
   }
 
-  Widget _header(BuildContext context, ICamera camera, bool isChanging) {
+  Widget _header(
+      BuildContext context, ICamera camera, bool isChanging, bool isLiveView) {
     return Stack(
       children: [
         Row(
@@ -93,22 +94,33 @@ class __CameraPageInternalState extends State<_CameraPageInternal> {
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: VCCSFlatButton(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(right: 8.0, bottom: 1.0),
-                            child: Icon(
-                              Ionicons.md_videocam,
-                              size: 16,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  right: 8.0, bottom: 1.0),
+                              child: Icon(
+                                isLiveView
+                                    ? (Ionicons.md_pause)
+                                    : (Ionicons.md_videocam),
+                                size: 16,
+                              ),
                             ),
-                          ),
-                          Text("LiveView"),
-                        ],
-                      ),
-                      onPressed: isChanging ? null : () {},
-                    ),
+                            Text(isLiveView ? "Stop" : "LiveView"),
+                          ],
+                        ),
+                        onPressed: isChanging
+                            ? null
+                            : () {
+                                isLiveView
+                                    ? BlocProvider.of<CameraBloc>(context,
+                                            listen: false)
+                                        .add(StopLiveView(camera))
+                                    : BlocProvider.of<CameraBloc>(context,
+                                            listen: false)
+                                        .add(StartLiveView(camera));
+                              }),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
@@ -221,7 +233,8 @@ class __CameraPageInternalState extends State<_CameraPageInternal> {
           body: Scrollbar(
             child: ListView(
               children: [
-                _header(context, state.camera, !state.status.canInteract),
+                _header(context, state.camera, !state.status.canInteract,
+                    state.status.isLiveViewActive),
                 _search(),
                 Padding(
                   padding: const EdgeInsets.all(16.0),

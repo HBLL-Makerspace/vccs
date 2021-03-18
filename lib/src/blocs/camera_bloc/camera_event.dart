@@ -16,6 +16,14 @@ class LoadCameraDataEvent extends CameraEvent {
   LoadCameraDataEvent(this.cameraId);
 }
 
-class StartLiveView extends CameraEvent {}
+class StartLiveView extends CameraEvent {
+  final ICamera camera;
 
-class StopLiveView extends CameraEvent {}
+  StartLiveView(this.camera);
+}
+
+class StopLiveView extends CameraEvent {
+  final ICamera camera;
+
+  StopLiveView(this.camera);
+}
