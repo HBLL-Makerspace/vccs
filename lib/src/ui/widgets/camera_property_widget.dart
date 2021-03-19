@@ -232,8 +232,8 @@ class _CameraTogglePropertyWidgetState extends State<CameraTogglePropertyWidget>
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
+    super.dispose();
   }
 
   @override

@@ -42,10 +42,9 @@ class MyApp extends StatelessWidget {
           title: 'VCCS',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-              brightness: Brightness.dark,
-              primarySwatch: Colors.blue,
-              primaryColor: Colors.blue,
-              accentColor: Colors.blue),
+            brightness: Brightness.dark,
+            accentColor: Colors.blue,
+          ),
           home: ExtendedNavigator(
             router: VCCSRoute(),
           ),
