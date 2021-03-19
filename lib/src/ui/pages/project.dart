@@ -88,7 +88,6 @@ class _ProjectPageState extends State<ProjectPage> with NavigatorObserver {
 
   @override
   Widget build(BuildContext context) {
-    // Comment
     return BlocBuilder<ProjectBloc, ProjectState>(
       cubit: projectBloc,
       builder: (context, state) {
