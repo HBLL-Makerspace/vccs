@@ -78,7 +78,8 @@ class _CameraSetsState extends State<CameraSets> {
                 set: e,
                 onSetAsMask: () =>
                     context.read<ProjectBloc>().add(SetMaskEvent(e)),
-                onDelete: () => setState(() => sets.remove(e)),
+                onDelete: () => setState(
+                    () => context.read<ProjectBloc>().add(RemoveSetEvent(e))),
               ),
             ))
         .toList();

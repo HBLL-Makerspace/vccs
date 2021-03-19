@@ -38,6 +38,12 @@ import 'package:vccs/src/ui/pages/pages.dart';
           durationInMilliseconds: 10,
         ),
         CustomRoute(
+          page: ImagePage,
+          path: "/slotimage/:set/:slot",
+          transitionsBuilder: TransitionsBuilders.fadeIn,
+          durationInMilliseconds: 10,
+        ),
+        CustomRoute(
           page: CameraSetup,
           path: "/setup",
           transitionsBuilder: TransitionsBuilders.fadeIn,

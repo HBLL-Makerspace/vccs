@@ -5,3 +5,4 @@ export './set.dart';
 export './set_image.dart';
 export './settings.dart';
 export './project_welcome.dart';
+export './image.dart';

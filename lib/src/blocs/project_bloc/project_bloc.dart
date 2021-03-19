@@ -35,6 +35,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         await _project.save();
         yield ProjectDataState(_project);
         break;
+      case RemoveSetEvent:
+        await _project.removeSet((event as RemoveSetEvent).set);
+        await _project.save();
+        yield ProjectDataState(_project);
+        break;
       case CreateSetEvent:
         await _project.createSet((event as CreateSetEvent).set);
         await _project.save();

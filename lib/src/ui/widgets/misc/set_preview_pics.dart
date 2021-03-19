@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -72,5 +73,114 @@ class SetPreviewPictures extends StatelessWidget {
           return Container();
       },
     );
+  }
+}
+
+class SlotImagePreview extends StatelessWidget {
+  final VCCSSet set;
+  final Slot slot;
+
+  const SlotImagePreview({
+    Key key,
+    this.set,
+    this.slot,
+  }) : super(key: key);
+
+  Widget _picture(BuildContext context) {
+    Project project = context.read<ProjectBloc>().project;
+    return BlocBuilder<SlotPreviewImageBloc, SlotPreviewImageState>(
+      cubit: SlotPreviewImageBloc()
+        ..add(LoadSlotPreviewImageEvent(project, set, slot)),
+      builder: (context, state) {
+        bool isLoading = state is LoadingSlotPreviewImageState;
+        File file =
+            ((state is LoadedSlotPreviewImageState) && state.file != null)
+                ? state.file
+                : null;
+        return _SlotImagePreview(
+            set: set,
+            slot: slot,
+            image: isLoading
+                ? SpinKitCircle(
+                    size: 24,
+                    color: Colors.grey[400],
+                  )
+                : file == null
+                    ? Center(child: Icon(Icons.picture_in_picture))
+                    : Image.file(
+                        file,
+                        fit: BoxFit.cover,
+                      ));
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _picture(context);
+  }
+}
+
+class _SlotImagePreview extends StatefulWidget {
+  final Widget image;
+  final Slot slot;
+  final VCCSSet set;
+
+  const _SlotImagePreview({
+    Key key,
+    this.image,
+    this.slot,
+    this.set,
+  }) : super(key: key);
+
+  @override
+  __SlotImagePreviewState createState() => __SlotImagePreviewState();
+}
+
+class __SlotImagePreviewState extends State<_SlotImagePreview> {
+  bool isHovering;
+
+  @override
+  void initState() {
+    super.initState();
+    isHovering = false;
+  }
+
+  Widget _picture(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => isHovering = true),
+      onExit: (_) => setState(() => isHovering = false),
+      child: Material(
+        elevation: isHovering ? 8.0 : 2.0,
+        child: InkWell(
+          onTap: () {
+            ExtendedNavigator.named("project")
+                .push("/slotimage/${widget.set.uid}/${widget.slot.id}");
+          },
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Material(
+                  color: Colors.transparent,
+                  child: widget.image,
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(widget.slot?.name ?? "Unknown"),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _picture(context);
   }
 }

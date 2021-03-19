@@ -103,6 +103,9 @@ class VCCSRoute extends RouterBase {
 
 class ProjectPageRoutes {
   static const String projectWelcome = '/';
+  static const String _imagePage = '/slotimage/:set/:slot';
+  static String imagePage({@required dynamic set, @required dynamic slot}) =>
+      '/slotimage/$set/$slot';
   static const String cameraSetup = '/setup';
   static const String cameraSets = '/sets';
   static const String _setPage = '/sets/:id?';
@@ -111,6 +114,7 @@ class ProjectPageRoutes {
   static const String settings = '/settings';
   static const all = <String>{
     projectWelcome,
+    _imagePage,
     cameraSetup,
     cameraSets,
     _setPage,
@@ -124,6 +128,7 @@ class ProjectPageRouter extends RouterBase {
   List<RouteDef> get routes => _routes;
   final _routes = <RouteDef>[
     RouteDef(ProjectPageRoutes.projectWelcome, page: ProjectWelcome),
+    RouteDef(ProjectPageRoutes._imagePage, page: ImagePage),
     RouteDef(ProjectPageRoutes.cameraSetup, page: CameraSetup),
     RouteDef(ProjectPageRoutes.cameraSets, page: CameraSets),
     RouteDef(ProjectPageRoutes._setPage, page: SetPage),
@@ -137,6 +142,15 @@ class ProjectPageRouter extends RouterBase {
       return PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) =>
             ProjectWelcome(),
+        settings: data,
+        transitionsBuilder: TransitionsBuilders.fadeIn,
+        transitionDuration: const Duration(milliseconds: 10),
+      );
+    },
+    ImagePage: (data) {
+      return PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const ImagePage(),
         settings: data,
         transitionsBuilder: TransitionsBuilders.fadeIn,
         transitionDuration: const Duration(milliseconds: 10),

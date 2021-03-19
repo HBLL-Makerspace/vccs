@@ -11,6 +11,7 @@ import 'package:vccs/src/ui/widgets/buttons.dart';
 import 'package:vccs/src/ui/widgets/floating_modal.dart';
 import 'package:vccs/src/ui/widgets/misc/set_preview_pics.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
+import 'package:vccs/src/ui/route.gr.dart';
 
 class AdvancedCard extends StatefulWidget {
   final Widget child;
@@ -145,7 +146,9 @@ class SetCard extends StatelessWidget {
       children: [
         Expanded(
           child: AdvancedCard(
-            onPressed: () => ExtendedNavigator.named("project").push("/sets/0"),
+            onPressed: () => ExtendedNavigator.named("project").push(
+                "/sets/${set.uid}",
+                arguments: SetPageArguments(set: set)),
             child: Container(
               height: 200,
               child: Stack(

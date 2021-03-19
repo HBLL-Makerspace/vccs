@@ -51,6 +51,12 @@ class ProjectManager {
     return true;
   }
 
+  static Future<bool> removeSetFolder(Project project, VCCSSet set) async {
+    Directory setDir = Directory(PathProvider.getSetFolderPath(project, set));
+    setDir.deleteSync(recursive: true);
+    return true;
+  }
+
   static Future<bool> saveProject(Project project) async {
     File configDir = File(join(project.location, project.name, "config.vccs"));
     configDir.writeAsStringSync(jsonEncode(project.config.toJson()));

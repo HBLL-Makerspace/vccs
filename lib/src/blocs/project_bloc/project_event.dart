@@ -20,6 +20,12 @@ class SetMaskEvent extends ProjectEvent {
   SetMaskEvent(this.set);
 }
 
+class RemoveSetEvent extends ProjectEvent {
+  final VCCSSet set;
+
+  RemoveSetEvent(this.set);
+}
+
 class CreateSetEvent extends ProjectEvent {
   final VCCSSet set;
 

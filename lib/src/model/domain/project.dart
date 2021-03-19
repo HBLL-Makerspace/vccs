@@ -18,6 +18,11 @@ class Project {
     await ProjectManager.createSetFolder(this, set);
   }
 
+  Future<void> removeSet(VCCSSet set) async {
+    config.sets.remove(set);
+    await ProjectManager.removeSetFolder(this, set);
+  }
+
   void setMask(VCCSSet set) {
     for (int i = 0; i < config.sets.length; i++)
       if (config.sets[i].uid == set.uid)
@@ -28,6 +33,12 @@ class Project {
 
   Future<void> save() async {
     await ProjectManager.saveProject(this);
+  }
+
+  VCCSSet getSetById(String id) {
+    List<VCCSSet> sets =
+        config.sets.where((element) => element.uid == id).toList();
+    if (sets.isNotEmpty) return sets.first;
   }
 
   // void close() {}
