@@ -2,10 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vccs/src/blocs/project_list/project_list_bloc.dart';
+import 'package:vccs/src/ui/route.gr.dart';
 import 'package:vccs/src/ui/widgets/buttons.dart';
 import 'package:vccs/src/ui/widgets/floating_modal.dart';
 import 'package:vccs/src/ui/widgets/forms/create_project.dart';
 import 'package:vccs/src/ui/widgets/forms/project_selection.dart';
+import 'package:vccs/src/ui/route.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -63,14 +65,21 @@ class _HomePageState extends State<HomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text("Open Project"),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               context
                                   .read<ProjectListBloc>()
                                   .add(LoadProjectsEvent());
-                              showFloatingModalBottomSheet(
-                                  context: context,
-                                  builder: (_) => SelectProject());
-                              // ExtendedNavigator.of(context).push("/project");
+                              String projectName =
+                                  await showFloatingModalBottomSheet(
+                                      context: context,
+                                      builder: (_) => SelectProject());
+                              if (projectName == null) {
+                                return;
+                              }
+                              ExtendedNavigator.of(context).push("/project",
+                                  arguments: ProjectPageArguments(
+                                      projectName: projectName,
+                                      projectLocation: ""));
                               // Navigator.push(
                               //     context,
                               //     MaterialPageRoute(

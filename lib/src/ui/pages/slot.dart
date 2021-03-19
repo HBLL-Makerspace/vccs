@@ -96,7 +96,7 @@ class _SlotPageState extends State<SlotPage> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: IconButton(
-                icon: Icon(Icons.close),
+                icon: Icon(Ionicons.ios_arrow_back),
                 onPressed: () => ExtendedNavigator.of(context).pop(),
               ),
             )

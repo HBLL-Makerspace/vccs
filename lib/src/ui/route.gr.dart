@@ -87,8 +87,13 @@ class VCCSRoute extends RouterBase {
       );
     },
     ProjectPage: (data) {
+      final args = data.getArgs<ProjectPageArguments>(nullOk: false);
       return PageRouteBuilder<dynamic>(
-        pageBuilder: (context, animation, secondaryAnimation) => ProjectPage(),
+        pageBuilder: (context, animation, secondaryAnimation) => ProjectPage(
+          key: args.key,
+          projectName: args.projectName,
+          projectLocation: args.projectLocation,
+        ),
         settings: data,
         transitionsBuilder: TransitionsBuilders.slideLeft,
       );
@@ -202,6 +207,15 @@ class SlotPageArguments {
   final Key key;
   final Slot slot;
   SlotPageArguments({this.key, @required this.slot});
+}
+
+/// ProjectPage arguments holder class
+class ProjectPageArguments {
+  final Key key;
+  final String projectName;
+  final String projectLocation;
+  ProjectPageArguments(
+      {this.key, @required this.projectName, @required this.projectLocation});
 }
 
 /// SetPage arguments holder class
