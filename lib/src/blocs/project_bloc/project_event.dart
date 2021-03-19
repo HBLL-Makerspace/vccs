@@ -13,3 +13,15 @@ class LoadProjectEvent extends ProjectEvent {
 class SaveProjectEvent extends ProjectEvent {}
 
 class CloseProjectEvent extends ProjectEvent {}
+
+class SetMaskEvent extends ProjectEvent {
+  final VCCSSet set;
+
+  SetMaskEvent(this.set);
+}
+
+class CreateSetEvent extends ProjectEvent {
+  final VCCSSet set;
+
+  CreateSetEvent(this.set);
+}

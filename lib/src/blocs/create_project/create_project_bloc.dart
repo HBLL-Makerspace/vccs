@@ -24,6 +24,7 @@ class CreateProjectBloc extends Bloc<CreateProjectEvent, CreateProjectState> {
         if (project == null)
           yield ProjectFailedState();
         else
+          // project?.close();
           yield CreatedNewProjectState(typed.projectName, typed.location);
         break;
     }

@@ -88,30 +88,33 @@ class _ProjectPageState extends State<ProjectPage> with NavigatorObserver {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProjectBloc, ProjectState>(
-      cubit: projectBloc,
-      builder: (context, state) {
-        switch (state.runtimeType) {
-          case ProjectLoadingState:
-            return Scaffold(
-                appBar: AppBar(
-                  centerTitle: true,
-                  title: Text(widget.projectName),
-                  backgroundColor: Colors.grey[800],
-                ),
-                body: Center(
-                    child: Text("Loading Project... 🤪",
-                        style: Theme.of(context).textTheme.headline5)));
-          default:
-            return Scaffold(
-                appBar: AppBar(
-                  centerTitle: true,
-                  title: Text(widget.projectName),
-                  backgroundColor: Colors.grey[800],
-                ),
-                body: buildPage());
-        }
-      },
+    return BlocProvider(
+      create: (context) => projectBloc,
+      child: BlocBuilder<ProjectBloc, ProjectState>(
+        cubit: projectBloc,
+        builder: (context, state) {
+          switch (state.runtimeType) {
+            case ProjectLoadingState:
+              return Scaffold(
+                  appBar: AppBar(
+                    centerTitle: true,
+                    title: Text(widget.projectName),
+                    backgroundColor: Colors.grey[800],
+                  ),
+                  body: Center(
+                      child: Text("Loading Project... 🤪",
+                          style: Theme.of(context).textTheme.headline5)));
+            default:
+              return Scaffold(
+                  appBar: AppBar(
+                    centerTitle: true,
+                    title: Text(widget.projectName),
+                    backgroundColor: Colors.grey[800],
+                  ),
+                  body: buildPage());
+          }
+        },
+      ),
     );
   }
 }

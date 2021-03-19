@@ -1,5 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vccs/src/blocs/project_bloc/project_bloc.dart';
 import 'package:vccs/src/model/domain/domian.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
 
@@ -26,11 +28,12 @@ class _CameraSetsState extends State<CameraSets> {
           message: 'Create a new set',
           child: FloatingActionButton(
             onPressed: () async {
-              String name = await showDialog<String>(context: context, builder: (context) => CreateSet());
+              String name = await showDialog<String>(
+                  context: context, builder: (context) => CreateSet());
               if (name != null)
-                setState(() {
-                  sets.add(VCCSSet(name: name));
-                });
+                context
+                    .read<ProjectBloc>()
+                    .add(CreateSetEvent(VCCSSet(name: name)));
             },
             child: Icon(Icons.add_a_photo),
           ),
@@ -54,7 +57,10 @@ class _CameraSetsState extends State<CameraSets> {
               child: Center(
                 child: Text(
                   "There are no sets. To add a set click on the blue button.",
-                  style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.grey[400]),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: Colors.grey[400]),
                 ),
               ),
             ),
@@ -64,23 +70,14 @@ class _CameraSetsState extends State<CameraSets> {
     );
   }
 
-  void _setMask(VCCSSet set) {
-    setState(() {
-      for (int i = 0; i < sets.length; i++)
-        if (sets[i].uid == set.uid)
-          sets[i] = sets[i].copyWith(isMask: true);
-        else
-          sets[i] = sets[i].copyWith(isMask: false);
-    });
-  }
-
-  List<Widget> _sets() {
+  List<Widget> _sets(List<VCCSSet> sets) {
     return sets
         .map((e) => Padding(
               padding: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
               child: SetCard(
                 set: e,
-                onSetAsMask: () => _setMask(e),
+                onSetAsMask: () =>
+                    context.read<ProjectBloc>().add(SetMaskEvent(e)),
                 onDelete: () => setState(() => sets.remove(e)),
               ),
             ))
@@ -89,33 +86,42 @@ class _CameraSetsState extends State<CameraSets> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: ListView(
+    return BlocBuilder<ProjectBloc, ProjectState>(
+      builder: (context, state) {
+        if (state is ProjectDataState) {
+          return Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Text(
-                  "Sets",
-                  style: Theme.of(context).textTheme.headline4,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Column(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: ListView(
                   children: [
-                    if (sets.isEmpty) _addSetBox(),
-                    if (sets.isNotEmpty) ..._sets(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Text(
+                        "Sets",
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Column(
+                        children: [
+                          if (state.project.sets.isEmpty) _addSetBox(),
+                          if (state.project.sets.isNotEmpty)
+                            ..._sets(state.project.sets)
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
+              _addSetButton()
             ],
-          ),
-        ),
-        _addSetButton()
-      ],
+          );
+        } else {
+          return Center(child: Text("loading project"));
+        }
+      },
     );
   }
 }

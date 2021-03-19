@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vccs/src/blocs/project_list/project_list_bloc.dart';
+import 'package:vccs/src/model/backend/path_provider.dart';
 import 'package:vccs/src/ui/route.gr.dart';
 import 'package:vccs/src/ui/widgets/buttons.dart';
 import 'package:vccs/src/ui/widgets/floating_modal.dart';
@@ -79,7 +80,8 @@ class _HomePageState extends State<HomePage> {
                               ExtendedNavigator.of(context).push("/project",
                                   arguments: ProjectPageArguments(
                                       projectName: projectName,
-                                      projectLocation: ""));
+                                      projectLocation:
+                                          PathProvider.getProjectsDirectory()));
                               // Navigator.push(
                               //     context,
                               //     MaterialPageRoute(
