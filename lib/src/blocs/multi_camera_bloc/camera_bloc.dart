@@ -10,8 +10,22 @@ part 'camera_event.dart';
 part 'camera_state.dart';
 
 class MultiCameraBloc extends Bloc<CameraEvent, CameraState> {
-  MultiCameraBloc(this._controller) : super(CameraInitial());
+  MultiCameraBloc(this._controller) : super(CameraInitial()) {
+    _camerasStream = _controller.connectedCameras.listen((event) {
+      add(LoadedCamerasEvent(event));
+    });
+    // _hardwareChanges = _controller.onHardwareChanges().listen((event) {
+    //   add(LoadCamerasEvent());
+    // });
+  }
   final ICameraController _controller;
+  StreamSubscription _camerasStream;
+
+  @override
+  Future<void> close() async {
+    super.close();
+    _camerasStream.cancel();
+  }
 
   @override
   Stream<CameraState> mapEventToState(
@@ -22,6 +36,9 @@ class MultiCameraBloc extends Bloc<CameraEvent, CameraState> {
         yield LoadingCamerasState();
         yield CamerasState(
             await _controller.getConnectedCameras(forceUpdate: true));
+        break;
+      case LoadedCamerasEvent:
+        yield CamerasState((event as LoadedCamerasEvent).cameras);
         break;
       default:
         break;

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:vccs/src/blocs/multi_camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/model/backend/backend.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_properties.dart';
@@ -10,13 +9,20 @@ import 'package:vccs/src/model/backend/interfaces/camera_properties.dart';
 part 'camera_event.dart';
 part 'camera_state.dart';
 
-class CameraBloc extends Bloc<CameraEvent, CameraChangePropertyState> {
+class CameraBloc extends Bloc<CameraEvent, CameraState> {
   CameraBloc(this._controller) : super(CameraChangePropertyInitial());
   final ICameraController _controller;
   ICamera camera;
+  StreamSubscription _stream;
 
   @override
-  Stream<CameraChangePropertyState> mapEventToState(
+  Future<void> close() async {
+    await super.close();
+    if (_stream != null) _stream.cancel();
+  }
+
+  @override
+  Stream<CameraState> mapEventToState(
     CameraEvent event,
   ) async* {
     switch (event.runtimeType) {
@@ -30,10 +36,33 @@ class CameraBloc extends Bloc<CameraEvent, CameraChangePropertyState> {
             status: await _controller.getCameraStatus(camera));
         break;
       case LoadCameraDataEvent:
-        camera = await _controller
-            .getCameraByID((event as LoadCameraDataEvent).cameraId);
+        var typed = (event as LoadCameraDataEvent);
+        camera = await _controller.getCameraByID(typed.cameraId);
+        if (_stream != null) _stream.cancel();
+        _stream = _controller.onCameraUpdate(typed.cameraId).listen((event) {
+          add(LoadCameraDataEvent(typed.cameraId));
+        });
         yield CameraDataState(camera,
             status: await _controller.getCameraStatus(camera));
+        break;
+
+      case StartLiveView:
+        yield CameraDataState(camera,
+            status: await _controller.getCameraStatus(camera));
+        StartLiveView typed = event as StartLiveView;
+        await _controller.startLiveView(typed.camera);
+        yield CameraDataState(camera,
+            status: await _controller.getCameraStatus(camera));
+        break;
+
+      case StopLiveView:
+        yield CameraDataState(camera,
+            status: await _controller.getCameraStatus(camera));
+        StopLiveView typed = event as StopLiveView;
+        await _controller.stopLiveView(typed.camera);
+        yield CameraDataState(camera,
+            status: await _controller.getCameraStatus(camera));
+        break;
     }
   }
 }

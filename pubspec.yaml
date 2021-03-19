@@ -29,6 +29,7 @@ dependencies:
   tuple: ^1.0.3
   http: ^0.12.2
   # win32: 2.0.0
+  watcher: ^1.0.0
   link_text: ^0.1.4
   tinycolor: ^1.0.3
   expandable: ^4.1.4
@@ -74,6 +75,7 @@ flutter:
   assets:
     - "assets/"
     - "assets/cameras/"
+    - "assets/cameras/default/"
     - "assets/cameras/nikon/"
     - "assets/cameras/nikon/d300/"
     - "assets/cameras/nikon/d300s/"
