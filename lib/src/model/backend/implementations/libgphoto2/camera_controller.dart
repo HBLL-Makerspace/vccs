@@ -168,6 +168,7 @@ class libgphoto2CameraController implements ICameraController {
     String port = _idPortMap[camera.getId()];
     filename = filename ?? join(PathProvider.getProjectsDirectory(), "temp");
     File file = File(filename);
+    print(filename);
     file.createSync(recursive: true);
     if (port != null && port.isNotEmpty) {
       _changingProperties[camera.getId()] = true;
