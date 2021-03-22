@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  flutter_serial_port
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

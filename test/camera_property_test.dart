@@ -13,7 +13,7 @@ void main() {
       print("Camer: ${cam.getModel()}, serial number: ${cam.getId()}");
   });
 
-  test("testing", () async {
+  test("Liveview", () async {
     await PathProvider.init();
     ICameraController _controller = libgphoto2CameraController();
     List<ICamera> cameras = await _controller.getConnectedCameras();

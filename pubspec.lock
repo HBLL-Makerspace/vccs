@@ -204,6 +204,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  dart_serial_port:
+    dependency: transitive
+    description:
+      name: dart_serial_port
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   dart_style:
     dependency: transitive
     description:
@@ -218,6 +225,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.7"
+  dylib:
+    dependency: transitive
+    description:
+      name: dylib
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.2"
   expandable:
     dependency: "direct main"
     description:
@@ -279,6 +293,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  flutter_serial_port:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: b18eeba5a2751cd7eecf39149a3bebc4e1ac5122
+      url: "https://github.com/jpnurmi/flutter_serial_port"
+    source: git
+    version: "0.1.0"
   flutter_spinkit:
     dependency: "direct main"
     description:

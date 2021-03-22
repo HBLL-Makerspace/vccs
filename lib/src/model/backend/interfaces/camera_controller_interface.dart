@@ -13,6 +13,7 @@ abstract class ICameraController {
   Future<CameraStatus> getCameraStatus(ICamera camera);
   Future<bool> startLiveView(ICamera camera);
   Future<bool> stopLiveView(ICamera camera);
+  Future<bool> tether(ICamera camera, {String filename});
   Stream<void> onHardwareChanges();
   Future<void> dispose();
 }
