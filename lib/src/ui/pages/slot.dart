@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
+import 'package:vccs/src/model/backend/interfaces/interfaces.dart';
 import 'package:vccs/src/model/domain/configuration.dart';
 import 'package:vccs/src/ui/widgets/misc/color_picker.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
@@ -28,7 +32,7 @@ class _SlotPageState extends State<SlotPage> {
     slot = widget.slot;
   }
 
-  Widget _header(BuildContext context) {
+  Widget _header(BuildContext context, ICameraController controller) {
     return Stack(
       children: [
         Row(
@@ -113,22 +117,30 @@ class _SlotPageState extends State<SlotPage> {
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: VCCSFlatButton(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(right: 8.0, bottom: 1.0),
-                            child: Icon(
-                              Ionicons.md_videocam,
-                              size: 16,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  right: 8.0, bottom: 1.0),
+                              child: Icon(
+                                Ionicons.md_videocam,
+                                size: 16,
+                              ),
                             ),
-                          ),
-                          Text("LiveView"),
-                        ],
-                      ),
-                      onPressed: () {},
-                    ),
+                            Text("Liveview"),
+                          ],
+                        ),
+                        onPressed: () {}
+                        /*
+                      ? null : ()
+                      {
+                        
+                        BlocProvider.of<ConfigurationBloc>(context,
+                        listen: false).add(ConfigurationStartLiveViewEvent(controller.getCameraByID(slot.cameraRef.cameraId)));
+                      }
+                      */
+                        ),
                   ),
                   if (slot.cameraRef != null)
                     Padding(
@@ -180,11 +192,12 @@ class _SlotPageState extends State<SlotPage> {
 
   @override
   Widget build(BuildContext context) {
+    var _controller = AppData.of(context).controller;
     return Scaffold(
       body: Scrollbar(
         child: ListView(
           children: [
-            _header(context),
+            _header(context, _controller),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Container(),

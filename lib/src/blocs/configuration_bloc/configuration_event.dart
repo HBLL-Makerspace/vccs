@@ -33,3 +33,11 @@ class ConfigurationUpdateSlotEvent extends ConfigurationEvent {
 class SaveConfigurationEvent extends ConfigurationEvent {}
 
 class ConfigurationLoadEvent extends ConfigurationEvent {}
+
+class ConfigurationStartLiveViewEvent extends ConfigurationEvent {
+  ICamera camera;
+
+  ConfigurationStartLiveViewEvent(this.camera);
+}
+
+class ConfigurationStopLiveViewEvent extends ConfigurationEvent {}

@@ -37,8 +37,8 @@ class MyApp extends StatelessWidget {
             create: (context) => MultiCameraBloc(_controller),
           ),
           BlocProvider<ConfigurationBloc>(
-              create: (context) =>
-                  ConfigurationBloc(_config)..add(ConfigurationLoadEvent())),
+              create: (context) => ConfigurationBloc(_config, _controller)
+                ..add(ConfigurationLoadEvent())),
           BlocProvider<ProjectListBloc>(
             create: (context) => ProjectListBloc(),
           )

@@ -52,7 +52,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
         StartLiveView typed = event as StartLiveView;
         await _controller.startLiveView(typed.camera);
         yield CameraDataState(camera,
-            status: await _controller.getCameraStatus(camera));
+            status: (await _controller.getCameraStatus(camera)));
         break;
 
       case StopLiveView:
