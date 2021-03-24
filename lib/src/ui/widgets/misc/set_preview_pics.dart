@@ -28,7 +28,7 @@ class SetPreviewPictures extends StatelessWidget {
     Slot slot =
         context.read<ConfigurationBloc>().configuration.getSlots().elementAt(i);
     return BlocBuilder<SlotPreviewImageBloc, SlotPreviewImageState>(
-      cubit:
+      bloc:
           SlotPreviewImageBloc(context.read<ProjectBloc>().project, set, slot),
       builder: (context, state) {
         bool isLoading = state is LoadingSlotPreviewImageState;
@@ -90,7 +90,7 @@ class SlotImagePreview extends StatelessWidget {
   Widget _picture(BuildContext context) {
     Project project = context.read<ProjectBloc>().project;
     return BlocBuilder<SlotPreviewImageBloc, SlotPreviewImageState>(
-      cubit:
+      bloc:
           SlotPreviewImageBloc(context.read<ProjectBloc>().project, set, slot),
       builder: (context, state) {
         bool isLoading = state is LoadingSlotPreviewImageState;

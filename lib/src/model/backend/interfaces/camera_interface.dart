@@ -32,5 +32,5 @@ abstract class ICamera {
   List<String> getSections();
   CameraProperty getProperty(String name);
   List<CameraProperty> getPropertiesInSection(String section);
-  Map<String, List<CameraProperty>> getPropertiesMap();
+  Map<String, CameraProperty> getPropertiesMap();
 }

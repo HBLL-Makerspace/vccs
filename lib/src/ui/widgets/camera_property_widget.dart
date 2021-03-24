@@ -294,8 +294,14 @@ class _CameraDateTimePropertyWidgetState
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(
-        text: _format.format(DateTime(widget?.property?.value ?? 0)));
+    var date;
+
+    try {
+      DateTime(widget?.property?.value ?? 0);
+      _controller = TextEditingController(text: _format.format(date));
+    } catch (e) {
+      _controller = TextEditingController();
+    }
   }
 
   @override

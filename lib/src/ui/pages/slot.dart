@@ -1,16 +1,15 @@
-import 'dart:async';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
+import 'package:vccs/src/model/backend/backend.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 import 'package:vccs/src/model/backend/interfaces/interfaces.dart';
 import 'package:vccs/src/model/domain/configuration.dart';
+import 'package:vccs/src/ui/widgets/forms/select_camera_property.dart';
 import 'package:vccs/src/ui/widgets/misc/color_picker.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
 
@@ -25,11 +24,21 @@ class SlotPage extends StatefulWidget {
 
 class _SlotPageState extends State<SlotPage> {
   Slot slot;
+  ICamera camera;
 
   @override
   void initState() {
     super.initState();
     slot = widget.slot;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    AppData.of(context)
+        .controller
+        .getCameraByID(slot?.cameraRef?.cameraId)
+        .then((value) => setState(() => camera = value));
   }
 
   Widget _header(BuildContext context, ICameraController controller) {
@@ -190,18 +199,84 @@ class _SlotPageState extends State<SlotPage> {
     );
   }
 
+  Widget _camProperty(ICamera camera, CameraProperty property, dynamic value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+      child: CameraPropertyWidget(
+        cameraProperty: property,
+        camera: camera,
+        onUpdate: (value) {
+          setState(() {});
+        },
+      ),
+    );
+  }
+
+  Widget _cameraSettings(BuildContext context, String cameraId) {
+    if (camera != null)
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Camera Properties",
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ),
+            ...(slot.config?.entries ?? {})
+                .map((e) => _camProperty(
+                    camera, camera.getProperty(e.value.name), e.value.value))
+                ?.toList(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: VCCSRaisedButton(
+                      child: Text("Add Property"),
+                      onPressed: () async {
+                        CameraProperty camProp =
+                            await showFloatingModalBottomSheet(
+                                context: context,
+                                builder: (_) => SelectCameraProperty(
+                                      camera: camera,
+                                    ));
+                        if (camProp != null) {
+                          setState(() {
+                            slot.setCameraProperty(camProp);
+                            slot = slot.copyWith();
+                          });
+                        }
+                      },
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    else
+      return Container();
+  }
+
   @override
   Widget build(BuildContext context) {
     var _controller = AppData.of(context).controller;
     return Scaffold(
       body: Scrollbar(
         child: ListView(
+          shrinkWrap: true,
           children: [
             _header(context, _controller),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Container(),
-            )
+            ),
+            _cameraSettings(context, slot?.cameraRef?.cameraId)
           ],
         ),
       ),

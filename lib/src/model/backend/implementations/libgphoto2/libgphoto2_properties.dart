@@ -27,40 +27,64 @@ class libgphoto2CameraProperties implements ICameraProperties {
             break;
           case 2:
             // print("text property");
-            props[json["name"]] = CameraTextProperty(json["name"],
-                json["label"], json["value"], (json["readOnly"] ?? 0) == 1);
+            props[json["name"]] = CameraTextProperty(
+                json["name"],
+                json["label"],
+                json["value"],
+                (json["readOnly"] ?? 0) == 1,
+                CameraPropertyType.TEXT);
             break;
           case 3:
             // print("range property");
-            props[json["name"]] = CameraRangeProperty(json["name"],
-                json["label"], json["value"], (json["readOnly"] ?? 0) == 1,
+            props[json["name"]] = CameraRangeProperty(
+                json["name"],
+                json["label"],
+                json["value"],
+                (json["readOnly"] ?? 0) == 1,
+                CameraPropertyType.RANGE,
                 low: json["low"] ?? 0,
                 high: json["high"] ?? 0,
                 increment: json["inc"] ?? 0);
             break;
           case 4:
             // print("toggle property");
-            props[json["name"]] = CameraToggleProperty(json["name"],
-                json["label"], json["value"], (json["readOnly"] ?? 0) == 1);
+            props[json["name"]] = CameraToggleProperty(
+                json["name"],
+                json["label"],
+                json["value"],
+                (json["readOnly"] ?? 0) == 1,
+                CameraPropertyType.TOGGLE);
             break;
           case 5:
           case 6:
             if ((json["choices"] ?? []).length <= 3)
-              props[json["name"]] = CameraRadioProperty(json["name"],
-                  json["label"], json["value"], (json["readOnly"] ?? 0) == 1,
+              props[json["name"]] = CameraRadioProperty(
+                  json["name"],
+                  json["label"],
+                  json["value"],
+                  (json["readOnly"] ?? 0) == 1,
+                  CameraPropertyType.RADIO,
                   choices: json["choices"]);
             else
-              props[json["name"]] = CameraDropDownProperty(json["name"],
-                  json["label"], json["value"], (json["readOnly"] ?? 0) == 1,
+              props[json["name"]] = CameraDropDownProperty(
+                  json["name"],
+                  json["label"],
+                  json["value"],
+                  (json["readOnly"] ?? 0) == 1,
+                  CameraPropertyType.DROPDOWN,
                   choices: json["choices"]);
             break;
           case 8:
-            props[json["name"]] = CameraDateProperty(json["name"],
-                json["label"], json["value"], (json["readOnly"] ?? 0) == 1);
+            props[json["name"]] = CameraDateProperty(
+                json["name"],
+                json["label"],
+                json["value"],
+                (json["readOnly"] ?? 0) == 1,
+                CameraPropertyType.DATE);
             break;
           default:
-            props[json["name"]] = CameraProperty(
-                json["name"], json["label"], json["value"], false);
+            props[json["name"]] = CameraProperty(json["name"], json["label"],
+                json["value"], false, CameraPropertyType.UNKOWN);
             break;
         }
         if (section != null) {
@@ -85,9 +109,8 @@ class libgphoto2CameraProperties implements ICameraProperties {
   }
 
   @override
-  Map<String, List<CameraProperty>> getPropertiesMap() {
-    // TODO: implement getPropertiesMap
-    throw UnimplementedError();
+  Map<String, CameraProperty> getPropertiesMap() {
+    return properties;
   }
 
   @override

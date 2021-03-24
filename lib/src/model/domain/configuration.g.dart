@@ -28,6 +28,13 @@ Slot _$SlotFromJson(Map<String, dynamic> json) {
         : CameraRef.fromJson(json['cameraRef'] as Map<String, dynamic>),
     id: json['id'] as String,
     color: json['color'] as int,
+    config: (json['config'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          e == null
+              ? null
+              : CameraProperty.fromJson(e as Map<String, dynamic>)),
+    ),
   );
 }
 
@@ -36,6 +43,7 @@ Map<String, dynamic> _$SlotToJson(Slot instance) => <String, dynamic>{
       'name': instance.name,
       'color': instance.color,
       'cameraRef': instance.cameraRef,
+      'config': instance.config,
     };
 
 CameraRef _$CameraRefFromJson(Map<String, dynamic> json) {

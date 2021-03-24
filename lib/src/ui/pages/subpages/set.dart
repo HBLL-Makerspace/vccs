@@ -67,7 +67,7 @@ class SetPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             BlocBuilder<MultiCameraCaptureBloc, MultiCameraCaptureState>(
-              cubit: bloc,
+              bloc: bloc,
               builder: (context, state) {
                 switch (state.runtimeType) {
                   case SetCapturingState:

@@ -126,12 +126,12 @@ class _CreateProjectFormState extends State<CreateProjectForm> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<CreateProjectBloc, CreateProjectState>(
-      cubit: bloc,
+      bloc: bloc,
       listener: (context, state) {
         if (state is CreatedNewProjectState) Navigator.pop(context);
       },
       child: BlocBuilder<CreateProjectBloc, CreateProjectState>(
-        cubit: bloc,
+        bloc: bloc,
         builder: (context, state) {
           return _form(context, state);
         },

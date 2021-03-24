@@ -40,8 +40,8 @@ class libgphoto2Camera implements ICamera {
   }
 
   @override
-  Map<String, List<CameraProperty>> getPropertiesMap() {
-    throw UnimplementedError();
+  Map<String, CameraProperty> getPropertiesMap() {
+    return config.getPropertiesMap();
   }
 
   @override

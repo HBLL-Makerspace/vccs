@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -27,6 +28,20 @@ class MultiCameraCaptureBloc
       case CaptureSetEvent:
         yield SetCapturingState();
         var typed = event as CaptureSetEvent;
+        // First delete all the pictures in the raw folder and raw_thumbnail folder
+        Directory raw = Directory(
+            PathProvider.getRawImagesFolderPath(typed.project, typed.set));
+        raw.listSync().forEach((element) {
+          element.deleteSync();
+        });
+
+        Directory raw_thumb = Directory(
+            PathProvider.getRawThumbnailImagesFolderPath(
+                typed.project, typed.set));
+        raw_thumb.listSync().forEach((element) {
+          element.deleteSync();
+        });
+
         for (var slot in config.getSlots()) {
           ICamera cam =
               await controller.getCameraByID(slot.cameraRef?.cameraId);

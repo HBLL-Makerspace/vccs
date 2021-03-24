@@ -91,7 +91,7 @@ class _ProjectPageState extends State<ProjectPage> with NavigatorObserver {
     return BlocProvider(
       create: (context) => projectBloc,
       child: BlocBuilder<ProjectBloc, ProjectState>(
-        cubit: projectBloc,
+        bloc: projectBloc,
         builder: (context, state) {
           switch (state.runtimeType) {
             case ProjectLoadingState:

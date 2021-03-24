@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:vccs/src/model/backend/backend.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 
 part 'configuration.g.dart';
@@ -50,32 +51,46 @@ class Slot with Comparable<Slot> {
   final String name;
   final int color;
   final CameraRef cameraRef;
+  final Map<String, CameraProperty> config;
 
   @JsonKey(ignore: true)
   Status status;
 
-  Slot({
-    this.name,
-    this.cameraRef,
-    String id,
-    this.status = Status.NOT_CONNECTED,
-    this.color,
-  }) : id = id ?? Uuid().v4();
+  Slot(
+      {this.name,
+      this.cameraRef,
+      String id,
+      this.status = Status.NOT_CONNECTED,
+      this.color,
+      Map<String, CameraProperty> config})
+      : id = id ?? Uuid().v4(),
+        config = config ?? {};
 
-  Slot copyWith({String id, String name, int color, CameraRef cameraRef}) {
+  Slot copyWith(
+      {String id,
+      String name,
+      int color,
+      CameraRef cameraRef,
+      Map<String, CameraProperty> config}) {
     return Slot(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        color: color ?? this.color,
-        cameraRef: cameraRef ?? this.cameraRef);
+      id: id ?? this.id,
+      name: name ?? this.name,
+      color: color ?? this.color,
+      cameraRef: cameraRef ?? this.cameraRef,
+      config: config ?? this.config,
+    );
+  }
+
+  void setCameraProperty(CameraProperty cameraProperty) {
+    config[cameraProperty?.name] = cameraProperty;
+  }
+
+  void removeCameraProperty(CameraProperty cameraProperty) {
+    config.remove(cameraProperty?.name);
   }
 
   Slot unassign() {
-    return Slot(
-      id: this.id,
-      name: this.name,
-      color: this.color,
-    );
+    return Slot(id: this.id, name: this.name, color: this.color, config: {});
   }
 
   @override
