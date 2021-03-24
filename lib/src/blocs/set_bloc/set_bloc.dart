@@ -31,11 +31,12 @@ class MultiCameraCaptureBloc
           ICamera cam =
               await controller.getCameraByID(slot.cameraRef?.cameraId);
           if (cam != null) {
-            controller.tether(cam,
-                filename: path.join(
-                    PathProvider.getRawImagesFolderPath(
-                        typed.project, typed.set),
-                    slot.id));
+            controller.tether(
+              cam,
+              rawFolderPath:
+                  PathProvider.getRawImagesFolderPath(typed.project, typed.set),
+              saveAsNoType: slot.id,
+            );
           }
         }
         await _cameraCapture.capture();

@@ -10,11 +10,11 @@ import 'package:vccs/src/model/domain/set.dart';
 class ImageController {
   Future<Image> generateThumbnailFor(String filename) async {}
 
-  Future<File> getRawThumbnailForSlot(
+  Future<File> getRawThumbnailFileForSlot(
       Project project, VCCSSet set, Slot slot) async {
     File file = File(join(
         PathProvider.getRawThumbnailImagesFolderPath(project, set),
-        "${slot.id}.jpeg"));
+        "${slot.id}.jpg"));
     if (file.existsSync())
       return file;
     else

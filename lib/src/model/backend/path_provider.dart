@@ -42,6 +42,10 @@ class PathProvider {
     return join(getSetFolderPath(project, set), "raw");
   }
 
+  static String getRawImagePath(Project project, VCCSSet set, Slot slot) {
+    return join(getRawImagesFolderPath(project, set), slot.id + ".jpg");
+  }
+
   static String getProcessedImagesFolderPath(Project project, VCCSSet set) {
     return join(getSetFolderPath(project, set), "processed");
   }

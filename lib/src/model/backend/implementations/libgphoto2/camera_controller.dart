@@ -164,28 +164,61 @@ class libgphoto2CameraController implements ICameraController {
 
   @override
   Future<bool> tether(ICamera camera,
-      {String filename, bool tempFile = true}) async {
+      {String rawFolderPath,
+      String saveAsNoType = "captured",
+      bool tempFile = true}) async {
     String port = _idPortMap[camera.getId()];
-    filename = filename ?? join(PathProvider.getProjectsDirectory(), "temp");
-    File file = File(filename);
-    print(filename);
+    rawFolderPath =
+        rawFolderPath ?? join(PathProvider.getProjectsDirectory(), "temp");
+    File file = File(join(rawFolderPath, saveAsNoType) + ".TMP");
+    // print(filename + ".TMP");
     file.createSync(recursive: true);
     if (port != null && port.isNotEmpty) {
       _changingProperties[camera.getId()] = true;
       // print("updating property ${property.name} to ${property.value.toString()}");
       String path = PathProvider.getPluginPath("libgphoto2");
       var process = await Process.run("${join(path, "tether_download")}",
-          ["--port", port, "--file", filename],
+          ["--port", port, "--file", join(rawFolderPath, saveAsNoType)],
           runInShell: true,
           workingDirectory: path,
           includeParentEnvironment: true);
-      print(process.exitCode);
+      // print(process.exitCode);
       print(process.stdout);
       print(process.stderr);
       _changingProperties.remove(camera.getId());
-      return process.exitCode == 0;
     }
-    print("deleting file");
+
+    Directory dir = Directory(rawFolderPath);
+    List<FileSystemEntity> files = dir.listSync(recursive: false).toList();
+    // print(files);
+    files = files
+        .where((event) =>
+            event is File &&
+            basename(event.path).contains(saveAsNoType) &&
+            !basename(event.path).contains("TMP"))
+        .toList();
+
+    // print(files);
+
+    if (files.length >= 1) {
+      print("processing raw images");
+      String path = PathProvider.getPluginPath("libgphoto2");
+      var process = await Process.run(
+          "${join(path, "process_raw.sh")}",
+          [
+            rawFolderPath,
+            join(Directory(rawFolderPath).parent.path,
+                "." + basename(rawFolderPath) + "_thumb"),
+            saveAsNoType,
+            files[0].path.split(".")[1] ?? ""
+          ],
+          runInShell: true,
+          includeParentEnvironment: true);
+      // print(process.exitCode);
+      print(process.stdout);
+      print(process.stderr);
+    }
+
     file.deleteSync();
 
     return true;

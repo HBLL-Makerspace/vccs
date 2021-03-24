@@ -25,6 +25,10 @@ class Configuration {
     }
   }
 
+  Slot getSlotById(String slotId) {
+    return slots[slotId];
+  }
+
   List<CameraRef> getAssignedCameraRefs() {
     return slots.values.map((e) => e.cameraRef).toList();
   }

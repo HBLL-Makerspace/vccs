@@ -9,6 +9,7 @@ import 'package:vccs/src/blocs/project_bloc/project_bloc.dart';
 import 'package:vccs/src/blocs/slot_preview_image/slot_preview_image_bloc.dart';
 import 'package:vccs/src/model/domain/domian.dart';
 import 'package:vccs/src/ui/widgets/cards.dart';
+import 'package:vccs/src/ui/widgets/inherited.dart';
 
 class SetPreviewPictures extends StatelessWidget {
   final VCCSSet set;
@@ -27,8 +28,8 @@ class SetPreviewPictures extends StatelessWidget {
     Slot slot =
         context.read<ConfigurationBloc>().configuration.getSlots().elementAt(i);
     return BlocBuilder<SlotPreviewImageBloc, SlotPreviewImageState>(
-      cubit: SlotPreviewImageBloc()
-        ..add(LoadSlotPreviewImageEvent(project, set, slot)),
+      cubit:
+          SlotPreviewImageBloc(context.read<ProjectBloc>().project, set, slot),
       builder: (context, state) {
         bool isLoading = state is LoadingSlotPreviewImageState;
         File file =
@@ -89,8 +90,8 @@ class SlotImagePreview extends StatelessWidget {
   Widget _picture(BuildContext context) {
     Project project = context.read<ProjectBloc>().project;
     return BlocBuilder<SlotPreviewImageBloc, SlotPreviewImageState>(
-      cubit: SlotPreviewImageBloc()
-        ..add(LoadSlotPreviewImageEvent(project, set, slot)),
+      cubit:
+          SlotPreviewImageBloc(context.read<ProjectBloc>().project, set, slot),
       builder: (context, state) {
         bool isLoading = state is LoadingSlotPreviewImageState;
         File file =

@@ -13,7 +13,8 @@ abstract class ICameraController {
   Future<CameraStatus> getCameraStatus(ICamera camera);
   Future<bool> startLiveView(ICamera camera);
   Future<bool> stopLiveView(ICamera camera);
-  Future<bool> tether(ICamera camera, {String filename});
+  Future<bool> tether(ICamera camera,
+      {String rawFolderPath, String saveAsNoType = "captured"});
   Stream<void> onHardwareChanges();
   Future<void> dispose();
 }
