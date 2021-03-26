@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/blocs/multi_camera_bloc/camera_bloc.dart';
+import 'package:vccs/src/globals.dart';
 import 'package:vccs/src/model/domain/camera_config.dart';
 import 'package:vccs/src/ui/widgets/inherited.dart';
 import 'package:vccs/src/ui/widgets/textfield.dart';
@@ -14,12 +15,8 @@ class SelectCamera extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> assignedCameras = context
-        .read<ConfigurationBloc>()
-        .configuration
-        .getAssignedCameraRefs()
-        .map((e) => e?.cameraId)
-        .toList();
+    List<String> assignedCameras =
+        configuration.getAssignedCameraRefs().map((e) => e?.cameraId).toList();
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: 500,

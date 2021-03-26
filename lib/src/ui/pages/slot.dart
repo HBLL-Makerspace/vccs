@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/model/backend/backend.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
@@ -41,7 +42,8 @@ class _SlotPageState extends State<SlotPage> {
         .then((value) => setState(() => camera = value));
   }
 
-  Widget _header(BuildContext context, ICameraController controller) {
+  Widget _header(BuildContext context, ICameraController controller,
+      CameraDataState state) {
     return Stack(
       children: [
         Row(
@@ -137,19 +139,21 @@ class _SlotPageState extends State<SlotPage> {
                                 size: 16,
                               ),
                             ),
-                            Text("Liveview"),
+                            Text(state.status.isLiveViewActive
+                                ? "Stop"
+                                : "LiveView"),
                           ],
                         ),
-                        onPressed: () {}
-                        /*
-                      ? null : ()
-                      {
-                        
-                        BlocProvider.of<ConfigurationBloc>(context,
-                        listen: false).add(ConfigurationStartLiveViewEvent(controller.getCameraByID(slot.cameraRef.cameraId)));
-                      }
-                      */
-                        ),
+                        onPressed: //()
+                            //? null :
+                            () {
+                          BlocProvider.of<ConfigurationBloc>(context,
+                                  listen: false)
+                              .add(ConfigurationStartLiveViewEvent(camera));
+                          setState(() {
+                            state = CameraDataState(camera);
+                          });
+                        }),
                   ),
                   if (slot.cameraRef != null)
                     Padding(
@@ -202,12 +206,40 @@ class _SlotPageState extends State<SlotPage> {
   Widget _camProperty(ICamera camera, CameraProperty property, dynamic value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
-      child: CameraPropertyWidget(
-        cameraProperty: property,
-        camera: camera,
-        onUpdate: (value) {
-          setState(() {});
-        },
+      child: Row(
+        children: [
+          Expanded(
+            child: CameraPropertyWidget(
+              cameraProperty: property,
+              overrideValue: slot.getCameraProperty(property.name).value,
+              camera: camera,
+              onUpdate: (value) {
+                setState(() {
+                  slot.setCameraProperty(value);
+                  slot = slot.copyWith();
+                });
+                context
+                    .read<ConfigurationBloc>()
+                    .add(ConfigurationUpdateSlotEvent(slot));
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: IconButton(
+              icon: Icon(Icons.remove),
+              onPressed: () {
+                setState(() {
+                  slot.removeCameraProperty(property);
+                  slot = slot.copyWith();
+                });
+                context
+                    .read<ConfigurationBloc>()
+                    .add(ConfigurationUpdateSlotEvent(slot));
+              },
+            ),
+          )
+        ],
       ),
     );
   }
@@ -249,6 +281,9 @@ class _SlotPageState extends State<SlotPage> {
                             slot.setCameraProperty(camProp);
                             slot = slot.copyWith();
                           });
+                          context
+                              .read<ConfigurationBloc>()
+                              .add(ConfigurationUpdateSlotEvent(slot));
                         }
                       },
                     ),
@@ -266,12 +301,13 @@ class _SlotPageState extends State<SlotPage> {
   @override
   Widget build(BuildContext context) {
     var _controller = AppData.of(context).controller;
+    var cameraState = CameraDataState(camera);
     return Scaffold(
       body: Scrollbar(
         child: ListView(
           shrinkWrap: true,
           children: [
-            _header(context, _controller),
+            _header(context, _controller, cameraState),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Container(),

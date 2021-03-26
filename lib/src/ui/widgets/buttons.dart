@@ -4,8 +4,9 @@ import 'package:tinycolor/tinycolor.dart';
 class VCCSRaisedButton extends StatelessWidget {
   final Widget child;
   final Function onPressed;
+  final Color color;
 
-  const VCCSRaisedButton({Key key, this.child, this.onPressed})
+  const VCCSRaisedButton({Key key, this.child, this.onPressed, this.color})
       : super(key: key);
 
   @override
@@ -15,6 +16,7 @@ class VCCSRaisedButton extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32),
       onPressed: onPressed,
       child: child,
+      color: color,
     );
   }
 }
@@ -23,15 +25,17 @@ class VCCSFlatButton extends StatelessWidget {
   final Widget child;
   final Function onPressed;
   final Color hoverColor;
+  final EdgeInsets padding;
 
-  const VCCSFlatButton({Key key, this.child, this.onPressed, this.hoverColor})
+  const VCCSFlatButton(
+      {Key key, this.child, this.onPressed, this.hoverColor, this.padding})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FlatButton(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32),
+      padding: padding ?? EdgeInsets.symmetric(vertical: 16.0, horizontal: 32),
       onPressed: onPressed,
       child: child,
       hoverColor: hoverColor != null

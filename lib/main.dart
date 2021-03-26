@@ -4,15 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vccs/src/blocs/multi_camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/blocs/project_list/project_list_bloc.dart';
+import 'package:vccs/src/globals.dart';
 import 'package:vccs/src/model/backend/backend.dart';
 import 'package:vccs/src/model/backend/implementations/hbll/multi_camera_capture.dart';
 import 'package:vccs/src/model/domain/camera_config.dart';
 import 'package:vccs/src/model/domain/configuration.dart';
 import 'package:vccs/src/ui/route.gr.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
-
-ICameraController _controller = libgphoto2CameraController();
-Configuration _config = Configuration();
 
 HbllMultiCameraCapture camerasCapture = HbllMultiCameraCapture();
 
@@ -29,16 +27,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppData(
-      controller: _controller,
+      controller: controller,
       camerasCapture: camerasCapture,
       child: MultiBlocProvider(
         providers: [
           BlocProvider<MultiCameraBloc>(
-            create: (context) => MultiCameraBloc(_controller),
+            create: (context) => MultiCameraBloc(controller),
           ),
           BlocProvider<ConfigurationBloc>(
-              create: (context) => ConfigurationBloc(_config, _controller)
-                ..add(ConfigurationLoadEvent())),
+              create: (context) =>
+                  ConfigurationBloc(controller)..add(ConfigurationLoadEvent())),
           BlocProvider<ProjectListBloc>(
             create: (context) => ProjectListBloc(),
           )

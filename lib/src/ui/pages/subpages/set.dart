@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/blocs/project_bloc/project_bloc.dart';
 import 'package:vccs/src/blocs/set_bloc/set_bloc.dart';
+import 'package:vccs/src/globals.dart';
 import 'package:vccs/src/model/domain/domian.dart';
 import 'package:vccs/src/ui/widgets/buttons.dart';
 import 'package:vccs/src/ui/widgets/cards.dart';
@@ -42,30 +43,51 @@ class SetPage extends StatelessWidget {
     MultiCameraCaptureBloc bloc = MultiCameraCaptureBloc(
         AppData.of(context).controller,
         AppData.of(context).camerasCapture,
-        context.read<ConfigurationBloc>().configuration);
+        configuration);
     var routeData = RouteData.of(context);
     var id = routeData.pathParams['id'].value;
     VCCSSet _set = context.read<ProjectBloc>().project.getSetById(id);
-    List<Slot> slots =
-        context.read<ConfigurationBloc>().configuration.getSlots();
+    List<Slot> slots = configuration.getSlots();
     return Scaffold(
-      appBar: AppBar(
-        title: Text(set?.name ?? "Unknown"),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-      ),
       body: _set == null
           ? Center(
               child: Text("Unknown set"),
             )
           : ListView(
-              children: [_slotPictures(context, _set, slots)],
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        _set.name,
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                      IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            ExtendedNavigator.named("project").pop();
+                          })
+                    ],
+                  ),
+                ),
+                _slotPictures(context, _set, slots)
+              ],
             ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            VCCSRaisedButton(
+              color: Colors.red[400],
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("Delete Pictures"),
+              ),
+              onPressed: () {},
+            ),
             BlocBuilder<MultiCameraCaptureBloc, MultiCameraCaptureState>(
               bloc: bloc,
               builder: (context, state) {

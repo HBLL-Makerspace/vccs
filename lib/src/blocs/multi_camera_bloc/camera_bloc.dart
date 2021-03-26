@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:vccs/src/globals.dart';
 import 'package:vccs/src/model/backend/backend.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 import 'package:vccs/src/model/backend/interfaces/interfaces.dart';
+import 'package:vccs/src/model/domain/domian.dart';
 
 part 'camera_event.dart';
 part 'camera_state.dart';
@@ -34,8 +36,16 @@ class MultiCameraBloc extends Bloc<CameraEvent, CameraState> {
     switch (event.runtimeType) {
       case LoadCamerasEvent:
         yield LoadingCamerasState();
-        yield CamerasState(
-            await _controller.getConnectedCameras(forceUpdate: true));
+        List<ICamera> cameras =
+            await _controller.getConnectedCameras(forceUpdate: true);
+        cameras.forEach((camera) {
+          Slot slot = configuration.getAssignedSlot(camera);
+          if (slot != null && (slot?.config?.isNotEmpty ?? false)) {
+            _controller.changeCameraProperty(
+                camera, slot.config.values.toList());
+          }
+        });
+        yield CamerasState(cameras);
         break;
       case LoadedCamerasEvent:
         yield CamerasState((event as LoadedCamerasEvent).cameras);

@@ -35,7 +35,8 @@ class SaveConfigurationEvent extends ConfigurationEvent {}
 class ConfigurationLoadEvent extends ConfigurationEvent {}
 
 class ConfigurationStartLiveViewEvent extends ConfigurationEvent {
-  ICamera camera;
+  //final String cameraId;
+  final ICamera camera;
 
   ConfigurationStartLiveViewEvent(this.camera);
 }

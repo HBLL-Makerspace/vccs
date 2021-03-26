@@ -12,7 +12,7 @@ class HbllMultiCameraCapture implements IMultiCameraCapture {
       await Future.delayed(Duration(milliseconds: 100));
       _port.write(Uint8List.fromList([0xf0]));
       _port.flush();
-      await Future.delayed(Duration(milliseconds: 3000));
+      await Future.delayed(Duration(milliseconds: 5000));
       _port.write(Uint8List.fromList([0xc0]));
       _port.flush();
       await Future.delayed(Duration(milliseconds: 1000));

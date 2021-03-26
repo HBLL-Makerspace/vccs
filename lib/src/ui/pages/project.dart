@@ -97,6 +97,7 @@ class _ProjectPageState extends State<ProjectPage> with NavigatorObserver {
             case ProjectLoadingState:
               return Scaffold(
                   appBar: AppBar(
+                    leading: Container(),
                     centerTitle: true,
                     title: Text(widget.projectName),
                     backgroundColor: Colors.grey[800],
@@ -107,9 +108,22 @@ class _ProjectPageState extends State<ProjectPage> with NavigatorObserver {
             default:
               return Scaffold(
                   appBar: AppBar(
+                    leading: Container(),
                     centerTitle: true,
                     title: Text(widget.projectName),
                     backgroundColor: Colors.grey[800],
+                    actions: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: VCCSFlatButton(
+                          child: Text("Close Project"),
+                          onPressed: () {
+                            ExtendedNavigator.of(context).pop();
+                          },
+                          hoverColor: Colors.red[400],
+                        ),
+                      )
+                    ],
                   ),
                   body: buildPage());
           }

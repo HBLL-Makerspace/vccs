@@ -14,19 +14,6 @@ class CameraProperty {
 
   CameraProperty(this.name, this.label, this.value, this.readOnly, this.type);
 
-  // factory CameraProperty(String name, String label, dynamic value,
-  //     bool readOnly, CameraPropertyType type) {
-  //   switch (type) {
-  //     case CameraPropertyType.TEXT:
-  //     case CameraPropertyType.RANGE:
-  //     case CameraPropertyType.TOGGLE:
-  //     case CameraPropertyType.RADIO:
-  //     case CameraPropertyType.DROPDOWN:
-  //     case CameraPropertyType.DATE:
-  //     case CameraPropertyType.UNKOWN:
-  //   }
-  // }
-
   CameraProperty copyWith(
       {String name,
       String label,
@@ -47,6 +34,16 @@ class CameraTextProperty extends CameraProperty {
       String name, String label, value, bool readOnly, CameraPropertyType type)
       : super(name, label, value, readOnly, type);
   String getText() => value?.toString() ?? "";
+
+  CameraTextProperty copyWith(
+      {String name,
+      String label,
+      bool readOnly,
+      dynamic value,
+      CameraPropertyType type}) {
+    return CameraTextProperty(name ?? this.name, label ?? this.label,
+        value ?? this.value, readOnly ?? this.readOnly, type ?? this.type);
+  }
 }
 
 class CameraRangeProperty extends CameraProperty {
@@ -58,12 +55,38 @@ class CameraRangeProperty extends CameraProperty {
       String name, String label, value, bool readOnly, CameraPropertyType type,
       {this.low = 0, this.high = 0, this.increment = 1})
       : super(name, label, value, readOnly, type);
+
+  CameraRangeProperty copyWith(
+      {String name,
+      String label,
+      bool readOnly,
+      dynamic value,
+      double low,
+      double high,
+      double increment,
+      CameraPropertyType type}) {
+    return CameraRangeProperty(name ?? this.name, label ?? this.label,
+        value ?? this.value, readOnly ?? this.readOnly, type ?? this.type,
+        low: low ?? this.low,
+        high: high ?? this.high,
+        increment: increment ?? this.increment);
+  }
 }
 
 class CameraToggleProperty extends CameraProperty {
   CameraToggleProperty(
       String name, String label, value, bool readOnly, CameraPropertyType type)
       : super(name, label, value, readOnly, type);
+
+  CameraToggleProperty copyWith(
+      {String name,
+      String label,
+      bool readOnly,
+      dynamic value,
+      CameraPropertyType type}) {
+    return CameraToggleProperty(name ?? this.name, label ?? this.label,
+        value ?? this.value, readOnly ?? this.readOnly, type ?? this.type);
+  }
 }
 
 class CameraRadioProperty extends CameraProperty {
@@ -72,6 +95,23 @@ class CameraRadioProperty extends CameraProperty {
       String name, String label, value, bool readOnly, CameraPropertyType type,
       {this.choices})
       : super(name, label, value, readOnly, type);
+
+  CameraRadioProperty copyWith(
+      {String name,
+      String label,
+      bool readOnly,
+      dynamic value,
+      List<dynamic> choices,
+      CameraPropertyType type}) {
+    return CameraRadioProperty(
+      name ?? this.name,
+      label ?? this.label,
+      value ?? this.value,
+      readOnly ?? this.readOnly,
+      type ?? this.type,
+      choices: choices ?? this.choices,
+    );
+  }
 }
 
 class CameraDropDownProperty extends CameraProperty {
@@ -80,10 +120,42 @@ class CameraDropDownProperty extends CameraProperty {
       String name, String label, value, bool readOnly, CameraPropertyType type,
       {this.choices})
       : super(name, label, value, readOnly, type);
+
+  CameraDropDownProperty copyWith(
+      {String name,
+      String label,
+      bool readOnly,
+      dynamic value,
+      List<dynamic> choices,
+      CameraPropertyType type}) {
+    return CameraDropDownProperty(
+      name ?? this.name,
+      label ?? this.label,
+      value ?? this.value,
+      readOnly ?? this.readOnly,
+      type ?? this.type,
+      choices: choices ?? this.choices,
+    );
+  }
 }
 
 class CameraDateProperty extends CameraProperty {
   CameraDateProperty(
       String name, String label, value, bool readOnly, CameraPropertyType type)
       : super(name, label, value, readOnly, type);
+
+  CameraDateProperty copyWith(
+      {String name,
+      String label,
+      bool readOnly,
+      dynamic value,
+      CameraPropertyType type}) {
+    return CameraDateProperty(
+      name ?? this.name,
+      label ?? this.label,
+      value ?? this.value,
+      readOnly ?? this.readOnly,
+      type ?? this.type,
+    );
+  }
 }

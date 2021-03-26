@@ -10,13 +10,15 @@ class CameraPropertyWidget extends StatelessWidget {
   final ICamera camera;
   final ValueChanged<CameraProperty> onUpdate;
   final bool enabled;
+  final dynamic overrideValue;
 
   const CameraPropertyWidget(
       {Key key,
       this.cameraProperty,
       this.camera,
       this.onUpdate,
-      this.enabled = true})
+      this.enabled = true,
+      this.overrideValue})
       : super(key: key);
 
   Widget _inputFromType(BuildContext context, ValueChanged<dynamic> onUpdate) {
@@ -26,42 +28,48 @@ class CameraPropertyWidget extends StatelessWidget {
     switch (cameraProperty.runtimeType) {
       case CameraTextProperty:
         input = CameraTextPropertyWidget(
-          property: cameraProperty,
+          property: (cameraProperty as CameraTextProperty)
+              .copyWith(value: overrideValue),
           onUpdate: onUpdate,
           enabled: enabled,
         );
         break;
       case CameraRangeProperty:
         input = CameraRangePropertyWidget(
-          property: cameraProperty,
+          property: (cameraProperty as CameraRangeProperty)
+              .copyWith(value: overrideValue),
           onUpdate: onUpdate,
           enabled: enabled,
         );
         break;
       case CameraToggleProperty:
         input = CameraTogglePropertyWidget(
-          property: cameraProperty,
+          property: (cameraProperty as CameraToggleProperty)
+              .copyWith(value: overrideValue),
           onUpdate: onUpdate,
           enabled: enabled,
         );
         break;
       case CameraDateProperty:
         input = CameraDateTimePropertyWidget(
-          property: cameraProperty,
+          property: (cameraProperty as CameraDateProperty)
+              .copyWith(value: overrideValue),
           onUpdate: onUpdate,
           enabled: enabled,
         );
         break;
       case CameraRadioProperty:
         input = CameraRadioPropertyWidget(
-          property: cameraProperty,
+          property: (cameraProperty as CameraRadioProperty)
+              .copyWith(value: overrideValue),
           onUpdate: onUpdate,
           enabled: enabled,
         );
         break;
       case CameraDropDownProperty:
         input = CameraDropDownPropertyWidget(
-          property: cameraProperty,
+          property: cameraProperty.copyWith(value: overrideValue)
+              as CameraDropDownProperty,
           onUpdate: onUpdate,
           enabled: enabled,
         );

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:vccs/src/model/backend/interfaces/interfaces.dart';
 import 'package:vccs/src/model/backend/interfaces/multi_camera_capture.dart';
@@ -55,6 +56,7 @@ class MultiCameraCaptureBloc
           }
         }
         await _cameraCapture.capture();
+        imageCache.clear();
         yield SetCapturedState();
         break;
     }

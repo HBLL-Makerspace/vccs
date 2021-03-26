@@ -219,7 +219,7 @@ class libgphoto2CameraController implements ICameraController {
       print(process.stderr);
     }
 
-    file.deleteSync();
+    if (file.existsSync()) file.deleteSync();
 
     return true;
   }

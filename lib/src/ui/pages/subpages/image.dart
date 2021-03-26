@@ -5,11 +5,16 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/blocs/project_bloc/project_bloc.dart';
+import 'package:vccs/src/globals.dart';
 import 'package:vccs/src/model/backend/path_provider.dart';
 import 'package:vccs/src/model/domain/domian.dart';
+import 'package:vccs/src/ui/widgets/inherited.dart';
+import 'package:vccs/src/ui/widgets/widgets.dart';
 
 class ImagePage extends StatefulWidget {
   const ImagePage({Key key}) : super(key: key);
@@ -47,8 +52,7 @@ class _ImagePageState extends State<ImagePage> {
     var routeData = RouteData.of(context);
     var setId = routeData.pathParams['set'].value;
     var slotId = routeData.pathParams['slot'].value;
-    var slot =
-        context.read<ConfigurationBloc>().configuration.getSlotById(slotId);
+    var slot = configuration.getSlotById(slotId);
     var set = context.read<ProjectBloc>().project.getSetById(setId);
     if (slot != null && set != null) {
       var imagePath = PathProvider.getRawImagePath(
@@ -66,6 +70,23 @@ class _ImagePageState extends State<ImagePage> {
                 imageProvider: FileImage(File(imagePath)),
               ),
             )),
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      ExtendedNavigator.named("project").pop();
+                    }),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                  padding: const EdgeInsets.only(top: 24.0, left: 18),
+                  child: SlotIndicator(slot: slot)),
+            ),
             Positioned.fill(
               child: Align(
                 alignment: Alignment.bottomCenter,

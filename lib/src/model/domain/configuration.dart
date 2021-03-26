@@ -22,7 +22,7 @@ class Configuration {
 
   Slot getAssignedSlot(ICamera camera) {
     for (var slot in slots.values) {
-      if (slot.cameraRef.cameraId == camera.getId()) return slot;
+      if (slot?.cameraRef?.cameraId == camera.getId()) return slot;
     }
   }
 
@@ -35,9 +35,10 @@ class Configuration {
   }
 
   List<Slot> getSlots() {
-    List<Slot> slots_unsorted = slots?.values?.toList();
-    slots_unsorted?.sort();
-    return slots_unsorted ?? [];
+    // List<Slot> slots_unsorted = slots?.values?.toList();
+    // slots_unsorted?.sort();
+    // return slots_unsorted ?? [];
+    return slots?.values?.toList() ?? [];
   }
 
   Map<String, dynamic> toJson() => _$ConfigurationToJson(this);
@@ -83,6 +84,10 @@ class Slot with Comparable<Slot> {
 
   void setCameraProperty(CameraProperty cameraProperty) {
     config[cameraProperty?.name] = cameraProperty;
+  }
+
+  CameraProperty getCameraProperty(String name) {
+    return config[name];
   }
 
   void removeCameraProperty(CameraProperty cameraProperty) {

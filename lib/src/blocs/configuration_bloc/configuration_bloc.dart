@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
-import 'package:vccs/main.dart';
+import 'package:vccs/src/globals.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 import 'package:vccs/src/model/backend/interfaces/interfaces.dart';
 
@@ -16,12 +16,9 @@ part 'configuration_event.dart';
 part 'configuration_state.dart';
 
 class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
-  ConfigurationBloc(this.configuration, this._controller)
-      : super(ConfigurationInitial()) {
-    configuration = Configuration(slots: {});
+  ConfigurationBloc(this._controller) : super(ConfigurationInitial()) {
     add(ConfigurationUpdateEvent());
   }
-  Configuration configuration;
   final ICameraController _controller;
 
   @override
@@ -79,7 +76,9 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
         break;
       case ConfigurationStartLiveViewEvent:
         var typed = (event as ConfigurationStartLiveViewEvent);
+
         await _controller.startLiveView(typed.camera);
+
         yield ConfigurationDataState(configuration);
 
         break;
