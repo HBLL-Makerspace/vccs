@@ -264,7 +264,7 @@ class SlotCard extends StatefulWidget {
 class _SlotCardState extends State<SlotCard> {
   Widget _cameraStatus(BuildContext context) {
     return BlocBuilder<CameraBloc, CameraState>(
-        bloc: CameraBloc(AppData.of(context).controller)
+        bloc: CameraBloc()
           ..add(LoadCameraDataEvent(widget.slot?.cameraRef?.cameraId)),
         builder: (context, state) {
           bool error = true;

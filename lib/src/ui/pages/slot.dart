@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
+import 'package:vccs/src/globals.dart';
 import 'package:vccs/src/model/backend/backend.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 import 'package:vccs/src/model/backend/interfaces/interfaces.dart';
@@ -300,14 +301,13 @@ class _SlotPageState extends State<SlotPage> {
 
   @override
   Widget build(BuildContext context) {
-    var _controller = AppData.of(context).controller;
     var cameraState = CameraDataState(camera);
     return Scaffold(
       body: Scrollbar(
         child: ListView(
           shrinkWrap: true,
           children: [
-            _header(context, _controller, cameraState),
+            _header(context, controller, cameraState),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Container(),

@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../model/domain/configuration.dart';
@@ -15,13 +14,15 @@ import '../model/domain/domian.dart';
 import 'pages/pages.dart';
 
 class Routes {
-  static const String homePage = '/';
+  static const String loadingPage = '/';
+  static const String homePage = '/home';
   static const String configurationPage = '/configure';
   static const String _cameraPage = '/configure/cameras/:id';
   static String cameraPage({@required dynamic id}) => '/configure/cameras/$id';
   static const String slotPage = '/configure/slots';
   static const String projectPage = '/project';
   static const all = <String>{
+    loadingPage,
     homePage,
     configurationPage,
     _cameraPage,
@@ -34,6 +35,7 @@ class VCCSRoute extends RouterBase {
   @override
   List<RouteDef> get routes => _routes;
   final _routes = <RouteDef>[
+    RouteDef(Routes.loadingPage, page: LoadingPage),
     RouteDef(Routes.homePage, page: HomePage),
     RouteDef(Routes.configurationPage, page: ConfigurationPage),
     RouteDef(Routes._cameraPage, page: CameraPage),
@@ -47,6 +49,13 @@ class VCCSRoute extends RouterBase {
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
   final _pagesMap = <Type, AutoRouteFactory>{
+    LoadingPage: (data) {
+      return PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) => LoadingPage(),
+        settings: data,
+        transitionsBuilder: TransitionsBuilders.slideLeft,
+      );
+    },
     HomePage: (data) {
       final args = data.getArgs<HomePageArguments>(
         orElse: () => HomePageArguments(),

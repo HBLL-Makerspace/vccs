@@ -5,10 +5,7 @@ import 'package:vccs/src/blocs/multi_camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/blocs/project_list/project_list_bloc.dart';
 import 'package:vccs/src/globals.dart';
-import 'package:vccs/src/model/backend/backend.dart';
 import 'package:vccs/src/model/backend/implementations/hbll/multi_camera_capture.dart';
-import 'package:vccs/src/model/domain/camera_config.dart';
-import 'package:vccs/src/model/domain/configuration.dart';
 import 'package:vccs/src/ui/route.gr.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
 
@@ -16,8 +13,6 @@ HbllMultiCameraCapture camerasCapture = HbllMultiCameraCapture();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await PathProvider.init();
-  await CameraConfiguration.load("assets/cameras/cameras.json");
   await camerasCapture.initialize();
   runApp(MyApp());
 }
@@ -48,8 +43,10 @@ class MyApp extends StatelessWidget {
             brightness: Brightness.dark,
             accentColor: Colors.blue,
           ),
-          home: ExtendedNavigator(
-            router: VCCSRoute(),
+          home: Scaffold(
+            body: ExtendedNavigator(
+              router: VCCSRoute(),
+            ),
           ),
         ),
       ),

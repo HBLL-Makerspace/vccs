@@ -30,6 +30,7 @@ dependencies:
   tuple: ^1.0.3
   http: ^0.12.2
   # win32: 2.0.0
+  rxdart: ^0.26.0
   watcher: ^1.0.0
   link_text: ^0.1.4
   tinycolor: ^1.0.3
@@ -49,6 +50,7 @@ dependencies:
   string_similarity: ^2.0.0
   # file_picker_cross: ^4.2.8
   circular_check_box: ^1.0.4
+  percent_indicator: ^2.1.7+2
   # filepicker_windows: ^1.0.0
   lazy_load_scrollview: 1.3.0
   modal_bottom_sheet: ^1.0.0+1

@@ -19,7 +19,7 @@ class CameraPage extends StatelessWidget {
     return Scaffold(
       body: BlocProvider(
         create: (BuildContext context) =>
-            CameraBloc(_controller)..add(LoadCameraDataEvent(id)),
+            CameraBloc()..add(LoadCameraDataEvent(id)),
         child: _CameraPageInternal(),
       ),
     );

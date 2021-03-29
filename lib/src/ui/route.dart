@@ -5,8 +5,13 @@ import 'package:vccs/src/ui/pages/pages.dart';
 @MaterialAutoRouter(
   routes: <AutoRoute>[
     CustomRoute(
-      page: HomePage,
+      page: LoadingPage,
       initial: true,
+      transitionsBuilder: TransitionsBuilders.slideLeft,
+    ),
+    CustomRoute(
+      page: HomePage,
+      path: "/home",
       transitionsBuilder: TransitionsBuilders.slideLeft,
     ),
     CustomRoute(

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:vccs/src/model/backend/implementations/camera_properties.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_controller_interface.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
@@ -17,10 +18,10 @@ class libgphoto2CameraController implements ICameraController {
   Map<String, ICamera> _cameras = {};
   Map<String, Process> _liveViewProcess = {};
   Map<String, bool> _changingProperties = {};
-  Map<String, StreamController> _cameraChanges = {};
+  Map<String, BehaviorSubject> _cameraChanges = {};
   StreamController _hardwareChanges = StreamController.broadcast();
-  StreamController<List<ICamera>> _connectedCameras =
-      StreamController<List<ICamera>>.broadcast();
+  final BehaviorSubject<List<ICamera>> _connectedCameras =
+      BehaviorSubject<List<ICamera>>();
 
   libgphoto2CameraController() {
     var watcher = DirectoryWatcher("/dev/bus/usb");
@@ -29,7 +30,7 @@ class libgphoto2CameraController implements ICameraController {
       if (event.type == ChangeType.ADD || event.type == ChangeType.REMOVE) {
         // print(event);
         _hardwareChanges.add(true);
-        _connectedCameras.add(await getConnectedCameras(forceUpdate: true));
+        // _connectedCameras.add(await getConnectedCameras(forceUpdate: true));
       }
     });
   }
@@ -58,6 +59,7 @@ class libgphoto2CameraController implements ICameraController {
             _cameras[cam_.getId()] = cam_;
             _idPortMap[cam_.getId()] = cam_.port;
           }
+          _connectedCameras.add(cameras);
           return cameras;
         } catch (e) {
           print(e);
@@ -139,7 +141,7 @@ class libgphoto2CameraController implements ICameraController {
   @override
   Stream onCameraUpdate(String cameraId) {
     if (!_cameraChanges.containsKey(cameraId))
-      _cameraChanges[cameraId] = StreamController.broadcast();
+      _cameraChanges[cameraId] = BehaviorSubject();
     return _cameraChanges[cameraId].stream.asBroadcastStream();
   }
 
@@ -217,6 +219,8 @@ class libgphoto2CameraController implements ICameraController {
       // print(process.exitCode);
       print(process.stdout);
       print(process.stderr);
+    } else {
+      return false; // Failed to get a picture
     }
 
     if (file.existsSync()) file.deleteSync();

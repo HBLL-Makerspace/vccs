@@ -43,11 +43,13 @@ class MultiCameraCaptureBloc
           element.deleteSync();
         });
 
+        // Then tether each camera in each slot and trigger the syncronous capture.
         for (var slot in config.getSlots()) {
           ICamera cam =
               await controller.getCameraByID(slot.cameraRef?.cameraId);
+          bool success = false;
           if (cam != null) {
-            controller.tether(
+            success = await controller.tether(
               cam,
               rawFolderPath:
                   PathProvider.getRawImagesFolderPath(typed.project, typed.set),

@@ -4,3 +4,4 @@ export './home.dart';
 export './project.dart';
 export './slot.dart';
 export './subpages/subpages.dart';
+export './loading.dart';

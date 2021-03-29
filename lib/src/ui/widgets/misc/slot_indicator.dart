@@ -37,8 +37,7 @@ class SlotIndicator extends StatelessWidget {
 
   Widget _cameraStatus(BuildContext context) {
     return BlocBuilder<CameraBloc, CameraState>(
-        bloc: CameraBloc(AppData.of(context).controller)
-          ..add(LoadCameraDataEvent(slot?.cameraRef?.cameraId)),
+        bloc: CameraBloc()..add(LoadCameraDataEvent(slot?.cameraRef?.cameraId)),
         builder: (context, state) {
           bool error = true;
           if (state is CameraDataState) error = state.camera == null;

@@ -14,6 +14,7 @@ part 'camera_state.dart';
 class MultiCameraBloc extends Bloc<CameraEvent, CameraState> {
   MultiCameraBloc(this._controller) : super(CameraInitial()) {
     _camerasStream = _controller.connectedCameras.listen((event) {
+      print(event);
       add(LoadedCamerasEvent(event));
     });
     // _hardwareChanges = _controller.onHardwareChanges().listen((event) {
