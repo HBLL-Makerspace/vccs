@@ -16,5 +16,7 @@ abstract class ICameraController {
   Future<bool> tether(ICamera camera,
       {String rawFolderPath, String saveAsNoType = "captured"});
   Stream<void> onHardwareChanges();
+  Future<void> capture(ICamera camera,
+      {String rawFolderPath, String saveAsNoType = "captured"});
   Future<void> dispose();
 }

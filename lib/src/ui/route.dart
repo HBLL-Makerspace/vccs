@@ -62,7 +62,7 @@ import 'package:vccs/src/ui/pages/pages.dart';
         ),
         CustomRoute(
           page: SetPage,
-          path: "/sets/:id?",
+          path: "/sets/:id",
           transitionsBuilder: TransitionsBuilders.slideLeft,
           durationInMilliseconds: 10,
         ),

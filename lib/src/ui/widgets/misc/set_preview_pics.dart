@@ -8,6 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/blocs/project_bloc/project_bloc.dart';
+import 'package:vccs/src/blocs/set_bloc/set_bloc.dart';
 import 'package:vccs/src/blocs/slot_preview_image/slot_preview_image_bloc.dart';
 import 'package:vccs/src/globals.dart';
 import 'package:vccs/src/model/domain/domian.dart';
@@ -171,7 +172,8 @@ class __SlotImagePreviewState extends State<_SlotImagePreview> {
                       onPressed: () {
                         ExtendedNavigator.named("project").push(
                             "/cameras/${widget.slot.cameraRef.cameraId}",
-                            arguments: SlotPageArguments(slot: widget.slot));
+                            arguments: CameraPageArguments(
+                                slot: widget.slot, set: widget.set));
                       },
                     ),
                   )),
@@ -188,7 +190,13 @@ class __SlotImagePreviewState extends State<_SlotImagePreview> {
                       "Retake",
                       style: TextStyle(fontSize: 12),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      context.read<MultiCameraCaptureBloc>().add(
+                          RetakeImageEvent(
+                              project: context.read<ProjectBloc>().project,
+                              set: widget.set,
+                              slot: widget.slot));
+                    },
                     padding: EdgeInsets.all(12),
                   ),
                 ),

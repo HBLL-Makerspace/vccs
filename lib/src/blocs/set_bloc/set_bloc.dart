@@ -15,7 +15,7 @@ part 'set_event.dart';
 part 'set_state.dart';
 
 class MultiCameraCaptureBloc
-    extends Bloc<MultiCameraCaptureBlocEvent, MultiCameraCaptureState> {
+    extends Bloc<SetBlocEvent, MultiCameraCaptureState> {
   MultiCameraCaptureBloc(this._cameraCapture, this.config)
       : super(SetInitial());
   IMultiCameraCapture _cameraCapture;
@@ -23,7 +23,7 @@ class MultiCameraCaptureBloc
 
   @override
   Stream<MultiCameraCaptureState> mapEventToState(
-    MultiCameraCaptureBlocEvent event,
+    SetBlocEvent event,
   ) async* {
     switch (event.runtimeType) {
       case CaptureSetEvent:
@@ -59,6 +59,35 @@ class MultiCameraCaptureBloc
         await _cameraCapture.capture();
         imageCache.clear();
         yield SetCapturedState();
+        break;
+      case RetakeImageEvent:
+        var typed = event as RetakeImageEvent;
+        Directory raw = Directory(
+            PathProvider.getRawImagesFolderPath(typed.project, typed.set));
+        raw
+            .listSync()
+            .where((element) => element.path.contains(typed.slot.id))
+            .forEach((element) {
+          element.deleteSync();
+        });
+
+        Directory raw_thumb = Directory(
+            PathProvider.getRawThumbnailImagesFolderPath(
+                typed.project, typed.set));
+        raw_thumb
+            .listSync()
+            .where((element) => element.path.contains(typed.slot.id))
+            .forEach((element) {
+          element.deleteSync();
+        });
+
+        ICamera cam =
+            await controller.getCameraByID(typed.slot.cameraRef?.cameraId);
+
+        if (cam != null)
+          controller.capture(cam,
+              rawFolderPath: raw.path, saveAsNoType: typed.slot.id);
+        imageCache.clear();
         break;
     }
   }

@@ -10,7 +10,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../model/domain/configuration.dart';
-import '../model/domain/domian.dart';
+import '../model/domain/set.dart';
 import 'pages/pages.dart';
 
 class Routes {
@@ -76,8 +76,15 @@ class VCCSRoute extends RouterBase {
       );
     },
     CameraPage: (data) {
+      final args = data.getArgs<CameraPageArguments>(
+        orElse: () => CameraPageArguments(),
+      );
       return PageRouteBuilder<dynamic>(
-        pageBuilder: (context, animation, secondaryAnimation) => CameraPage(),
+        pageBuilder: (context, animation, secondaryAnimation) => CameraPage(
+          key: args.key,
+          slot: args.slot,
+          set: args.set,
+        ),
         settings: data,
         transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
         transitionDuration: const Duration(milliseconds: 10),
@@ -117,8 +124,8 @@ class ProjectPageRoutes {
       '/slotimage/$set/$slot';
   static const String cameraSetup = '/setup';
   static const String cameraSets = '/sets';
-  static const String _setPage = '/sets/:id?';
-  static String setPage({dynamic id = ''}) => '/sets/$id';
+  static const String _setPage = '/sets/:id';
+  static String setPage({@required dynamic id}) => '/sets/$id';
   static const String _cameraPage = '/cameras/:id';
   static String cameraPage({@required dynamic id}) => '/cameras/$id';
   static const String modelCreation = '/model';
@@ -200,8 +207,15 @@ class ProjectPageRouter extends RouterBase {
       );
     },
     CameraPage: (data) {
+      final args = data.getArgs<CameraPageArguments>(
+        orElse: () => CameraPageArguments(),
+      );
       return PageRouteBuilder<dynamic>(
-        pageBuilder: (context, animation, secondaryAnimation) => CameraPage(),
+        pageBuilder: (context, animation, secondaryAnimation) => CameraPage(
+          key: args.key,
+          slot: args.slot,
+          set: args.set,
+        ),
         settings: data,
         transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
         transitionDuration: const Duration(milliseconds: 10),
@@ -235,6 +249,14 @@ class ProjectPageRouter extends RouterBase {
 class HomePageArguments {
   final Key key;
   HomePageArguments({this.key});
+}
+
+/// CameraPage arguments holder class
+class CameraPageArguments {
+  final Key key;
+  final Slot slot;
+  final VCCSSet set;
+  CameraPageArguments({this.key, this.slot, this.set});
 }
 
 /// SlotPage arguments holder class

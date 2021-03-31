@@ -8,9 +8,15 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/model/backend/implementations/camera_properties.dart';
 import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
+import 'package:vccs/src/model/domain/configuration.dart';
+import 'package:vccs/src/model/domain/set.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
 
 class CameraPage extends StatelessWidget {
+  final Slot slot;
+  final VCCSSet set;
+
+  const CameraPage({Key key, this.slot, this.set}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var routeData = RouteData.of(context);

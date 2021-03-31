@@ -47,84 +47,87 @@ class SetPage extends StatelessWidget {
     var id = routeData.pathParams['id'].value;
     VCCSSet _set = context.read<ProjectBloc>().project.getSetById(id);
     List<Slot> slots = configuration.getSlots();
-    return Scaffold(
-      body: _set == null
-          ? Center(
-              child: Text("Unknown set"),
-            )
-          : ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        _set.name,
-                        style: Theme.of(context).textTheme.headline4,
-                      ),
-                      IconButton(
-                          icon: Icon(Icons.close),
-                          onPressed: () {
-                            ExtendedNavigator.named("project").pop();
-                          })
-                    ],
+    return BlocProvider(
+      create: (BuildContext context) => bloc,
+      child: Scaffold(
+        body: _set == null
+            ? Center(
+                child: Text("Unknown set"),
+              )
+            : ListView(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _set.name,
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                        IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              ExtendedNavigator.named("project").pop();
+                            })
+                      ],
+                    ),
                   ),
+                  _slotPictures(context, _set, slots)
+                ],
+              ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              VCCSRaisedButton(
+                color: Colors.red[400],
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Delete Pictures"),
                 ),
-                _slotPictures(context, _set, slots)
-              ],
-            ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            VCCSRaisedButton(
-              color: Colors.red[400],
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("Delete Pictures"),
+                onPressed: () {},
               ),
-              onPressed: () {},
-            ),
-            BlocListener<MultiCameraCaptureBloc, MultiCameraCaptureState>(
-              bloc: bloc,
-              listener: (context, state) {
-                if (state is SetCapturedState)
-                  NotificationMessenger.addNotification(NotificationMessage(
-                      "Finished capture",
-                      type: MessageType.SUCCESS,
-                      duration: Duration(seconds: 10)));
-              },
-              child:
-                  BlocBuilder<MultiCameraCaptureBloc, MultiCameraCaptureState>(
+              BlocListener<MultiCameraCaptureBloc, MultiCameraCaptureState>(
                 bloc: bloc,
-                builder: (context, state) {
-                  switch (state.runtimeType) {
-                    case SetCapturingState:
-                      return VCCSRaisedButton(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("Taking Pictures"),
-                        ),
-                        onPressed: null,
-                      );
-                    default:
-                      return VCCSRaisedButton(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("Take Pictures"),
-                        ),
-                        onPressed: () {
-                          bloc.add(CaptureSetEvent(
-                              set, context.read<ProjectBloc>().project));
-                        },
-                      );
-                  }
+                listener: (context, state) {
+                  if (state is SetCapturedState)
+                    NotificationMessenger.addNotification(NotificationMessage(
+                        "Finished capture",
+                        type: MessageType.SUCCESS,
+                        duration: Duration(seconds: 10)));
                 },
-              ),
-            )
-          ],
+                child: BlocBuilder<MultiCameraCaptureBloc,
+                    MultiCameraCaptureState>(
+                  bloc: bloc,
+                  builder: (context, state) {
+                    switch (state.runtimeType) {
+                      case SetCapturingState:
+                        return VCCSRaisedButton(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Taking Pictures"),
+                          ),
+                          onPressed: null,
+                        );
+                      default:
+                        return VCCSRaisedButton(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Take Pictures"),
+                          ),
+                          onPressed: () {
+                            bloc.add(CaptureSetEvent(
+                                set, context.read<ProjectBloc>().project));
+                          },
+                        );
+                    }
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

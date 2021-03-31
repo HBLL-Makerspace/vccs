@@ -227,4 +227,66 @@ class libgphoto2CameraController implements ICameraController {
 
     return true;
   }
+
+  @override
+  Future<void> capture(ICamera camera,
+      {String rawFolderPath, String saveAsNoType = "captured"}) async {
+    String port = _idPortMap[camera.getId()];
+    rawFolderPath =
+        rawFolderPath ?? join(PathProvider.getProjectsDirectory(), "temp");
+    File file = File(join(rawFolderPath, saveAsNoType) + ".TMP");
+    // print(filename + ".TMP");
+    file.createSync(recursive: true);
+    if (port != null && port.isNotEmpty) {
+      _changingProperties[camera.getId()] = true;
+      // print("updating property ${property.name} to ${property.value.toString()}");
+      String path = PathProvider.getPluginPath("libgphoto2");
+      var process = await Process.run("${join(path, "capture_image")}",
+          ["--port", port, "--file", join(rawFolderPath, saveAsNoType)],
+          runInShell: true,
+          workingDirectory: path,
+          includeParentEnvironment: true);
+      // print(process.exitCode);
+      print(process.stdout);
+      print(process.stderr);
+      _changingProperties.remove(camera.getId());
+    }
+
+    Directory dir = Directory(rawFolderPath);
+    List<FileSystemEntity> files = dir.listSync(recursive: false).toList();
+    // print(files);
+    files = files
+        .where((event) =>
+            event is File &&
+            basename(event.path).contains(saveAsNoType) &&
+            !basename(event.path).contains("TMP"))
+        .toList();
+
+    // print(files);
+
+    if (files.length >= 1) {
+      print("processing raw images");
+      String path = PathProvider.getPluginPath("libgphoto2");
+      var process = await Process.run(
+          "${join(path, "process_raw.sh")}",
+          [
+            rawFolderPath,
+            join(Directory(rawFolderPath).parent.path,
+                "." + basename(rawFolderPath) + "_thumb"),
+            saveAsNoType,
+            files[0].path.split(".")[1] ?? ""
+          ],
+          runInShell: true,
+          includeParentEnvironment: true);
+      // print(process.exitCode);
+      print(process.stdout);
+      print(process.stderr);
+    } else {
+      return false; // Failed to get a picture
+    }
+
+    if (file.existsSync()) file.deleteSync();
+
+    return true;
+  }
 }
