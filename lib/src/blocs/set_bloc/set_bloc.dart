@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
+import 'package:vccs/src/globals.dart';
 import 'package:vccs/src/model/backend/interfaces/interfaces.dart';
 import 'package:vccs/src/model/backend/interfaces/multi_camera_capture.dart';
 import 'package:vccs/src/model/backend/path_provider.dart';
@@ -15,10 +16,9 @@ part 'set_state.dart';
 
 class MultiCameraCaptureBloc
     extends Bloc<MultiCameraCaptureBlocEvent, MultiCameraCaptureState> {
-  MultiCameraCaptureBloc(this.controller, this._cameraCapture, this.config)
+  MultiCameraCaptureBloc(this._cameraCapture, this.config)
       : super(SetInitial());
   IMultiCameraCapture _cameraCapture;
-  ICameraController controller;
   Configuration config;
 
   @override
@@ -47,9 +47,8 @@ class MultiCameraCaptureBloc
         for (var slot in config.getSlots()) {
           ICamera cam =
               await controller.getCameraByID(slot.cameraRef?.cameraId);
-          bool success = false;
           if (cam != null) {
-            success = await controller.tether(
+            controller.tether(
               cam,
               rawFolderPath:
                   PathProvider.getRawImagesFolderPath(typed.project, typed.set),

@@ -22,6 +22,7 @@ class SlotPreviewImageBloc
     if (!Directory(join(PathProvider.getRawImagesFolderPath(project, set),
             "${slot.id}.TMP"))
         .existsSync()) {
+      print("Got temp file");
       add(LoadSlotPreviewImageEvent());
     }
     DirectoryWatcher(PathProvider.getRawImagesFolderPath(project, set))
@@ -50,9 +51,15 @@ class SlotPreviewImageBloc
       case LoadSlotPreviewImageEvent:
         yield LoadingSlotPreviewImageState();
         var typed = event as LoadSlotPreviewImageEvent;
-        ImageController controller = ImageController();
-        yield LoadedSlotPreviewImageState(
-            await controller.getRawThumbnailFileForSlot(project, set, slot));
+        if (Directory(join(PathProvider.getRawImagesFolderPath(project, set),
+                "${slot.id}.TMP"))
+            .existsSync()) {
+          LoadingSlotPreviewImageState();
+        } else {
+          ImageController controller = ImageController();
+          yield LoadedSlotPreviewImageState(
+              await controller.getRawThumbnailFileForSlot(project, set, slot));
+        }
         break;
       case TempFilePictureAddedEvent:
         yield LoadingSlotPreviewImageState();

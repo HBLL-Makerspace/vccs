@@ -11,6 +11,7 @@ import 'package:vccs/src/blocs/project_bloc/project_bloc.dart';
 import 'package:vccs/src/blocs/slot_preview_image/slot_preview_image_bloc.dart';
 import 'package:vccs/src/globals.dart';
 import 'package:vccs/src/model/domain/domian.dart';
+import 'package:vccs/src/ui/route.gr.dart';
 import 'package:vccs/src/ui/widgets/buttons.dart';
 import 'package:vccs/src/ui/widgets/cards.dart';
 import 'package:vccs/src/ui/widgets/inherited.dart';
@@ -163,8 +164,16 @@ class __SlotImagePreviewState extends State<_SlotImagePreview> {
               alignment: Alignment.topLeft,
               child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: SlotIndicator(
-                    slot: widget.slot,
+                  child: Tooltip(
+                    message: 'Open assigned camera',
+                    child: SlotIndicator(
+                      slot: widget.slot,
+                      onPressed: () {
+                        ExtendedNavigator.named("project").push(
+                            "/cameras/${widget.slot.cameraRef.cameraId}",
+                            arguments: SlotPageArguments(slot: widget.slot));
+                      },
+                    ),
                   )),
             ),
             Align(

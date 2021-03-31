@@ -5,6 +5,7 @@ import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/blocs/project_bloc/project_bloc.dart';
 import 'package:vccs/src/blocs/set_bloc/set_bloc.dart';
 import 'package:vccs/src/globals.dart';
+import 'package:vccs/src/model/backend/notifications/notification.dart';
 import 'package:vccs/src/model/domain/domian.dart';
 import 'package:vccs/src/ui/widgets/buttons.dart';
 import 'package:vccs/src/ui/widgets/cards.dart';
@@ -41,9 +42,7 @@ class SetPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MultiCameraCaptureBloc bloc = MultiCameraCaptureBloc(
-        AppData.of(context).controller,
-        AppData.of(context).camerasCapture,
-        configuration);
+        AppData.of(context).camerasCapture, configuration);
     var routeData = RouteData.of(context);
     var id = routeData.pathParams['id'].value;
     VCCSSet _set = context.read<ProjectBloc>().project.getSetById(id);
@@ -88,31 +87,42 @@ class SetPage extends StatelessWidget {
               ),
               onPressed: () {},
             ),
-            BlocBuilder<MultiCameraCaptureBloc, MultiCameraCaptureState>(
+            BlocListener<MultiCameraCaptureBloc, MultiCameraCaptureState>(
               bloc: bloc,
-              builder: (context, state) {
-                switch (state.runtimeType) {
-                  case SetCapturingState:
-                    return VCCSRaisedButton(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("Taking Pictures"),
-                      ),
-                      onPressed: null,
-                    );
-                  default:
-                    return VCCSRaisedButton(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("Take Pictures"),
-                      ),
-                      onPressed: () {
-                        bloc.add(CaptureSetEvent(
-                            set, context.read<ProjectBloc>().project));
-                      },
-                    );
-                }
+              listener: (context, state) {
+                if (state is SetCapturedState)
+                  NotificationMessenger.addNotification(NotificationMessage(
+                      "Finished capture",
+                      type: MessageType.SUCCESS,
+                      duration: Duration(seconds: 10)));
               },
+              child:
+                  BlocBuilder<MultiCameraCaptureBloc, MultiCameraCaptureState>(
+                bloc: bloc,
+                builder: (context, state) {
+                  switch (state.runtimeType) {
+                    case SetCapturingState:
+                      return VCCSRaisedButton(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Taking Pictures"),
+                        ),
+                        onPressed: null,
+                      );
+                    default:
+                      return VCCSRaisedButton(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Take Pictures"),
+                        ),
+                        onPressed: () {
+                          bloc.add(CaptureSetEvent(
+                              set, context.read<ProjectBloc>().project));
+                        },
+                      );
+                  }
+                },
+              ),
             )
           ],
         ),

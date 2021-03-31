@@ -13,6 +13,7 @@ import 'package:vccs/src/blocs/project_bloc/project_bloc.dart';
 import 'package:vccs/src/globals.dart';
 import 'package:vccs/src/model/backend/path_provider.dart';
 import 'package:vccs/src/model/domain/domian.dart';
+import 'package:vccs/src/ui/route.gr.dart';
 import 'package:vccs/src/ui/widgets/inherited.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
 
@@ -84,8 +85,19 @@ class _ImagePageState extends State<ImagePage> {
             Align(
               alignment: Alignment.topLeft,
               child: Padding(
-                  padding: const EdgeInsets.only(top: 24.0, left: 18),
-                  child: SlotIndicator(slot: slot)),
+                padding: const EdgeInsets.only(top: 24.0, left: 18),
+                child: Tooltip(
+                  message: 'Open assigned camera',
+                  child: SlotIndicator(
+                    slot: slot,
+                    onPressed: () {
+                      ExtendedNavigator.named("project").push(
+                          "/cameras/${slot.cameraRef.cameraId}",
+                          arguments: SlotPageArguments(slot: slot));
+                    },
+                  ),
+                ),
+              ),
             ),
             Positioned.fill(
               child: Align(

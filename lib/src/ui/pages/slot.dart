@@ -37,8 +37,7 @@ class _SlotPageState extends State<SlotPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    AppData.of(context)
-        .controller
+    controller
         .getCameraByID(slot?.cameraRef?.cameraId)
         .then((value) => setState(() => camera = value));
   }

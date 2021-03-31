@@ -8,29 +8,35 @@ import 'package:vccs/src/ui/widgets/inherited.dart';
 
 class SlotIndicator extends StatelessWidget {
   final Slot slot;
+  final VoidCallback onPressed;
 
-  const SlotIndicator({Key key, this.slot}) : super(key: key);
+  const SlotIndicator({Key key, this.slot, this.onPressed}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Color(slot.color),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 6),
-            child: Text(
-              slot?.name ?? "Unknown",
-              overflow: TextOverflow.fade,
+    return InkWell(
+      onTap: onPressed,
+      child: Material(
+        color: Color(slot.color),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 6),
+              child: Text(slot?.name ?? "Unknown",
+                  overflow: TextOverflow.fade,
+                  style: TextStyle(
+                      color: Color(slot.color).computeLuminance() > 0.5
+                          ? Colors.black
+                          : Colors.white)),
             ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 8.0, top: 2, bottom: 2, right: 2),
-            child: _cameraStatus(context),
-          ),
-        ],
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 8.0, top: 2, bottom: 2, right: 2),
+              child: _cameraStatus(context),
+            ),
+          ],
+        ),
       ),
     );
   }
