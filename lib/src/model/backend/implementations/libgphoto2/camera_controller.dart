@@ -219,8 +219,6 @@ class libgphoto2CameraController implements ICameraController {
       // print(process.exitCode);
       print(process.stdout);
       print(process.stderr);
-    } else {
-      return false; // Failed to get a picture
     }
 
     if (file.existsSync()) file.deleteSync();

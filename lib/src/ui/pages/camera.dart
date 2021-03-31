@@ -116,7 +116,7 @@ class __CameraPageInternalState extends State<_CameraPageInternal> {
                             Text(isLiveView ? "Stop" : "LiveView"),
                           ],
                         ),
-                        onPressed: isChanging
+                        onPressed: (isChanging && !isLiveView)
                             ? null
                             : () {
                                 isLiveView
