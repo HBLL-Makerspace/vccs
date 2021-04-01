@@ -74,14 +74,6 @@ class ConfigurationBloc extends Bloc<ConfigurationEvent, ConfigurationState> {
         yield ConfigurationDataState(configuration);
 
         break;
-      case ConfigurationStartLiveViewEvent:
-        var typed = (event as ConfigurationStartLiveViewEvent);
-
-        await _controller.startLiveView(typed.camera);
-
-        yield ConfigurationDataState(configuration);
-
-        break;
     }
   }
 }

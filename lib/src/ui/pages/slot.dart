@@ -42,8 +42,11 @@ class _SlotPageState extends State<SlotPage> {
         .then((value) => setState(() => camera = value));
   }
 
-  Widget _header(BuildContext context, ICameraController controller,
-      CameraDataState state) {
+  Widget _header(
+    BuildContext context,
+    ICameraController controller,
+    //bool isChanging, bool isLiveView
+  ) {
     return Stack(
       children: [
         Row(
@@ -128,32 +131,33 @@ class _SlotPageState extends State<SlotPage> {
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: VCCSFlatButton(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  right: 8.0, bottom: 1.0),
-                              child: Icon(
-                                Ionicons.md_videocam,
-                                size: 16,
-                              ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 8.0, bottom: 1.0),
+                            child: Icon(
+                              Ionicons.md_videocam,
+                              size: 16,
                             ),
-                            Text(state.status.isLiveViewActive
-                                ? "Stop"
-                                : "LiveView"),
-                          ],
-                        ),
-                        onPressed: //()
-                            //? null :
-                            () {
-                          BlocProvider.of<ConfigurationBloc>(context,
-                                  listen: false)
-                              .add(ConfigurationStartLiveViewEvent(camera));
-                          setState(() {
-                            state = CameraDataState(camera);
-                          });
-                        }),
+                          ),
+                          //Text(isLiveView ? "Stop" : "LiveView"),
+                        ],
+                      ),
+                      /*
+                        onPressed: (isChanging && !isLiveView)
+                            ? null
+                            : () {
+                                isLiveView
+                                    ? BlocProvider.of<CameraBloc>(context,
+                                            listen: false)
+                                        .add(StopLiveView(camera))
+                                    : BlocProvider.of<CameraBloc>(context,
+                                            listen: false)
+                                        .add(StartLiveView(camera));
+                              }*/
+                    ),
                   ),
                   if (slot.cameraRef != null)
                     Padding(
@@ -300,21 +304,29 @@ class _SlotPageState extends State<SlotPage> {
 
   @override
   Widget build(BuildContext context) {
-    var cameraState = CameraDataState(camera);
-    return Scaffold(
-      body: Scrollbar(
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            _header(context, controller, cameraState),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(),
+    return BlocBuilder<CameraBloc, CameraState>(
+      bloc: CameraBloc(),
+      builder: (context, state) {
+        state = CameraDataState(camera);
+        return Scaffold(
+          body: Scrollbar(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                _header(
+                  context, controller, //!state.status.canInteract,
+                  //state.status.isLiveViewActive
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Container(),
+                ),
+                _cameraSettings(context, slot?.cameraRef?.cameraId)
+              ],
             ),
-            _cameraSettings(context, slot?.cameraRef?.cameraId)
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
