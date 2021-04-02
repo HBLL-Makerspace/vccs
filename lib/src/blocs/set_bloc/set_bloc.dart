@@ -60,6 +60,33 @@ class MultiCameraCaptureBloc
         imageCache.clear();
         yield SetCapturedState();
         break;
+      case SequentialCaptureSetEvent:
+        yield SetCapturingState();
+        var typed = event as SequentialCaptureSetEvent;
+        Directory raw = Directory(
+            PathProvider.getRawImagesFolderPath(typed.project, typed.set));
+        raw.listSync().forEach((element) {
+          element.deleteSync();
+        });
+
+        Directory raw_thumb = Directory(
+            PathProvider.getRawThumbnailImagesFolderPath(
+                typed.project, typed.set));
+        raw_thumb.listSync().forEach((element) {
+          element.deleteSync();
+        });
+
+        for (var slot in configuration.getSlots()) {
+          ICamera cam =
+              await controller.getCameraByID(slot.cameraRef?.cameraId);
+
+          if (cam != null)
+            await controller.capture(cam,
+                rawFolderPath: raw.path, saveAsNoType: slot.id);
+          imageCache.clear();
+        }
+        yield SetCapturedState();
+        break;
       case RetakeImageEvent:
         var typed = event as RetakeImageEvent;
         Directory raw = Directory(

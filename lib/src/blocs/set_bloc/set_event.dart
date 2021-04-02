@@ -10,6 +10,13 @@ class CaptureSetEvent extends SetBlocEvent {
   CaptureSetEvent(this.set, this.project);
 }
 
+class SequentialCaptureSetEvent extends SetBlocEvent {
+  final VCCSSet set;
+  final Project project;
+
+  SequentialCaptureSetEvent(this.set, this.project);
+}
+
 class RetakeImageEvent extends SetBlocEvent {
   final Project project;
   final Slot slot;

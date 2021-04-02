@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:vccs/src/ui/widgets/widgets.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 
 class ModelCreation extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return ModelCreationState();
-  }
+  ModelCreationState createState() => new ModelCreationState();
 }
 
 class ModelCreationState extends State<ModelCreation> {
   @override
   int currentStep = 0;
+  bool isReadyToCreate;
   StepperType type = StepperType.horizontal;
 
   Widget build(BuildContext context) {
@@ -30,37 +31,41 @@ class ModelCreationState extends State<ModelCreation> {
                 return Row(
                   children: <Widget>[
                     TextButton(
-                      onPressed: onStepContinue,
-                      child: Text((currentStep >= 2) ? 'CREATE MODEL' : 'NEXT'),
+                      onPressed: () => continued(),
+                      //need to change onPressed if isReadyToCreate is true
+                      child: new Text(
+                          (currentStep == 1) ? "Create Model" : "Continue"),
                     ),
                     TextButton(
-                      onPressed: onStepCancel,
-                      child: const Text('CANCEL'),
+                      onPressed: () => cancel(),
+                      child: new Text('Cancel'),
                     ),
                   ],
                 );
               },
               steps: <Step>[
                 Step(
-                  title: new Text('Sets'),
-                  content: new Text('Step One'),
+                  title: new Text('Connect to 3D Software'),
+                  content: new Text(
+                      'Enter the host and port numbers of connected computers'),
                   isActive: currentStep >= 0,
                   state: currentStep >= 0
                       ? StepState.complete
                       : StepState.disabled,
                 ),
                 Step(
-                  title: new Text('S'),
-                  content: new Text('Step Two'),
-                  isActive: currentStep >= 0,
+                  title: new Text('Select Sets'),
+                  content: new Text('Select Sets'),
+                  isActive: currentStep >= 1,
                   state: currentStep >= 1
                       ? StepState.complete
                       : StepState.disabled,
                 ),
                 Step(
                   title: new Text('Create 3D Model'),
-                  content: new Text('Create Model'),
-                  isActive: currentStep >= 0,
+                  content: new Text(
+                      'This is where it will connect to external software'),
+                  isActive: currentStep >= 2,
                   state: currentStep >= 2
                       ? StepState.complete
                       : StepState.disabled,
@@ -78,7 +83,8 @@ class ModelCreationState extends State<ModelCreation> {
   }
 
   continued() {
-    currentStep < 2 ? setState(() => currentStep += 1) : null;
+    currentStep <= 2 ? setState(() => currentStep += 1) : null;
+    currentStep <= 1 ? (isReadyToCreate = true) : null;
   }
 
   cancel() {

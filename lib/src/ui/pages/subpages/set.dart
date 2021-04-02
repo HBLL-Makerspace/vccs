@@ -118,7 +118,7 @@ class SetPage extends StatelessWidget {
                             child: Text("Take Pictures"),
                           ),
                           onPressed: () {
-                            bloc.add(CaptureSetEvent(
+                            bloc.add(SequentialCaptureSetEvent(
                                 set, context.read<ProjectBloc>().project));
                           },
                         );
