@@ -9,7 +9,11 @@ class ModelCreation extends StatefulWidget {
 
 class ModelCreationState extends State<ModelCreation> {
   @override
+  final textController1 = TextEditingController();
+  final textController2 = TextEditingController();
   int currentStep = 0;
+  int hostAddress;
+  int portNumber;
   bool isReadyToCreate;
   StepperType type = StepperType.horizontal;
 
@@ -46,8 +50,18 @@ class ModelCreationState extends State<ModelCreation> {
               steps: <Step>[
                 Step(
                   title: new Text('Connect to 3D Software'),
-                  content: new Text(
-                      'Enter the host and port numbers of connected computers'),
+                  content: Column(
+                    children: <Widget>[
+                      TextFormField(
+                          controller: textController1,
+                          decoration: InputDecoration(
+                              labelText: 'Target host address')),
+                      TextFormField(
+                          controller: textController2,
+                          decoration:
+                              InputDecoration(labelText: 'Target port number')),
+                    ],
+                  ),
                   isActive: currentStep >= 0,
                   state: currentStep >= 0
                       ? StepState.complete
@@ -83,11 +97,27 @@ class ModelCreationState extends State<ModelCreation> {
   }
 
   continued() {
-    currentStep <= 2 ? setState(() => currentStep += 1) : null;
+    currentStep < 2 ? setState(() => currentStep += 1) : null;
     currentStep <= 1 ? (isReadyToCreate = true) : null;
+
+    //Getting errors here
+    /*
+    if (currentStep == 1) {
+      hostAddress = int.parse(textController1.text);
+      portNumber = int.parse(textController2.text);
+
+      dispose();
+    }
+    */
   }
 
   cancel() {
     currentStep > 0 ? setState(() => currentStep -= 1) : null;
+  }
+
+  void dispose() {
+    textController1.dispose();
+    textController2.dispose();
+    super.dispose();
   }
 }
