@@ -1,13 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vccs/src/blocs/multi_camera_bloc/camera_bloc.dart';
-import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
-import 'package:vccs/src/blocs/project_list/project_list_bloc.dart';
+
 import 'package:vccs/src/globals.dart';
-import 'package:vccs/src/model/backend/implementations/hbll/multi_camera_capture.dart';
 import 'package:vccs/src/ui/route.gr.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
+import 'package:vccs/src/model/backend/backend.dart';
+import 'package:vccs/src/blocs/multi_camera_bloc/camera_bloc.dart';
+import 'package:vccs/src/blocs/project_list/project_list_bloc.dart';
+import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 
 HbllMultiCameraCapture camerasCapture = HbllMultiCameraCapture();
 

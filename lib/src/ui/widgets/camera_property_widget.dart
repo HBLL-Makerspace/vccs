@@ -1,8 +1,9 @@
+import 'package:intl/intl.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:vccs/src/model/backend/implementations/camera_properties.dart';
-import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
+import 'package:vccs/src/model/backend/backend.dart';
+
 import 'package:vccs/src/ui/widgets/widgets.dart';
 
 class CameraPropertyWidget extends StatelessWidget {

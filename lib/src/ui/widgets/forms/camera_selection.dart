@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
-import 'package:vccs/src/blocs/multi_camera_bloc/camera_bloc.dart';
+
 import 'package:vccs/src/globals.dart';
-import 'package:vccs/src/model/domain/camera_config.dart';
-import 'package:vccs/src/ui/widgets/inherited.dart';
-import 'package:vccs/src/ui/widgets/textfield.dart';
+import 'package:vccs/src/ui/widgets/widgets.dart';
+import 'package:vccs/src/model/domain/domian.dart';
+import 'package:vccs/src/blocs/multi_camera_bloc/camera_bloc.dart';
 
 class SelectCamera extends StatelessWidget {
   final bool filter;

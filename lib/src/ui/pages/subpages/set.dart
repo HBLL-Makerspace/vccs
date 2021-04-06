@@ -1,16 +1,14 @@
 import 'package:auto_route/auto_route.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
-import 'package:vccs/src/blocs/project_bloc/project_bloc.dart';
-import 'package:vccs/src/blocs/set_bloc/set_bloc.dart';
+
 import 'package:vccs/src/globals.dart';
-import 'package:vccs/src/model/backend/notifications/notification.dart';
+import 'package:vccs/src/ui/widgets/widgets.dart';
 import 'package:vccs/src/model/domain/domian.dart';
-import 'package:vccs/src/ui/widgets/buttons.dart';
-import 'package:vccs/src/ui/widgets/cards.dart';
-import 'package:vccs/src/ui/widgets/inherited.dart';
-import 'package:vccs/src/ui/widgets/misc/set_preview_pics.dart';
+import 'package:vccs/src/model/backend/backend.dart';
+import 'package:vccs/src/blocs/set_bloc/set_bloc.dart';
+import 'package:vccs/src/blocs/project_bloc/project_bloc.dart';
 
 class SetPage extends StatelessWidget {
   final VCCSSet set;

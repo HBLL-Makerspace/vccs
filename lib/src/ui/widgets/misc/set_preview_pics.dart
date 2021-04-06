@@ -3,9 +3,7 @@ import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
 import 'package:vccs/src/blocs/project_bloc/project_bloc.dart';
 import 'package:vccs/src/blocs/set_bloc/set_bloc.dart';
@@ -13,10 +11,7 @@ import 'package:vccs/src/blocs/slot_preview_image/slot_preview_image_bloc.dart';
 import 'package:vccs/src/globals.dart';
 import 'package:vccs/src/model/domain/domian.dart';
 import 'package:vccs/src/ui/route.gr.dart';
-import 'package:vccs/src/ui/widgets/buttons.dart';
-import 'package:vccs/src/ui/widgets/cards.dart';
-import 'package:vccs/src/ui/widgets/inherited.dart';
-import 'package:vccs/src/ui/widgets/misc/slot_indicator.dart';
+import 'package:vccs/src/ui/widgets/widgets.dart';
 
 class SetPreviewPictures extends StatelessWidget {
   final VCCSSet set;

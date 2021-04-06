@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vccs/src/ui/widgets/buttons.dart';
-import 'package:vccs/src/ui/widgets/textfield.dart';
+import 'package:vccs/src/ui/widgets/widgets.dart';
 
 class CreateSet extends StatefulWidget {
   @override

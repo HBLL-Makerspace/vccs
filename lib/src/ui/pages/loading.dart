@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:percent_indicator/percent_indicator.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+
 import 'package:vccs/src/blocs/loading_bloc/loading_bloc.dart';
 
 class LoadingPage extends StatelessWidget {

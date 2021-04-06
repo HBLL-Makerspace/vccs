@@ -1,7 +1,7 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:json_annotation/json_annotation.dart';
+
 import 'package:vccs/src/model/backend/backend.dart';
-import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
 
 part 'configuration.g.dart';
 

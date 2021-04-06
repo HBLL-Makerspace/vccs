@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:vccs/src/model/backend/project_manager.dart';
+
 import 'package:vccs/src/model/domain/set.dart';
+import 'package:vccs/src/model/backend/backend.dart';
 
 part "project.g.dart";
 

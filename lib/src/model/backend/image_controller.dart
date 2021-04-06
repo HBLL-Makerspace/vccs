@@ -1,11 +1,10 @@
 import 'dart:io';
-import 'dart:isolate';
+
 import 'package:image/image.dart';
 import 'package:path/path.dart';
-import 'package:vccs/src/model/backend/path_provider.dart';
-import 'package:vccs/src/model/domain/configuration.dart';
-import 'package:vccs/src/model/domain/project.dart';
-import 'package:vccs/src/model/domain/set.dart';
+
+import 'package:vccs/src/model/domain/domian.dart';
+import 'package:vccs/src/model/backend/backend.dart';
 
 class ImageController {
   Future<Image> generateThumbnailFor(String filename) async {}

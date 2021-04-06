@@ -1,10 +1,8 @@
 // import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:vccs/src/model/domain/configuration.dart';
-import 'package:vccs/src/ui/widgets/buttons.dart';
-import 'package:vccs/src/ui/widgets/misc/color_picker.dart';
-import 'package:vccs/src/ui/widgets/textfield.dart';
+import 'package:vccs/src/model/domain/domian.dart';
+import 'package:vccs/src/ui/widgets/widgets.dart';
 
 class CreateSlotForm extends StatefulWidget {
   @override

@@ -1,6 +1,7 @@
-import 'package:flutter/foundation.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+import 'package:flutter/foundation.dart';
 
 part 'set.g.dart';
 

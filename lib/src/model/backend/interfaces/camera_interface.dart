@@ -1,7 +1,5 @@
 import 'package:tuple/tuple.dart';
-import 'package:vccs/src/model/backend/implementations/camera_properties.dart';
-import 'package:vccs/src/model/backend/interfaces/camera_properties.dart';
-import 'package:vccs/src/model/backend/interfaces/interfaces.dart';
+import 'package:vccs/src/model/backend/backend.dart';
 
 abstract class ICamera {
   final ICameraController controller;

@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:vccs/src/model/backend/interfaces/camera_properties.dart';
+import 'package:vccs/src/model/backend/backend.dart';
 
 import '../camera_properties.dart';
 

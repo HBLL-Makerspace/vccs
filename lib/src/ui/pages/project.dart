@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+
 import 'package:vccs/src/blocs/project_bloc/project_bloc.dart';
-import 'package:vccs/src/model/backend/notifications/notification.dart';
+import 'package:vccs/src/model/backend/backend.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
 
 class ProjectPage extends StatefulWidget {

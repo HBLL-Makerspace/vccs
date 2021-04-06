@@ -1,15 +1,15 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:expandable/expandable.dart';
-import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
+
 import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
-import 'package:vccs/src/model/backend/implementations/camera_properties.dart';
-import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
-import 'package:vccs/src/model/domain/configuration.dart';
-import 'package:vccs/src/model/domain/set.dart';
+import 'package:vccs/src/model/backend/backend.dart';
+import 'package:vccs/src/model/domain/domian.dart';
 import 'package:vccs/src/ui/widgets/widgets.dart';
 
 class CameraPage extends StatelessWidget {

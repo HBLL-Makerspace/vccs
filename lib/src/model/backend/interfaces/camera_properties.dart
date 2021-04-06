@@ -1,4 +1,4 @@
-import 'package:vccs/src/model/backend/implementations/camera_properties.dart';
+import 'package:vccs/src/model/backend/backend.dart';
 
 abstract class ICameraProperties {
   List<String> getSections();

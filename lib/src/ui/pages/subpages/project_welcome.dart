@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:vccs/src/model/backend/notifications/notification.dart';
-import 'package:vccs/src/ui/widgets/buttons.dart';
+
+import 'package:vccs/src/ui/widgets/widgets.dart';
+import 'package:vccs/src/model/backend/backend.dart';
 
 class ProjectWelcome extends StatelessWidget {
   @override

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:vccs/src/model/domain/configuration.dart';
-import 'package:vccs/src/ui/widgets/buttons.dart';
-import 'package:vccs/src/ui/widgets/textfield.dart';
+
+import 'package:vccs/src/ui/widgets/widgets.dart';
 
 class CameraPropertiesForm extends StatelessWidget {
   final bool horizontal;
   final String actionLabel;
   final ValueChanged onSubmit;
 
-  const CameraPropertiesForm({Key key, this.horizontal = false, this.actionLabel = "Apply", this.onSubmit}) : super(key: key);
+  const CameraPropertiesForm(
+      {Key key,
+      this.horizontal = false,
+      this.actionLabel = "Apply",
+      this.onSubmit})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,19 +1,17 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+
+import 'package:vccs/src/globals.dart';
+import 'package:vccs/src/ui/widgets/widgets.dart';
+import 'package:vccs/src/model/domain/domian.dart';
+import 'package:vccs/src/model/backend/backend.dart';
 import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
-import 'package:vccs/src/globals.dart';
-import 'package:vccs/src/model/backend/backend.dart';
-import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
-import 'package:vccs/src/model/backend/interfaces/interfaces.dart';
-import 'package:vccs/src/model/domain/configuration.dart';
-import 'package:vccs/src/ui/widgets/forms/select_camera_property.dart';
-import 'package:vccs/src/ui/widgets/misc/color_picker.dart';
-import 'package:vccs/src/ui/widgets/widgets.dart';
 
 class SlotPage extends StatefulWidget {
   final Slot slot;

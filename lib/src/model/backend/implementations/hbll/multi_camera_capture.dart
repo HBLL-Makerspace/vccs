@@ -1,7 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:flutter_serial_port/flutter_serial_port.dart';
-import 'package:vccs/src/model/backend/interfaces/multi_camera_capture.dart';
+
+import 'package:vccs/src/model/backend/backend.dart';
 
 class HbllMultiCameraCapture implements IMultiCameraCapture {
   SerialPort _port;

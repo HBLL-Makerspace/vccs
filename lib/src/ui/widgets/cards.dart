@@ -1,17 +1,15 @@
 import 'package:auto_route/auto_route.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+
+import 'package:vccs/src/ui/route.gr.dart';
+import 'package:vccs/src/ui/widgets/widgets.dart';
+import 'package:vccs/src/model/domain/domian.dart';
+import 'package:vccs/src/model/backend/backend.dart';
 import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/blocs/configuration_bloc/configuration_bloc.dart';
-import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
-import 'package:vccs/src/model/domain/camera_config.dart';
-import 'package:vccs/src/model/domain/domian.dart';
-import 'package:vccs/src/ui/widgets/buttons.dart';
-import 'package:vccs/src/ui/widgets/floating_modal.dart';
-import 'package:vccs/src/ui/widgets/misc/set_preview_pics.dart';
-import 'package:vccs/src/ui/widgets/widgets.dart';
-import 'package:vccs/src/ui/route.gr.dart';
 
 class AdvancedCard extends StatefulWidget {
   final Widget child;

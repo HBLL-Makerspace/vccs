@@ -1,17 +1,12 @@
+import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:vccs/src/model/backend/implementations/camera_properties.dart';
-import 'package:vccs/src/model/backend/interfaces/camera_controller_interface.dart';
-import 'package:vccs/src/model/backend/interfaces/camera_interface.dart';
-import 'package:vccs/src/model/backend/interfaces/camera_properties.dart';
 import 'package:watcher/watcher.dart';
-import './libgphoto2_camera.dart';
 
-import '../../path_provider.dart';
+import 'package:vccs/src/model/backend/backend.dart';
 
 class libgphoto2CameraController implements ICameraController {
   Map<String, String> _idPortMap = {};

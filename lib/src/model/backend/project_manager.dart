@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart';
-import 'package:vccs/src/model/backend/path_provider.dart';
-import 'package:vccs/src/model/domain/project.dart';
-import 'package:vccs/src/model/domain/set.dart';
+
+import 'package:vccs/src/model/domain/domian.dart';
+import 'package:vccs/src/model/backend/backend.dart';
 
 class ProjectManager {
   static String version = "0.0.1-pre_alpha";

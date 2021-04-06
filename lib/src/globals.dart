@@ -1,8 +1,5 @@
-import 'package:vccs/src/model/domain/configuration.dart';
-
-import 'model/backend/implementations/implementations.dart';
-import 'model/backend/interfaces/camera_controller_interface.dart';
-import 'model/backend/interfaces/camera_interface.dart';
+import 'model/backend/backend.dart';
+import 'model/domain/domian.dart';
 
 ICameraController controller = libgphoto2CameraController();
 Configuration configuration = Configuration();

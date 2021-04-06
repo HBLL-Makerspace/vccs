@@ -1,14 +1,12 @@
 import 'package:auto_route/auto_route.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vccs/src/blocs/project_list/project_list_bloc.dart';
-import 'package:vccs/src/model/backend/path_provider.dart';
+import 'package:vccs/src/model/backend/backend.dart';
+
 import 'package:vccs/src/ui/route.gr.dart';
-import 'package:vccs/src/ui/widgets/buttons.dart';
-import 'package:vccs/src/ui/widgets/floating_modal.dart';
-import 'package:vccs/src/ui/widgets/forms/create_project.dart';
-import 'package:vccs/src/ui/widgets/forms/project_selection.dart';
-import 'package:vccs/src/ui/route.dart';
+import 'package:vccs/src/blocs/project_list/project_list_bloc.dart';
+import 'package:vccs/src/ui/widgets/widgets.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);

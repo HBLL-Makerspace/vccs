@@ -1,5 +1,4 @@
 import 'package:vccs/src/model/backend/backend.dart';
-import 'package:vccs/src/model/backend/interfaces/interfaces.dart';
 
 import 'camera_properties.dart';
 

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vccs/src/model/backend/interfaces/camera_controller_interface.dart';
-import 'package:vccs/src/model/backend/interfaces/multi_camera_capture.dart';
-import 'package:vccs/src/model/domain/domian.dart';
+import 'package:vccs/src/model/backend/backend.dart';
 
 class AppData extends InheritedWidget {
   final ICameraController controller;
