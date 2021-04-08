@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vccs/src/ui/widgets/textfield.dart';
+import 'package:vccs/src/ui/pages/subpages/set.dart';
 
 class ModelCreation extends StatefulWidget {
   @override
@@ -11,133 +13,12 @@ class MyData {
 }
 
 class ModelCreationState extends State<ModelCreation> {
-  @override
   int currentStep = 0;
-  static var _focusNode = new FocusNode();
-  GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  bool modelComplete = false;
+  TextEditingController hostController = new TextEditingController();
+  TextEditingController portController = new TextEditingController();
   static MyData data = new MyData();
 
-  @override
-  void initState() {
-    super.initState();
-    _focusNode.addListener(() {
-      setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  List<Step> steps = [
-    new Step(
-        title: const Text('Connect to 3D Software'),
-        isActive: true,
-        state: StepState.indexed,
-        content: new TextFormField(
-          focusNode: _focusNode,
-          keyboardType: TextInputType.text,
-          autocorrect: false,
-          onSaved: (String hostValue) {
-            data.hostAddress = hostValue;
-          },
-          maxLines: 1,
-          validator: (hostValue) {
-            if (hostValue.isEmpty || hostValue.length < 1) {
-              return 'Please enter a host address';
-            }
-          },
-          decoration: new InputDecoration(
-            labelText: 'Host Address',
-          ),
-        )),
-    new Step(
-      title: const Text('Connect to 3D Software'),
-      isActive: true,
-      state: StepState.indexed,
-      content: new TextFormField(
-        keyboardType: TextInputType.text,
-        autocorrect: false,
-        onSaved: (String portValue) {
-          data.portNumber = portValue;
-        },
-        validator: (portValue) {
-          if (portValue.isEmpty || portValue.length < 1) {
-            return 'Please enter a port number';
-          }
-        },
-        maxLines: 1,
-        decoration: new InputDecoration(
-          labelText: 'Port Number',
-        ),
-      ),
-    ),
-    new Step(
-      title: const Text('Select Sets'),
-      isActive: true,
-    ),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    void _submitDetails() {
-      final FormState formState = _formKey.currentState;
-      formState.save();
-
-      if (!formState.validate()) {
-        print('Please enter correct data'); //change to show a pop up
-      } else {
-        formState.save();
-      }
-    }
-
-    return new Container(
-        child: new Form(
-      key: _formKey,
-      child: new ListView(children: <Widget>[
-        new Stepper(
-          steps: steps,
-          type: StepperType.horizontal,
-          currentStep: this.currentStep,
-          onStepContinue: () {
-            setState(() {
-              if (currentStep < steps.length - 1) {
-                currentStep = currentStep + 1;
-              } else {
-                currentStep = 0;
-              }
-            });
-          },
-          onStepCancel: () {
-            setState(() {
-              if (currentStep > 0) {
-                currentStep = currentStep - 1;
-              } else {
-                currentStep = 0;
-              }
-            });
-          },
-          onStepTapped: (step) {
-            setState(() {
-              currentStep = step;
-            });
-          },
-        ),
-        new ElevatedButton(
-          child: new Text(
-            'Create Model',
-            style: new TextStyle(color: Colors.white),
-          ),
-          onPressed: _submitDetails,
-        ),
-      ]),
-    ));
-  }
-}
-
-/*
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -145,9 +26,8 @@ class ModelCreationState extends State<ModelCreation> {
           children: [
             Expanded(
                 child: Stepper(
-              type: type,
+              type: StepperType.horizontal,
               physics: ScrollPhysics(),
-              currentStep: currentStep,
               onStepTapped: (step) => tapped(step),
               onStepContinue: continued(),
               onStepCancel: cancel(),
@@ -157,7 +37,6 @@ class ModelCreationState extends State<ModelCreation> {
                   children: <Widget>[
                     TextButton(
                       onPressed: () => continued(),
-                      //need to change onPressed to connect to software if isReadyToCreate is true
                       child: new Text(
                           (currentStep == 1) ? "Create Model" : "Continue"),
                     ),
@@ -168,44 +47,8 @@ class ModelCreationState extends State<ModelCreation> {
                   ],
                 );
               },
-              steps: <Step>[
-                Step(
-                  title: new Text('Connect to 3D Software'),
-                  content: Column(
-                    children: <Widget>[
-                      TextFormField(
-                          controller: textController1,
-                          decoration: InputDecoration(
-                              labelText: 'Target host address')),
-                      TextFormField(
-                          controller: textController2,
-                          decoration:
-                              InputDecoration(labelText: 'Target port number')),
-                    ],
-                  ),
-                  isActive: currentStep >= 0,
-                  state: currentStep >= 0
-                      ? StepState.complete
-                      : StepState.disabled,
-                ),
-                Step(
-                  title: new Text('Select Sets'),
-                  content: new Text('Select Sets'),
-                  isActive: currentStep >= 1,
-                  state: currentStep >= 1
-                      ? StepState.complete
-                      : StepState.disabled,
-                ),
-                Step(
-                  title: new Text('Create 3D Model'),
-                  content: new Text(
-                      'This is where it will connect to external software'),
-                  isActive: currentStep >= 2,
-                  state: currentStep >= 2
-                      ? StepState.complete
-                      : StepState.disabled,
-                ),
-              ],
+              steps: pageSteps(),
+              currentStep: this.currentStep,
             )),
           ],
         ),
@@ -213,32 +56,84 @@ class ModelCreationState extends State<ModelCreation> {
     );
   }
 
+  List<Step> pageSteps() {
+    List<Step> steps = [
+      Step(
+        title: new Text('Connect to 3D Software'),
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              child: VCCSTextFormField(
+                label: "Enter the target host address",
+                //onSubmitted:
+              ),
+            ),
+            Container(
+                child: VCCSTextFormField(
+              label: "Enter the target port number",
+              //onSubmitted
+            )),
+          ],
+        ),
+        isActive: currentStep >= 0,
+        state: currentStep > 0 ? StepState.complete : StepState.disabled,
+      ),
+      Step(
+        title: new Text('Select Sets'),
+        //content: SetPage().build(context),
+        content: new Text("Temporary content"),
+        isActive: currentStep >= 1,
+        state: currentStep > 1 ? StepState.complete : StepState.disabled,
+      ),
+      Step(
+        title: new Text('Create 3D Model'),
+        //Starts creating software, when done we can push the button to continue
+
+        content: new Text('This is where it will connect to external software'),
+        isActive: currentStep >= 2,
+        state: currentStep >= 2 ? StepState.complete : StepState.disabled,
+      ),
+    ];
+
+    return steps;
+  }
+
   tapped(int step) {
     setState(() => currentStep = step);
   }
 
   continued() {
-    if (currentStep == 0) {
-      hostAddress = int.parse(textController1.text);
-      portNumber = int.parse(textController2.text);
-
-      //dispose();
-    }
-
-    currentStep < 2 ? setState(() => currentStep += 1) : null;
-    currentStep >= 1 ? (isReadyToCreate = true) : null;
-
-    //Getting errors here
+    setState(() {
+      if (this.currentStep < this.pageSteps().length) {
+        this.currentStep = this.currentStep + 1;
+      } else {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => PostCreation()));
+      }
+    });
   }
 
   cancel() {
-    currentStep > 0 ? setState(() => currentStep -= 1) : null;
+    setState(() {
+      if (this.currentStep > 0) {
+        this.currentStep = this.currentStep - 1;
+      }
+    });
   }
+}
 
-  void dispose() {
-    textController1.dispose();
-    textController2.dispose();
-    super.dispose();
+class PostCreation extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+          //appbar info here
+          ),
+      body: Container(
+        child: Text("Assembled model view will go here"),
+      ),
+    );
   }
-  }
-  */
+}
