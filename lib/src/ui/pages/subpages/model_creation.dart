@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vccs/src/ui/widgets/textfield.dart';
-import 'package:vccs/src/ui/pages/subpages/set.dart';
 import 'package:vccs/src/ui/widgets/buttons.dart';
 
 class ModelCreation extends StatefulWidget {
@@ -41,52 +40,40 @@ class ModelCreationState extends State<ModelCreation> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
+                        alignment: Alignment.topCenter,
+                        margin: EdgeInsets.all(10.0),
                         child: VCCSTextFormField(
                           label: "Enter the target host address",
-                          //onSubmitted: update data
+                          controller: hostController,
                         ),
                       ),
                       Container(
+                          alignment: Alignment.topCenter,
+                          margin: EdgeInsets.all(10.0),
                           child: VCCSTextFormField(
-                        label: "Enter the target port number",
-                        //onSubmitted: update data
-                      )),
-                      Row(
-                        children: [
-                          VCCSFlatButton(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 8.0, bottom: 1.0),
-                                  //child: Icon(),
+                            label: "Enter the target port number",
+                            controller: portController,
+                          )),
+                      Container(
+                          alignment: Alignment.centerRight,
+                          child: Row(
+                            children: [
+                              VCCSFlatButton(
+                                //make this a floating action button
+                                child: Row(
+                                  //crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text("Continue"),
+                                  ],
                                 ),
-                                Text("Continue"),
-                              ],
-                            ),
-                            onPressed: () {
-                              continued();
-                            },
-                          ),
-                          VCCSFlatButton(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 8.0, bottom: 1.0),
-                                  //child: Icon(),
-                                ),
-                                Text("Cancel"),
-                              ],
-                            ),
-                            onPressed: () {
-                              cancel();
-                            },
-                          ),
-                        ],
-                      )
+                                onPressed: () {
+                                  data.hostAddress = hostController.text;
+                                  data.portNumber = portController.text;
+                                  continued();
+                                },
+                              ),
+                            ],
+                          ))
                     ],
                   ),
                   isActive: currentStep >= 0,
@@ -126,7 +113,7 @@ class ModelCreationState extends State<ModelCreation> {
                                       right: 8.0, bottom: 1.0),
                                   //child: Icon(),
                                 ),
-                                Text("Cancel"),
+                                Text("Back"),
                               ],
                             ),
                             onPressed: () {
@@ -148,24 +135,44 @@ class ModelCreationState extends State<ModelCreation> {
                     children: [
                       new Text(
                           'This is where it will connect to external software'),
-                      VCCSFlatButton(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  right: 8.0, bottom: 1.0),
+                      Row(
+                        children: [
+                          VCCSFlatButton(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 8.0, bottom: 1.0),
+                                ),
+                                Text("Create Model"),
+                              ],
                             ),
-                            Text("Create Model"),
-                          ],
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PostCreation()));
-                        },
-                      ),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PostCreation()));
+                            },
+                          ),
+                          VCCSFlatButton(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 8.0, bottom: 1.0),
+                                  //child: Icon(),
+                                ),
+                                Text("Cancel"),
+                              ],
+                            ),
+                            onPressed: () {
+                              cancel();
+                            },
+                          ),
+                        ],
+                      )
                     ],
                   ),
 
@@ -181,6 +188,8 @@ class ModelCreationState extends State<ModelCreation> {
         ),
       ),
     );
+    hostController.dispose();
+    portController.dispose();
   }
 
   tapped(int step) {
@@ -212,7 +221,8 @@ class PostCreation extends StatelessWidget {
           //appbar info here
           ),
       body: Container(
-        child: Text("Assembled model view will go here"),
+        child: Text(
+            "This can either be a loading screen that pushes to an assembled model screen or just an assembled model screen."),
       ),
     );
   }
