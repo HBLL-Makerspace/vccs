@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:path/path.dart';
 
 import 'package:vccs/src/blocs/camera_bloc/camera_bloc.dart';
 import 'package:vccs/src/model/backend/backend.dart';
@@ -234,85 +235,85 @@ class __CameraPageInternalState extends State<_CameraPageInternal> {
 
   Widget _page(BuildContext context) {
     return BlocBuilder<CameraBloc, CameraState>(
-        bloc: CameraBloc(),
+        // bloc: CameraBloc(),
         builder: (context, state) {
-          if (state is CameraDataState) {
-            return Scaffold(
-              body: Scrollbar(
-                child: ListView(
-                  children: [
-                    _header(context, state.camera, !state.status.canInteract,
-                        state.status.isLiveViewActive),
-                    _search(),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: _camProperties(
-                          context, state.camera, !state.status.canInteract),
-                    ),
-                    Container(
-                      height: 80,
-                    )
-                  ],
+      print(state);
+      if (state is CameraDataState) {
+        return Scaffold(
+          body: Scrollbar(
+            child: ListView(
+              children: [
+                _header(context, state.camera, !state.status.canInteract,
+                    state.status.isLiveViewActive),
+                _search(),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: _camProperties(
+                      context, state.camera, !state.status.canInteract),
                 ),
-              ),
-              floatingActionButton: AnimatedOpacity(
-                opacity: properties.isEmpty ? 0 : 1,
-                duration: Duration(milliseconds: 300),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: VCCSFlatButton(
-                        hoverColor: Colors.red[400],
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("Cancel"),
-                        ),
-                        onPressed: !state.status.canInteract
-                            ? null
-                            : () {
-                                setState(() {
-                                  properties.clear();
-                                });
-                              },
-                      ),
+                Container(
+                  height: 80,
+                )
+              ],
+            ),
+          ),
+          floatingActionButton: AnimatedOpacity(
+            opacity: properties.isEmpty ? 0 : 1,
+            duration: Duration(milliseconds: 300),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: VCCSFlatButton(
+                    hoverColor: Colors.red[400],
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("Cancel"),
                     ),
-                    VCCSRaisedButton(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: !state.status.canInteract
-                            ? Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0),
-                                child: Container(
-                                  height: 15,
-                                  child: SpinKitWave(
-                                    color: Colors.white,
-                                    size: 15,
-                                  ),
-                                ),
-                              )
-                            : Text("Apply Changes"),
-                      ),
-                      onPressed: !state.status.canInteract
-                          ? null
-                          : () {
-                              BlocProvider.of<CameraBloc>(context,
-                                      listen: false)
-                                  .add(ChangeCameraPropertyEvent(state.camera,
-                                      properties.values.toList()));
-                            },
-                    ),
-                  ],
+                    onPressed: !state.status.canInteract
+                        ? null
+                        : () {
+                            setState(() {
+                              properties.clear();
+                            });
+                          },
+                  ),
                 ),
-              ),
-            );
-          } else
-            return Scaffold(
-              body: Center(child: Text("loading camera")),
-            );
-        });
+                VCCSRaisedButton(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: !state.status.canInteract
+                        ? Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Container(
+                              height: 15,
+                              child: SpinKitWave(
+                                color: Colors.white,
+                                size: 15,
+                              ),
+                            ),
+                          )
+                        : Text("Apply Changes"),
+                  ),
+                  onPressed: !state.status.canInteract
+                      ? null
+                      : () {
+                          BlocProvider.of<CameraBloc>(context, listen: false)
+                              .add(ChangeCameraPropertyEvent(
+                                  state.camera, properties.values.toList()));
+                        },
+                ),
+              ],
+            ),
+          ),
+        );
+      } else
+        return Scaffold(
+          body: Center(child: Text("loading camera")),
+        );
+    });
   }
 
   @override

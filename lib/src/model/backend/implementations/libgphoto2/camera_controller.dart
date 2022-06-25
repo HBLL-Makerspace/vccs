@@ -98,6 +98,7 @@ class libgphoto2CameraController implements ICameraController {
 
   @override
   Future<ICamera> getCameraByID(String id, {bool forceUpdate = false}) async {
+    print("Getting camera $id");
     return _cameras[id];
   }
 

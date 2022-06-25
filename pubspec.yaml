@@ -1,5 +1,5 @@
 name: vccs
-description: A new Flutter project.
+description: VCCS
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -56,8 +56,10 @@ dependencies:
   modal_bottom_sheet: ^1.0.0+1
   auto_route_generator: ^0.6.10
 
-  flutter_serial_port:
-    git: https://github.com/jpnurmi/flutter_serial_port
+  flutter_libserialport: ^0.2.3
+
+  # flutter_serial_port:
+  #   git: https://github.com/jpnurmi/flutter_serial_port
     
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
